@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/abc_primary_text_disable_only_material_light.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/abc_primary_text_disable_only_material_light.xml"
+    },
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/abc_secondary_text_material_light.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/abc_secondary_text_material_light.xml"
+    },
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/abc_search_url_text.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/abc_search_url_text.xml"
+    },
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/abc_primary_text_material_dark.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/abc_primary_text_material_dark.xml"
+    },
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/switch_thumb_material_dark.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/switch_thumb_material_dark.xml"
+    },
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/abc_secondary_text_material_dark.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/abc_secondary_text_material_dark.xml"
+    },
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/abc_primary_text_disable_only_material_dark.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/abc_primary_text_disable_only_material_dark.xml"
+    },
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/abc_primary_text_material_light.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/abc_primary_text_material_light.xml"
+    },
+    {
+        "merged": "/Volumes/HDD/PROG/android/21.02.17/mfilm/Mfilm/library/recyclerviewenhanced/build/intermediates/res/merged/release/color/switch_thumb_material_light.xml",
+        "source": "/Users/mrvu/.android/build-cache/aa253a48e2cc50fd3e590107885baee79db2878d/output/res/color/switch_thumb_material_light.xml"
+    }
+]

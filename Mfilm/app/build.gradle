@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "net.mfilm"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            buildConfigField("String", "BASE_URL", "\"http://45.76.66.168:8080\"")
+            buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
+
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "BASE_URL", "\"http://45.76.66.168:8080\"")
+            buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    repositories {
+        jcenter()
+        maven {
+            url "https://mint.splunk.com/gradle/"
+        }
+    }
+    packagingOptions {
+        pickFirst 'META-INF/rxjava.properties'
+    }
+    dependencies {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+        compile project(':library:fragment-stack-manager')
+        compile project(':library:recyclerviewenhanced')
+
+        compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+        compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+        compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+        compile "com.android.support:design:$rootProject.supportLibraryVersion"
+        compile "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
+        compile "com.android.support:animated-vector-drawable:$rootProject.supportLibraryVersion"
+        compile "com.android.support.constraint:constraint-layout:$rootProject.constraintVersion"
+        testCompile 'junit:junit:4.12'
+
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+        // fonts
+        compile "uk.co.chrisjenx:calligraphy:$rootProject.calligraphyVersion"
+
+        // dependency injection
+        compile "com.google.dagger:dagger:$rootProject.dagger2Version"
+        annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+        kapt "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+        provided 'javax.annotation:jsr250-api:1.0'
+        compile 'javax.inject:javax.inject:1'
+
+        // reactive
+        compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
+        compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+
+        // retrofit
+        compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+        compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+        compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofitVersion"
+        compile "com.squareup.okhttp3:okhttp:rootProject.$okhttpVersion"
+        compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttpVersion"
+
+        compile "com.facebook.fresco:fresco:$rootProject.frescoVersion"
+
+        //Toast
+        compile "com.github.GrenderG:Toasty:$rootProject.toastyVersion"
+
+        //iconify
+        compile "com.joanzapata.iconify:android-iconify-fontawesome:$rootProject.iconifyVersion"
+        compile "com.joanzapata.iconify:android-iconify-ionicons:$rootProject.iconifyVersion"
+
+        //DraggablePanel
+        compile "com.github.pedrovgs:draggablepanel:$rootProject.draggablepanelVersion"
+
+        // ExoPlayer
+        compile 'com.google.android.exoplayer:exoplayer:r2.2.0'
+        compile 'com.minimize.library:seekbar-compat:0.2.5'
+    }
+    repositories {
+//        mavenCentral()
+        jcenter()
+    }
+
+}
+kapt {
+    generateStubs = true
+}
