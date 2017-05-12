@@ -7,6 +7,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.provider.Settings
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import net.mfilm.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,6 +17,40 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
+var anim: Animation? = null
+var animIn: Animation? = null
+var animOut: Animation? = null
+//var rotate: RotateAnimation?=null
+//var rotateReversed: RotateAnimation?=null
+fun initAnimations(context: Context) {
+    if (anim != null) {
+        return
+    }
+    anim = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+    anim?.apply {
+        duration = ANIM_DURATION_SHORT
+    }
+
+    animIn = AnimationUtils.loadAnimation(context,
+            android.R.anim.fade_in)
+    animOut = AnimationUtils.loadAnimation(context,
+            android.R.anim.fade_out)
+    animIn?.apply {
+        duration = ANIM_DURATION
+    }
+    animOut?.apply {
+        duration = ANIM_DURATION
+    }
+}
+
+fun View.show(show: Boolean) {
+    if (show) {
+        visibility = View.VISIBLE
+        startAnimation(anim)
+    } else {
+        visibility = View.GONE
+    }
+}
 fun showLoadingDialog(context: Context): ProgressDialog {
     val progressDialog = ProgressDialog(context)
     progressDialog.show()
@@ -31,7 +68,6 @@ fun showLoadingDialog(context: Context): ProgressDialog {
 fun getDeviceId(context: Context): String {
     return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 }
-
 
 fun getTimeStamp(): String {
     return SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale.US).format(Date())

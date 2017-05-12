@@ -6,6 +6,7 @@
     <dimen name="nav_header_height">160dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin_top">16dp</dimen>
 
     <dimen name="actionBarSize">48dp</dimen>
     <dimen name="view_margin_top">5dip</dimen>
@@ -16,6 +17,7 @@
     <dimen name="edittext_content_max_height">200dip</dimen>
 
     <dimen name="dimen0">0dp</dimen>
+    <dimen name="dimen1">1dp</dimen>
     <dimen name="dimen2">2dp</dimen>
     <dimen name="dimen3">3dp</dimen>
     <dimen name="dimen4">4dp</dimen>
@@ -45,7 +47,9 @@
     <dimen name="dimen96">96dp</dimen>
     <dimen name="dimen100">100dp</dimen>
     <dimen name="dimen124">124dp</dimen>
-
+    <dimen name="dimen135">135dp</dimen>
+    <dimen name="dimen150">150dp</dimen>
+    <dimen name="dimen200">200dp</dimen>
     <dimen name="txt_size_10">10sp</dimen>
     <dimen name="txt_size_11">11sp</dimen>
     <dimen name="txt_size_12">12sp</dimen>
@@ -78,4 +82,40 @@
     <dimen name="top_fragment_margin">10dip</dimen>
     <dimen name="top_fragment_height">200dip</dimen>
     <dimen name="height_controller_bot_video">38dp</dimen>
+    <dimen name="dimen50">50dp</dimen>
+
+
+    <dimen name="margin_top_medium">8dp</dimen>
+    <dimen name="margin_bottom">16dp</dimen>
+    <dimen name="margin_bottom_small">8dp</dimen>
+    <dimen name="margin_left">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_right">16dp</dimen>
+    <dimen name="margin_right_handle">22dp</dimen>
+    <dimen name="icon_width">40dp</dimen>
+    <dimen name="icon_height">40dp</dimen>
+    <dimen name="icon_touchable_component_mini">40dp</dimen>
+    <dimen name="icon_circular_width">24dp</dimen>
+    <dimen name="icon_circular_height">24dp</dimen>
+    <dimen name="butterbar_height">3dp</dimen>
+    <dimen name="toolbar_height">64dp</dimen><!-- 56 + 8 small margin top -->
+    <dimen name="popup_button_min_height">48dp</dimen>
+    <dimen name="popup_max_height">290dp</dimen>
+    <dimen name="bottom_sheet_peek">312dp</dimen>
+
+    <dimen name="card_height">60dp</dimen>
+    <dimen name="card_extra_height">15dp</dimen>
+    <dimen name="label_height">150dp</dimen>
+    <dimen name="dialog_padding_vertical">24dp</dimen>
+    <dimen name="dialog_padding_horizontal">24dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Navigation Drawer -->
+    <dimen name="nav_drawer_max_width">320dp</dimen>
+
+    <!-- Header View -->
+    <dimen name="header_view_start_margin_left">16dp</dimen>
+    <dimen name="header_view_end_margin_left">40dp</dimen>
+    <dimen name="header_view_end_margin_right">14dp</dimen>
+    <dimen name="header_view_start_margin_bottom">14dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 </resources>

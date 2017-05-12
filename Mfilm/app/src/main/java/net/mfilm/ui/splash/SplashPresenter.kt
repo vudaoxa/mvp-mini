@@ -19,9 +19,15 @@ package net.mfilm.ui.splash
 //import net.mfilm.data.networkretrofit.models.AccessToken
 //import net.mfilm.ui.login.LoginPresenter
 
+import android.util.Log
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
+import net.mfilm.R
 import net.mfilm.data.DataMng
 import net.mfilm.ui.base.BasePresenter
+import net.mfilm.utils.DebugLog
 import javax.inject.Inject
 
 /**
@@ -35,79 +41,34 @@ constructor(dataManager: DataMng, compositeDisposable: CompositeDisposable)
     override fun onAttach(mvpView: V) {
         super.onAttach(mvpView)
 
-        mvpView.startSyncService()
-        checkToken()
-//        compositeDisposable.add(dataManager.seedDatabaseQuestions()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .concatMap { aBoolean ->
-//                    Log.d(TAG, "xyz--concatMap-apply--" + aBoolean!!)
-//                    dataManager.seedDatabaseOptions()
-//                }
-//                .subscribe(Consumer<Boolean> { aBoolean ->
-//                    Log.d(TAG, "xyz--subscribe-accept--" + aBoolean!!)
-//
-//                    if (!isViewAttached) {
-//                        return@Consumer
-//                    }
-//                    decideNextActivity()
-//                }, Consumer<Throwable> { throwable ->
-//                    Log.d(TAG, "xyz--Consumer-accept--" + throwable.message)
-//                    if (!isViewAttached) {
-//                        return@Consumer
-//                    }
-//                    mvpView.onError(R.string.some_error)
-//                    decideNextActivity()
-//                }))
+//        mvpView.startSyncService()
+        compositeDisposable.add(
+                dataManager.seedDatabaseQuestions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(Consumer<Boolean> { aBoolean ->
+                    DebugLog.d("xyz--subscribe-accept--" + aBoolean!!)
+
+                    if (!isViewAttached) {
+                        return@Consumer
+                    }
+                    decideNextActivity()
+                }, Consumer<Throwable> { throwable ->
+                    DebugLog.d("xyz--Consumer-accept--" + throwable.message)
+                    if (!isViewAttached) {
+                        return@Consumer
+                    }
+                    mvpView.onError(R.string.some_error)
+                    decideNextActivity()
+                }))
     }
 
-    fun checkToken() {
-//        mvpView?.apply {
-//            showLoading()
-//            val d = object : DisposableObserver<AccessToken>() {
-//                override fun onComplete() {
-//                    openMainActivity()
-//                }
-//
-//                override fun onError(e: Throwable?) {
-//                    when (e) {
-//                        is HttpException -> {
-//                            DebugLog.e("connect failed---------")
-//                        }
-//                        is IOException -> {
-//                            DebugLog.e("no internet connection ----------------")
-//                        }
-//                    }
-//                }
-//
-//                override fun onNext(t: AccessToken?) {
-//                    if (isViewAttached) {
-//                        openMainActivity()
-//                        val tk = t?.accessToken
-//                        dataManager.accessToken = tk
-//                        dataManager.currentUserLoggedInMode = DataMng.LoggedInMode.LOGGED_IN_MODE_SERVER_DEFAULT.type
-//                        DebugLog.e("tk-----------------$tk")
-//                    }
-//                }
-//            }
-//            dataManager.getAccessTokenAndLogin(NetConstants.DEFAULT_USERNAME, NetConstants.PASSWORD, null)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(d)
-//            compositeDisposable.add(d)
-//        }
-    }
 
-//    private fun decideNextActivity() {
-//        if (dataManager.currentUserLoggedInMode == DataMng.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.type) {
-//            mvpView!!.openLoginActivity()
-//        } else {
-//            mvpView!!.openMainActivity()
-//        }
-//    }
+    private fun decideNextActivity() {
+        mvpView!!.openMainActivity()
+    }
 
     companion object {
 
-        private val TAG = "SplashPresenter"
     }
 }

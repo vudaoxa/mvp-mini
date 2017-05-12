@@ -15,8 +15,6 @@
 
 package net.mfilm.di.modules
 
-//import net.mfilm.ui.login.LoginPresenter
-
 import android.app.Activity
 import android.content.Context
 import dagger.Module
@@ -36,9 +34,6 @@ import net.mfilm.ui.main.MainPresenter
 import net.mfilm.ui.splash.SplashMvpPresenter
 import net.mfilm.ui.splash.SplashMvpView
 import net.mfilm.ui.splash.SplashPresenter
-import net.mfilm.ui.videos.base.VideoMvpPresenter
-import net.mfilm.ui.videos.base.VideoMvpView
-import net.mfilm.ui.videos.base.VideoPresenter
 
 /**
  * Created by janisharali on 27/01/17.
@@ -88,12 +83,6 @@ class ActModule(val mActivity: Activity) {
 
     @Provides
     fun provideHomePresenter(presenter: HomePresenter<HomeMVPView>): HomeMvpPresenter<HomeMVPView> {
-        return presenter
-    }
-
-    @Provides
-    @PerActivity
-    fun provideVideoMvpPresenter(presenter: VideoPresenter<VideoMvpView>): VideoMvpPresenter<VideoMvpView> {
         return presenter
     }
 }

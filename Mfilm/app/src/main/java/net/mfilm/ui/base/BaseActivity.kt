@@ -51,7 +51,9 @@ abstract class BaseActivity : AppCompatActivity(), MvpView, BaseFragment.Callbac
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.navigationBarColor = resources.getColor(R.color.colorPrimary)
+        }
         mActComponent = DaggerActComponent.builder()
                 .actModule(ActModule(this))
                 .appComponent(MApplication.instance.mAppComponent)

@@ -13,17 +13,18 @@
  * limitations under the License
  */
 
-package net.mfilm.ui.base.stack
+package  net.mfilm.ui.base.stack
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.StringRes
+import android.support.v4.app.Fragment
 import android.view.View
-import com.tieudieu.fragmentstackmanager.BaseFragmentStack
-
-import net.mfilm.di.components.ActComponent
 import net.mfilm.ui.base.MvpView
-
+import net.mfilm.ui.base.stack.BaseStackActivity
+import net.mfilm.utils.anim
+import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 
 /**
  * Created by janisharali on 27/01/17.
@@ -36,13 +37,13 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initField()
         setHasOptionsMenu(false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
+        initFields()
+        initViews()
     }
 
     override fun onAttach(context: Context?) {
@@ -61,6 +62,13 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
         baseActivity?.hideLoading()
     }
 
+    override fun onFailure() {
+        baseActivity?.onFailure()
+    }
+
+    override fun onNoInternetConnections() {
+        baseActivity?.onNoInternetConnections()
+    }
     override fun onError(message: String?) {
         baseActivity?.onError(message)
     }
@@ -92,12 +100,39 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
         baseActivity?.openActivityOnTokenExpire()
     }
 
-    val activityComponent: ActComponent
+    val activityComponent: ActivityComponent
         get() = baseActivity!!.activityComponent
 
-    protected abstract fun initView()
+    fun attachChildFragment(view: View, containerId: Int, fragment: Fragment?) {
+        val fm = childFragmentManager
+        val ft = fm.beginTransaction()
+        if (fragment == null || fragment.isAdded || fragment.isInLayout) {
+            return
+        }
+        Handler().postDelayed({
+            ft.add(containerId, fragment)
+            view.startAnimation(anim)
+            view.postOnAnimationDelayed({ ft.commit() }, 250)
+        }, 150)
+    }
 
-    protected abstract fun initField()
+    fun removeChildFragment(containerId: Int) {
+        // remove
+        try {
+            val fm = childFragmentManager
+            val fragment = fm.findFragmentById(containerId) ?: return
+            if (!fragment.isAdded) return
+            val ft = fm.beginTransaction()
+            ft.remove(fragment)
+            ft.commit()
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        }
+    }
+
+    protected abstract fun initViews()
+
+    protected abstract fun initFields()
 
     interface Callback {
 
@@ -105,4 +140,10 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
 
         fun onFragmentDetached(tag: String)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+
 }

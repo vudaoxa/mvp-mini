@@ -34,7 +34,6 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(AppModule::class, NetModule::class))
 interface AppComponent {
     fun inject(app: MApplication)
-    //    fun inject(service: SyncService)
     @AppContext
     fun context(): Context
 
@@ -46,10 +45,8 @@ interface AppComponent {
 @Component(dependencies = arrayOf(AppComponent::class), modules = arrayOf(ActModule::class))
 interface ActComponent {
     fun inject(activity: MainActivity)
-    //    fun inject(activity: LoginActivity)
     fun inject(activity: SplashActivity)
 
     fun inject(fragment: AboutFragment)
     fun inject(fragment: HomeFragment)
-//    fun inject(fragment: LoginFragment)
 }

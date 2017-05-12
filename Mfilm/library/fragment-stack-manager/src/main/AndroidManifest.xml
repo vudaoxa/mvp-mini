@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tieudieu.fragmentstackmanager">
+    package="vn.tieudieu.fragmentstackmanager">
 
     <application
         android:allowBackup="true"

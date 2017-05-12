@@ -33,5 +33,7 @@ interface MvpView {
     fun onError(@StringRes resId: Int)
     fun onError(message: String?)
     val isNetworkConnected: Boolean
+    fun onNoInternetConnections()
+    fun onFailure()
     fun hideKeyboard()
 }
