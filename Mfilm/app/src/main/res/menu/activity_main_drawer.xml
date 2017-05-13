@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_acc_info"
+            android:icon="@drawable/ic_menu_acc_info"
+            android:title="@string/history" />
+        <item
+            android:id="@+id/nav_change_pass"
+            android:icon="@drawable/ic_menu_change_pass"
+            android:title="@string/favorites" />
+        <item
+            android:id="@+id/nav_tut"
+            android:icon="@drawable/ic_menu_tut"
+            android:title="@string/playlist" />
+    </group>
+</menu>

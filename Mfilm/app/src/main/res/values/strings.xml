@@ -1,5 +1,8 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Mfilm</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="action_settings">Settings</string>
     <string name="home">Home</string>
     <string name="categories">Categories</string>
@@ -12,6 +15,115 @@
     <string name="connection_error">Internet connection lost!</string>
     <string name="text_all_click_back_exit_app">Press back 1 more time to exit</string>
     <string name="redo">Try again</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="OK">OK</string>
+    <string name="skip">Skip</string>
+    <string name="thanks">Thanks</string>
+    <string name="end">Finish</string>
+    <string name="send">Send</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="to_cancel">Are you sure to cancel?</string>
+    <string name="error_conection">Failed to connect!</string>
+    <string name="internet_no_conection">No internet connections</string>
+    <string name="empty_data">Data empty</string>
+
+    <string name="history">History</string>
+    <string name="library">Favorites</string>
+    <string name="playlist">Playlist</string>
+    <string name="trending">Trending</string>
+    <string name="music_genres">Music Genres</string>
+    <string-array name="array_music_genres">
+        <item>Alternative</item>
+        <item>Blues</item>
+        <item>Classical</item>
+        <item>Club</item>
+        <item>Electronic</item>
+        <item>Folk</item>
+        <item>Hip-hop / Rap</item>
+        <item>Instrumental</item>
+        <item>Jazz</item>
+        <item>Karaoke</item>
+        <item>Latino</item>
+        <item>Minimal House</item>
+        <item>Psychedelic</item>
+        <!--<item>R&#39;B / Soul</item>-->
+        <item>Reggae</item>
+        <item>Rock</item>
+        <item>Techno</item>
+        <item>Trance</item>
+    </string-array>
+    <string name="music_services">Music Services</string>
+    <string name="listen_during">Listen During</string>
+    <string-array name="array_listen_during">
+        <item>Celebration</item>
+        <item>Chilling</item>
+        <item>Cooking</item>
+        <item>Drinking</item>
+        <item>Driving</item>
+        <item>Exercise</item>
+        <item>Jogging</item>
+        <item>Party</item>
+        <item>Playing Games</item>
+        <item>Relaxing</item>
+        <item>Making Love</item>
+        <item>Sleeping</item>
+        <item>Summer</item>
+        <item>Traveling</item>
+        <item>Vacation</item>
+        <item>Weed Smoking</item>
+        <item>Working</item>
+    </string-array>
+
+    <string name="high_in_chart">High in charts today</string>
+    <!--<string name="feeling">I&#39; feeling</string>-->
+    <string-array name="array_feeling">
+        <item>Aggressive</item>
+        <item>Bored</item>
+        <item>Celebratory</item>
+        <item>Chill</item>
+        <item>Dramatic</item>
+        <item>Dreamy</item>
+        <item>Energized</item>
+        <item>Euphoric</item>
+        <item>Excited</item>
+        <item>Exotic</item>
+        <item>Happy</item>
+        <item>Heart Broken</item>
+        <item>In Love</item>
+        <item>Sensual</item>
+        <item>Sleepy</item>
+    </string-array>
+    <string name="search">Search</string>
+    <string name="edit">Edit</string>
+    <string name="filter_tracks">Filter tracks</string>
+    <string name="done">Done</string>
+    <string name="select_all">Select All</string>
+    <string name="delete">Delete</string>
+    <string name="menu_add_to_favorites">Add to Favorites</string>
+    <string name="menu_add_to_playlist">Add to Playlist</string>
+    <string name="menu_sharing">Share with Friends</string>
+    <string name="menu_copy_url">Copy Share URL</string>
+    <string name="add_tracks">Add Tracks</string>
+    <string name="playlist_no_song">You have no songs here. Tap on Add Tracks to add some from Favorites</string>
+    <string name="fav_no_song">You have no songs here! Add your music from Discover or Search and start listening now</string>
+    <string name="add">Add</string>
+    <!--<string name=""></string>-->
+    <!--<string name=""></string>-->
+    <string name="date">Date</string>
+    <string name="title">Title</string>
+    <string name="duration">Duration</string>
+    <string name="arrange_by">Arrange by %s</string>
+    <string name="new_playlist">New Playlist</string>
+    <string name="count_tracks">%d tracks</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="streaming_quality">Streaming Quality</string>
+    <string name="choose_country">Choose Country</string>
+    <string name="share_app">Share this app with your friends</string>
+    <string name="review_app">Review this app</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="restore_purchases">Restore Purchases</string>
 
     <!--Video Message-->
     <string name="selection_disabled">Disabled</string>

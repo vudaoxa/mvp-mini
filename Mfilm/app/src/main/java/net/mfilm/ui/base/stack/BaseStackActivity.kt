@@ -26,11 +26,21 @@ import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.ActionBarDrawerToggle
+import android.text.TextUtils
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import com.tieudieu.fragmentstackmanager.BaseActivityFragmentStack
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.di.components.ActComponent
+import net.mfilm.di.components.DaggerActComponent
+import net.mfilm.di.modules.ActModule
 import net.mfilm.ui.base.BaseFragment
 import net.mfilm.ui.base.MvpView
 import net.mfilm.ui.videos.model.MPlayer
@@ -46,15 +56,16 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     private var mProgressDialog: ProgressDialog? = null
     lateinit var activityComponent: ActComponent
         private set
-//    private var mUnBinder: Unbinder? = null
+    var mMenu: Menu? = null
+    var mToggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        activityComponent = D.builder()
-//                .activityModule(ActModule(this))
-//                .applicationComponent(MApplication.instance.mAppComponent)
-//                .build()
+        activityComponent = DaggerActComponent.builder()
+                .actModule(ActModule(this))
+                .appComponent(MApplication.instance.mAppComponent)
+                .build()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -80,7 +91,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     override fun hideLoading() {
         mProgressDialog?.apply {
-            if (!isShowing)
+            if (isShowing)
                 cancel()
         }
     }
@@ -131,5 +142,47 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 //        finish()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        when (item.itemId) {
+            R.id.action_settings -> {
+                onSettings()
+            }
+        }
+        return true
+    }
+
+    fun setToolbarTitle(title: String?) {
+        toolbar_title.text = if (!TextUtils.isEmpty(title)) title else getString(R.string.app_name)
+    }
+
+    fun showBtnBack(visi: Boolean) {
+        toolbar_back.visibility = if (visi) View.VISIBLE else View.GONE
+    }
+
+    fun showBtnBack() {
+        toolbar_back.visibility = View.VISIBLE
+        toolbar.navigationIcon = null
+    }
+
+    protected fun showDrawer() {
+        toolbar_back.visibility = (View.GONE)
+        syncStateDrawer()
+    }
+
+    protected fun syncStateDrawer() {
+        drawer_layout.post({ mToggle?.syncState() })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.main, menu)
+        mMenu = menu
+        return true
+    }
+
+    abstract fun onSettings()
     abstract fun playVideo(mPlayer: MPlayer?)
 }

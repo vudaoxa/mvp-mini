@@ -6,13 +6,15 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
+import android.support.v7.app.ActionBarDrawerToggle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
 import com.github.pedrovgs.DraggableListener
+import com.tieudieu.fragmentstackmanager.BaseFragmentStack
 import com.tieudieu.util.DebugLog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -26,13 +28,11 @@ import net.mfilm.ui.videos.model.MPlayer
 import net.mfilm.utils.AppConstants
 import javax.inject.Inject
 
-class MainActivity : BaseStackActivity(), MainMvpView, VideoMvpView {
+class MainActivity : NavigationView.OnNavigationItemSelectedListener, BaseStackActivity(), MainMvpView, VideoMvpView {
     @Inject
     lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
     @Inject
     lateinit var mVideoPresenter: VideoMvpPresenter<VideoMvpView>
-    //    @Inject
-//    lateinit var mLoginPresenter: LoginMvpPresenter<LoginMvpView>
     private var mDoubleBackToExitPressedOnce = false
     internal var fragmentVideo: Fragment? = null
     internal var mOrientation = Configuration.ORIENTATION_PORTRAIT
@@ -47,7 +47,18 @@ class MainActivity : BaseStackActivity(), MainMvpView, VideoMvpView {
     }
 
     private fun initView() {
-        setSupportActionBar(toolbar)
+        toolbar?.apply {
+            setSupportActionBar(this)
+            supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
+        }
+        mToggle = ActionBarDrawerToggle(
+                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        mToggle?.apply {
+            drawer_layout.addDrawerListener(this)
+            syncState()
+        }
+        nav_view.setNavigationItemSelectedListener(this)
+        toolbar_back.setOnClickListener { onBackPressed() }
     }
 
     override fun onBackPressed() {
@@ -87,6 +98,29 @@ class MainActivity : BaseStackActivity(), MainMvpView, VideoMvpView {
     override fun onNewScreenRequested(indexTag: Int, fragment: Fragment?, obj: Any?) {
     }
 
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
+//        when (item.itemId) {
+//            R.id.nav_home -> {
+//                fragmentStackManager.clearStack()
+////                fragmentStackManager.swapFragment(HomePagerFragment.newInstance())
+//            }
+//            R.id.nav_acc_info -> {
+//
+//            }
+//            R.id.nav_change_pass -> {
+//
+//            }
+//            R.id.nav_tut -> {
+//
+//            }
+//            R.id.nav_exit -> {
+//
+//            }
+//        }
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
+    }
     /**
      * OVERRIDE FRAGMENT STACK
      */
@@ -109,9 +143,26 @@ class MainActivity : BaseStackActivity(), MainMvpView, VideoMvpView {
     }
 
     override fun onFragmentEntered(fragment: Fragment?) {
-
+        setToolbarTitle((fragment as BaseFragmentStack).title)
+        if (fragment.showBackButton()) {
+            showBtnBack()
+        } else {
+            showDrawer()
+        }
+        var home = false
+        when (fragment) {
+            is TabsFragment -> {
+                home = true
+            }
+        }
+        mMenu?.apply {
+            findItem(R.id.action_settings).isVisible = home
+        }
     }
 
+    override fun onSettings() {
+
+    }
 
     // End fragment stack
 
@@ -241,8 +292,8 @@ class MainActivity : BaseStackActivity(), MainMvpView, VideoMvpView {
 
     @Synchronized private fun exitFullScreenVideo(): Boolean {
         val playerView = fragmentVideo?.getView()
-        container_video_full_screen.removeView(playerView)
-        container_video_full_screen.setVisibility(View.INVISIBLE)
+//        container_video_full_screen.removeView(playerView)
+//        container_video_full_screen.setVisibility(View.INVISIBLE)
         val playerParent = findViewById(R.id.drag_view) as ViewGroup
         val width = playerParent.width
 
@@ -280,16 +331,16 @@ class MainActivity : BaseStackActivity(), MainMvpView, VideoMvpView {
         val playerParent = findViewById(R.id.drag_view) as ViewGroup
         playerParent.removeView(playerView)
 
-        container_video_full_screen.setVisibility(View.VISIBLE)
-        val width = container_video_full_screen.getWidth()
-        val height = container_video_full_screen.getHeight()
-        DebugLog.d("xyz---player~LANDSCAPE-WIDTH-" + width)
-        DebugLog.d("xyz---player~LANDSCAPE-HEIGHT-" + height)
-        playerView!!.layoutParams.width = width
-        playerView.layoutParams.height = height
-        playerView.requestLayout()
-        container_video_full_screen.addView(playerView, playerView.layoutParams)
-        container_video_full_screen.requestLayout()
+//        container_video_full_screen.setVisibility(View.VISIBLE)
+//        val width = container_video_full_screen.getWidth()
+//        val height = container_video_full_screen.getHeight()
+//        DebugLog.d("xyz---player~LANDSCAPE-WIDTH-" + width)
+//        DebugLog.d("xyz---player~LANDSCAPE-HEIGHT-" + height)
+//        playerView!!.layoutParams.width = width
+//        playerView.layoutParams.height = height
+//        playerView.requestLayout()
+//        container_video_full_screen.addView(playerView, playerView.layoutParams)
+//        container_video_full_screen.requestLayout()
         return true
     }
 
