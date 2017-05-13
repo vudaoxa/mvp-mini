@@ -1,7 +1,5 @@
 package net.mfilm.di.components
 
-//import net.mfilm.ui.login.LoginActivity
-//import net.mfilm.ui.login.LoginFragment
 import android.app.Application
 import android.content.Context
 import dagger.Component

@@ -13,23 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.github.pedrovgs.DraggablePanel
-        android:id="@+id/draggable_panel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:enable_horizontal_alpha_effect="false"
-        app:top_fragment_height="@dimen/top_fragment_height"
-        app:top_fragment_margin_bottom="@dimen/top_fragment_margin"
-        app:top_fragment_margin_right="@dimen/top_fragment_margin"
-        app:x_scale_factor="@dimen/x_scale_factor"
-        app:y_scale_factor="@dimen/y_scale_factor" />
-
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/black"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />

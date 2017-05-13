@@ -30,6 +30,11 @@ import javax.inject.Inject
  */
 
 class AboutFragment : BaseFragment(), AboutMvpView {
+    override fun onNoInternetConnections() {
+    }
+
+    override fun onFailure() {
+    }
 
     @Inject
     lateinit var mPresenter: AboutMvpPresenter<AboutMvpView>

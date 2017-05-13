@@ -91,12 +91,7 @@ android {
         compile "com.joanzapata.iconify:android-iconify-fontawesome:$rootProject.iconifyVersion"
         compile "com.joanzapata.iconify:android-iconify-ionicons:$rootProject.iconifyVersion"
 
-        //DraggablePanel
-        compile "com.github.pedrovgs:draggablepanel:$rootProject.draggablepanelVersion"
 
-        // ExoPlayer
-        compile 'com.google.android.exoplayer:exoplayer:r2.2.0'
-        compile 'com.minimize.library:seekbar-compat:0.2.5'
     }
     repositories {
 //        mavenCentral()

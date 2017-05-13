@@ -6,6 +6,7 @@
     <string name="home">Home</string>
     <string name="categories">Categories</string>
     <string name="favorites">Favorites</string>
+    <string name="history">History</string>
 
     <!--App Message-->
     <string name="api_retry_error">Please retry!</string>

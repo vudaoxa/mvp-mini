@@ -23,7 +23,7 @@ class TabsFragment : BaseStackFragment() {
     }
 
     internal var prevMenuItem: MenuItem? = null
-    override fun initView() {
+    override fun initViews() {
         viewpager.apply {
             offscreenPageLimit = SIZE_TABS
             adapter = TabsPagerAdapter(fragmentManager, SIZE_TABS)
@@ -64,7 +64,7 @@ class TabsFragment : BaseStackFragment() {
         }
     }
 
-    override fun initField() {
+    override fun initFields() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

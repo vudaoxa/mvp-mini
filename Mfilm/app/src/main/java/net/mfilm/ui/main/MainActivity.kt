@@ -2,7 +2,6 @@ package net.mfilm.ui.main
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
@@ -12,16 +11,12 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import com.github.pedrovgs.DraggableListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.home.HomeFragment
-import net.mfilm.ui.tabs.TabsFragment
 import net.mfilm.utils.AppConstants
 import net.mfilm.utils.DebugLog
 import javax.inject.Inject
@@ -38,10 +33,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     @Inject
     lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
-//    @Inject
-//    lateinit var mVideoPresenter: VideoMvpPresenter<VideoMvpView>
-    //    @Inject
-//    lateinit var mLoginPresenter: LoginMvpPresenter<LoginMvpView>
     private var mDoubleBackToExitPressedOnce = false
     internal var fragmentVideo: Fragment? = null
     internal var mOrientation = Configuration.ORIENTATION_PORTRAIT
@@ -128,7 +119,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun onFragmentEntered(fragment: Fragment?) {
 
     }
-
 
     // End fragment stack
 

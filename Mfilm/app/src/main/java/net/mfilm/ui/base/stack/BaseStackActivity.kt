@@ -35,6 +35,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import net.mfilm.MApplication
 import net.mfilm.R
+import net.mfilm.di.components.ActComponent
+import net.mfilm.di.components.DaggerActComponent
+import net.mfilm.di.modules.ActModule
 import net.mfilm.ui.base.BaseFragment
 import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.AppConstants
@@ -50,7 +53,7 @@ import vn.tieudieu.fragmentstackmanager.BaseActivityFragmentStack
 
 abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFragment.Callback {
     private var mProgressDialog: ProgressDialog? = null
-    lateinit var activityComponent: ActivityComponent
+    lateinit var activityComponent: ActComponent
         private set
     var mMenu: Menu? = null
     var mToggle: ActionBarDrawerToggle? = null
@@ -60,9 +63,9 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.navigationBarColor = resources.getColor(R.color.colorPrimary)
         }
-        activityComponent = DaggerActivityComponent.builder()
-                .activityModule(ActivityModule(this))
-                .applicationComponent(MApplication.instance.mAppComponent)
+        activityComponent = DaggerActComponent.builder()
+                .actModule(ActModule(this))
+                .appComponent(MApplication.instance.mAppComponent)
                 .build()
     }
 
@@ -103,11 +106,6 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         onError(R.string.error_conection)
     }
     override fun onError(message: String?) {
-//        message?.apply {
-//            showSnackBar(this)
-//        } ?: let {
-//            showSnackBar(getString(R.string.some_error))
-//        }
         DebugLog.e(message)
         hideLoading()
         MApplication.instance.showMessage(AppConstants.TYPE_TOAST_ERROR, message!!)

@@ -21,8 +21,8 @@ import android.os.Handler
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.view.View
+import net.mfilm.di.components.ActComponent
 import net.mfilm.ui.base.MvpView
-import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.utils.anim
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 
@@ -100,7 +100,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
         baseActivity?.openActivityOnTokenExpire()
     }
 
-    val activityComponent: ActivityComponent
+    val activityComponent: ActComponent
         get() = baseActivity!!.activityComponent
 
     fun attachChildFragment(view: View, containerId: Int, fragment: Fragment?) {

@@ -19,10 +19,10 @@ class HomeFragment : BaseStackFragment(), HomeMVPView {
         return inflater!!.inflate(R.layout.fragment_scrolling, container, false)
     }
 
-    override fun initView() {
+    override fun initViews() {
     }
 
-    override fun initField() {
+    override fun initFields() {
     }
 
     companion object {

@@ -2,8 +2,6 @@ package net.mfilm
 
 import android.app.Application
 import android.support.annotation.StringRes
-import com.google.android.exoplayer2.upstream.*
-import com.google.android.exoplayer2.util.Util
 import net.mfilm.di.AppModule
 import net.mfilm.di.components.AppComponent
 import net.mfilm.di.components.DaggerAppComponent
@@ -40,7 +38,6 @@ class MApplication : Application() {
         mAppComponent.inject(this)
 
         CalligraphyConfig.initDefault(mCalligraphyConfig)
-        userAgent = Util.getUserAgent(this, "VLOT")
         instance = this
     }
 
@@ -58,13 +55,6 @@ class MApplication : Application() {
         return BuildConfig.FLAVOR == WITH_EXT
     }
 
-    fun buildDataSourceFactory(bandwidthMeter: DefaultBandwidthMeter?): DataSource.Factory {
-        return DefaultDataSourceFactory(this, bandwidthMeter, buildHttpDataSourceFactory(bandwidthMeter))
-    }
-
-    fun buildHttpDataSourceFactory(bandwidthMeter: DefaultBandwidthMeter?): HttpDataSource.Factory {
-        return DefaultHttpDataSourceFactory(userAgent, bandwidthMeter)
-    }
 
     companion object {
         lateinit var instance: MApplication

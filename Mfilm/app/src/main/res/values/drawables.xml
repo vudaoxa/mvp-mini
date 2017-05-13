@@ -1,0 +1,5 @@
+<resources>
+    <item name="ic_menu_home" type="drawable">@drawable/ic_home_black_24dp</item>
+    <item name="ic_menu_acc_info" type="drawable">@drawable/ic_history_black_24dp</item>
+    <item name="ic_menu_change_pass" type="drawable">@drawable/ic_thumb_up_black_24dp</item>
+</resources>

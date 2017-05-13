@@ -104,7 +104,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
             val ft = mInitializationParams!!.fragmentManager.beginTransaction()
             if (mInitializationParams!!.isAnimationEnabled) {
                 // ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_right_in, 0, 0);
-                ft.setCustomAnimations(vn.tieudieu.fragmentstackmanager.R.anim.slide_left_in, 0, 0, 0)
+                ft.setCustomAnimations(R.anim.slide_left_in, 0, 0, 0)
             }
             ft.add(mInitializationParams!!.contentFrame, fragment)
             if (stackFragments!!.size > 0) {
@@ -145,7 +145,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
             if (stackEntries >= 2) {
                 val ft = mInitializationParams!!.fragmentManager.beginTransaction()
                 if (mInitializationParams!!.isAnimationEnabled) {
-                    ft.setCustomAnimations(0, vn.tieudieu.fragmentstackmanager.R.anim.slide_right_out, 0, 0)
+                    ft.setCustomAnimations(0, R.anim.slide_right_out, 0, 0)
                 }
                 stackFragments!!.lastElement().onPause()
                 ft.remove(stackFragments!!.pop())
@@ -163,9 +163,6 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
     }
 
     override fun clearStack() {
-        if (mInitializationParams!!.homeClass == null) {
-            clearStackAll()
-        }
         val operation = Runnable {
             mInitializationParams!!.fragmentManager.executePendingTransactions()
             val ft = mInitializationParams!!.fragmentManager.beginTransaction()
