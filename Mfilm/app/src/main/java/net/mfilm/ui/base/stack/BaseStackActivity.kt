@@ -15,8 +15,6 @@
 
 package net.mfilm.ui.base.stack
 
-//import net.mfilm.ui.login.LoginActivity
-
 import android.annotation.TargetApi
 import android.app.ProgressDialog
 import android.content.Context
