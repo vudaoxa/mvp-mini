@@ -53,12 +53,10 @@ class NetModule(private val param: String) {
     @Singleton
     fun provideOkHttpClient(cache: Cache): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
-//        val interceptorRefreshToken = InterceptorRefreshToken()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder()
                 .cache(cache)
                 .addInterceptor(loggingInterceptor)
-//                .addInterceptor(interceptorRefreshToken)
                 .build()
         return client
     }

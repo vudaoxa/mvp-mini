@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_thumb"
+        android:layout_width="@dimen/dimen150"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="0dp"
+        fresco:failureImage="@drawable/ic_defaut_grey"
+        fresco:failureImageScaleType="fitXY"
+        fresco:placeholderImage="@drawable/ic_defaut_grey"
+        fresco:placeholderImageScaleType="centerCrop"
+        fresco:progressBarAutoRotateInterval="1000"
+        fresco:progressBarImage="@drawable/ic_loading_image"
+        fresco:progressBarImageScaleType="centerInside"
+        fresco:retryImageScaleType="centerCrop"
+        fresco:viewAspectRatio="0.8"
+
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/TextStyle.Regular.20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="tokyo hot"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:id="@+id/tv_other_name"
+            style="@style/TextStyle.Regular.14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="ten khac: xyz" />
+
+        <TextView
+            android:id="@+id/tv_author"
+            style="@style/TextStyle.Regular.14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="tac gia: xxx" />
+
+        <TextView
+            android:id="@+id/tv_categories"
+            style="@style/TextStyle.Regular.14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="the loai: xxx" />
+
+        <TextView
+            android:id="@+id/tv_chaps_count"
+            style="@style/TextStyle.Regular.14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="so chap: 20" />
+
+        <TextView
+            android:id="@+id/tv_updated_at"
+            style="@style/TextStyle.Regular.14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="cap nhat: 18:45 15/05" />
+    </LinearLayout>
+</LinearLayout>

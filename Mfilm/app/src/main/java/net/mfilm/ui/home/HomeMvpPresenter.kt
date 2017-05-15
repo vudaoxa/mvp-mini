@@ -7,5 +7,6 @@ import net.mfilm.ui.base.MvpPresenter
  */
 
 interface HomeMvpPresenter<V : HomeMVPView> : MvpPresenter<V> {
-    fun getApiHome()
+    fun requestMangas(category: Int?, limit: Int, page: Int
+                      , sort: String, search: String?)
 }

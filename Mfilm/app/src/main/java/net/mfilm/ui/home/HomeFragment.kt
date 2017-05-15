@@ -1,19 +1,34 @@
 package net.mfilm.ui.home
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import net.mfilm.R
+import net.mfilm.data.network_retrofit.Manga
+import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.utils.DebugLog
+import net.mfilm.utils.filters
 import javax.inject.Inject
 
 /**
  * Created by tusi on 4/2/17.
  */
 class HomeFragment : BaseStackFragment(), HomeMVPView {
+    companion object {
+        fun newInstance(): HomeFragment {
+            val args = Bundle()
+            val fragment = HomeFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     @Inject
     lateinit var mPresenter: HomeMvpPresenter<HomeMVPView>
 
@@ -22,23 +37,66 @@ class HomeFragment : BaseStackFragment(), HomeMVPView {
     }
 
     override fun initViews() {
-        buildSpnBanks(listOf(R.string.az, R.string.hottest, R.string.newest))
+
+        buildSpnBanks()
+        rv.apply {
+            layoutManager = LinearLayoutManager(context)
+        }
+        requestMangas()
     }
 
     override fun initFields() {
+        activityComponent.inject(this)
+        mPresenter.onAttach(this)
     }
 
-    fun buildSpnBanks(banks: List<Int>) {
-        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, banks.map { getString(it) })
-//        banksAdapter.setDropDownViewResource(R.layout.row_spn_dropdown)
-        spn_filter.setAdapter(banksAdapter)
-    }
-    companion object {
-        fun newInstance(): HomeFragment {
-            val args = Bundle()
-            val fragment = HomeFragment()
-            fragment.arguments = args
-            return fragment
+    inner class AdapterTracker : AdapterView.OnItemSelectedListener {
+        var mPosition = 0
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+
         }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            mPosition = position
+        }
+
+    }
+
+    val spnFilterTracker = AdapterTracker()
+    fun buildSpnBanks() {
+        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, filters.map { getString(it.resId) })
+        spn_filter.setAdapter(banksAdapter)
+        spn_filter.setOnItemSelectedListener(spnFilterTracker)
+    }
+
+    override fun requestMangas() {
+        mPresenter.requestMangas(null, 10, 1, filters[spnFilterTracker.mPosition].content, null)
+    }
+
+    override fun onMangasResponse(mangasResponse: MangasResponse?) {
+        hideLoading()
+        mangasResponse.let { mr ->
+            mr?.apply {
+                mr.mangasPaging.let { mp ->
+                    mp?.apply {
+                        mp.mangas.let { mgs ->
+                            mgs?.apply {
+                                if (mgs.isNotEmpty()) {
+
+                                } else onMangasNull()
+                            } ?: let { onMangasNull() }
+                        }
+                    } ?: let { onMangasNull() }
+                }
+            } ?: let { onMangasNull() }
+        }
+    }
+
+    override fun onMangasNull() {
+        DebugLog.e("----------------onMangasNull-----------------")
+    }
+
+    override fun initMangas(mangas: List<Manga>) {
+
     }
 }

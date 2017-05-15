@@ -16,11 +16,8 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
-import net.mfilm.ui.tabs.TabsFragment
-import net.mfilm.utils.AppConstants
-import net.mfilm.utils.DebugLog
-import net.mfilm.utils.IndexTags
-import net.mfilm.utils.icon_search
+import net.mfilm.ui.home.pager.HomePagerFragment
+import net.mfilm.utils.*
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 import javax.inject.Inject
 
@@ -46,6 +43,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         activityComponent.inject(this)
         mMainPresenter.onAttach(this)
         initViews()
+        initFilters()
     }
 
     override fun initViews() {
@@ -104,7 +102,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         when (indexTag) {
             IndexTags.FRAGMENT_HOME -> {
                 fragmentStackManager.clearStack()
-                fragmentStackManager.swapFragment(TabsFragment.newInstance())
+                fragmentStackManager.swapFragment(HomePagerFragment.newInstance())
             }
         }
     }
@@ -123,11 +121,11 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         get() = R.id.container
 
     override val homeClass: Class<*>
-        get() = TabsFragment::class.java
+        get() = HomePagerFragment::class.java
 
     override fun onMainScreenRequested() = fragmentStackManager.run {
         clearStack()
-        swapFragment(TabsFragment.newInstance())
+        swapFragment(HomePagerFragment.newInstance())
     }
 
     override fun onFragmentEntered(fragment: Fragment?) {
@@ -138,7 +136,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
             showDrawer()
         }
         mMenu?.apply {
-            findItem(R.id.action_settings).isVisible = fragment is TabsFragment
+            findItem(R.id.action_settings).isVisible = fragment is HomePagerFragment
         }
     }
 

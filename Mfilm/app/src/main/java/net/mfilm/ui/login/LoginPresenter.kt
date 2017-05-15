@@ -17,11 +17,11 @@
 //
 //
 //import net.mfilm.R
-//import net.mfilm.mangaPaging.DataMng
-//import net.mfilm.mangaPaging.networkretrofit.models.AccessToken
-//import net.mfilm.mangaPaging.networkretrofit.models.OnResponse
-//import net.mfilm.mangaPaging.networkretrofit.support.NetConstants
-//import net.mfilm.mangaPaging.networkretrofit.support.OnResponseSuccess
+//import net.mfilm.mangasPaging.DataMng
+//import net.mfilm.mangasPaging.networkretrofit.models.AccessToken
+//import net.mfilm.mangasPaging.networkretrofit.models.OnResponse
+//import net.mfilm.mangasPaging.networkretrofit.support.NetConstants
+//import net.mfilm.mangasPaging.networkretrofit.support.OnResponseSuccess
 //import net.mfilm.ui.base.BasePresenter
 //import net.mfilm.utils.CommonUtils
 //import io.reactivex.android.schedulers.AndroidSchedulers

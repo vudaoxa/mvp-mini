@@ -14,7 +14,7 @@ open class MResponse(
         var status: Boolean? = null,
         @SerializedName("message")
         @Expose
-        var message: Any? = null) : Serializable
+        var message: String? = null) : Serializable
 
 class Category : Serializable {
     @SerializedName("id")
@@ -25,7 +25,7 @@ class Category : Serializable {
     var name: String? = null
     @SerializedName("desciption")
     @Expose
-    var desciption: Any? = null
+    var desciption: String? = null
     @SerializedName("pivot")
     @Expose
     var pivot: Pivot? = null
@@ -56,7 +56,7 @@ open class MPaging : Serializable {
     var nextPageUrl: String? = null
     @SerializedName("prev_page_url")
     @Expose
-    var prevPageUrl: Any? = null
+    var prevPageUrl: String? = null
     @SerializedName("from")
     @Expose
     var from: Int? = null
@@ -65,10 +65,16 @@ open class MPaging : Serializable {
     var to: Int? = null
 }
 
-class MangaPaging : MPaging() {
+class MangasPaging : MPaging() {
     @SerializedName("data")
     @Expose
-    var data: List<Manga>? = null
+    var mangas: List<Manga>? = null
+}
+
+class MangaDetailResponse : MResponse() {
+    @SerializedName("data")
+    @Expose
+    var manga: Manga? = null
 }
 
 class Manga : Serializable {
@@ -83,7 +89,7 @@ class Manga : Serializable {
     var source: Int? = null
     @SerializedName("other_name")
     @Expose
-    var otherName: Any? = null
+    var otherName: String? = null
     @SerializedName("translator")
     @Expose
     var translator: String? = null
@@ -92,7 +98,7 @@ class Manga : Serializable {
     var status: Int? = null
     @SerializedName("author")
     @Expose
-    var author: Any? = null
+    var author: String? = null
     @SerializedName("cover_url")
     @Expose
     var coverUrl: String? = null
@@ -104,7 +110,7 @@ class Manga : Serializable {
     var summary: String? = null
     @SerializedName("note")
     @Expose
-    var note: Any? = null
+    var note: String? = null
     @SerializedName("views")
     @Expose
     var views: Int? = null
@@ -122,10 +128,10 @@ class Manga : Serializable {
     var category: List<Category>? = null
 }
 
-class MangaResponse : MResponse() {
+class MangasResponse : MResponse() {
     @SerializedName("data")
     @Expose
-    var mangaPaging: MangaPaging? = null
+    var mangasPaging: MangasPaging? = null
 }
 
 class Pivot : Serializable {
@@ -155,7 +161,7 @@ class Chapter : Serializable {
     var name: String? = null
     @SerializedName("title")
     @Expose
-    var title: Any? = null
+    var title: String? = null
     @SerializedName("release_time")
     @Expose
     var releaseTime: Int? = null
@@ -194,14 +200,14 @@ class ChapterDetailResponse : MResponse() {
     var data: ChapterDetail? = null
 }
 
-class ChapterImg : Serializable {
+class ChapterImage : Serializable {
     @SerializedName("url")
     @Expose
     var url: String? = null
 }
 
-class ChapterImgsResponse : MResponse() {
+class ChapterImagesResponse : MResponse() {
     @SerializedName("data")
     @Expose
-    var data: List<ChapterImg>? = null
+    var data: List<ChapterImage>? = null
 }

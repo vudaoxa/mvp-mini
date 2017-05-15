@@ -1,4 +1,4 @@
-package net.mfilm.ui.tabs
+package net.mfilm.ui.home.pager
 
 import android.os.Bundle
 import android.support.v4.view.ViewPager
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_tabs.*
+import kotlinx.android.synthetic.main.fragment_pager_home.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.utils.SIZE_TABS
@@ -14,10 +14,10 @@ import net.mfilm.utils.SIZE_TABS
 /**
  * Created by tusi on 3/21/17.
  */
-class TabsFragment : BaseStackFragment() {
+class HomePagerFragment : BaseStackFragment() {
     companion object {
-        fun newInstance(): TabsFragment {
-            val fragment = TabsFragment()
+        fun newInstance(): HomePagerFragment {
+            val fragment = HomePagerFragment()
             return fragment
         }
     }
@@ -25,8 +25,7 @@ class TabsFragment : BaseStackFragment() {
     internal var prevMenuItem: MenuItem? = null
     override fun initViews() {
         viewpager.apply {
-            offscreenPageLimit = SIZE_TABS
-            adapter = TabsPagerAdapter(fragmentManager, SIZE_TABS)
+            adapter = HomePagerAdapter(fragmentManager, SIZE_TABS)
             navigation.setOnNavigationItemSelectedListener { item ->
                 currentItem =
                         when (item.itemId) {
@@ -68,6 +67,6 @@ class TabsFragment : BaseStackFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_tabs, container, false)
+        return inflater?.inflate(R.layout.fragment_pager_home, container, false)
     }
 }

@@ -1,4 +1,4 @@
-package net.lc.widgets
+package net.mfilm.ui.custom
 
 import android.annotation.TargetApi
 import android.content.Context

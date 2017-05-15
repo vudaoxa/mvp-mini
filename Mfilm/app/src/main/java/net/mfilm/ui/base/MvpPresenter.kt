@@ -19,7 +19,7 @@ package net.mfilm.ui.base
  * Created by janisharali on 27/01/17.
  */
 
-//import net.mfilm.mangaPaging.networkretrofit.models.RpError
+//import net.mfilm.mangasPaging.networkretrofit.models.RpError
 
 /**
  * Every presenter in the app must either implement this interface or extend BasePresenter

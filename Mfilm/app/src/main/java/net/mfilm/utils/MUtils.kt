@@ -4,9 +4,13 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.provider.Settings
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -16,12 +20,47 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.joanzapata.iconify.fonts.IoniconsIcons
 import com.joanzapata.iconify.fonts.IoniconsModule
 import net.mfilm.R
+import net.mfilm.ui.manga.Filter
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by tusi on 4/2/17.
  */
+fun getTitleHeader(context: Context, headerResId: Int, contentResId: Int): SpannableString {
+    val header = context.getString(headerResId)
+    val content = context.getString(contentResId)
+    val r = header + " " + content
+    val res = SpannableString(r)
+    res.apply {
+        val start = header.length + 1
+        val end = start + content.length
+        setSpan(StyleSpan(Typeface.BOLD), start,
+                end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+    return res
+}
+
+fun getTitleHeader(context: Context, headerResId: Int, content: String): SpannableString {
+    val header = context.getString(headerResId)
+    val r = header + " " + content
+    val res = SpannableString(r)
+    res.apply {
+        val start = header.length + 1
+        val end = start + content.length
+        setSpan(StyleSpan(Typeface.BOLD), start,
+                end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+    return res
+}
+
+var filters = listOf<Filter>()
+fun initFilters() {
+    val filterAz = Filter(R.string.az, TYPE_FILTER_AZ)
+    val filterViews = Filter(R.string.hottest, TYPE_FILTER_VIEWS)
+    val filterTime = Filter(R.string.newest, TYPE_FILTER_TIME)
+    filters = listOf(filterAz, filterViews, filterTime)
+}
 fun initAwesome() {
     Iconify.with(FontAwesomeModule())
             .with(IoniconsModule())

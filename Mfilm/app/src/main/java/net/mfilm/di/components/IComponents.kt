@@ -5,6 +5,7 @@ import android.content.Context
 import dagger.Component
 import net.mfilm.MApplication
 import net.mfilm.data.DataMng
+import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.di.AppContext
 import net.mfilm.di.AppModule
 import net.mfilm.di.PerActivity
@@ -12,6 +13,7 @@ import net.mfilm.di.module.NetModule
 import net.mfilm.di.modules.ActModule
 import net.mfilm.di.scope.UserScope
 import net.mfilm.ui.about.AboutFragment
+import net.mfilm.ui.categories.CategoriesFragment
 import net.mfilm.ui.home.HomeFragment
 import net.mfilm.ui.main.MainActivity
 import net.mfilm.ui.splash.SplashActivity
@@ -37,6 +39,7 @@ interface AppComponent {
 
     fun application(): Application
     val dataManager: DataMng
+    val retrofitService: RetrofitService
 }
 
 @PerActivity
@@ -47,4 +50,6 @@ interface ActComponent {
 
     fun inject(fragment: AboutFragment)
     fun inject(fragment: HomeFragment)
+    fun inject(fragment: CategoriesFragment)
+
 }
