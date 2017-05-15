@@ -23,6 +23,7 @@ import net.mfilm.ui.base.MvpView
  */
 
 interface MainMvpView : MvpView {
+    fun goSearch()
     fun openLoginActivity()
     fun showAboutFragment()
     fun updateUserName(currentUserName: String)

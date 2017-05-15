@@ -49,6 +49,7 @@ android {
         })
         compile project(':library:fragment-stack-manager')
         compile project(':library:recyclerviewenhanced')
+        compile project(':library:nice-spinner-master')
 
         compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
         compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
@@ -104,4 +105,10 @@ kapt {
 }
 
 dependencies {
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.equals("lint")) {
+        task.enabled = false
+    }
 }

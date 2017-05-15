@@ -6,9 +6,7 @@ import net.mfilm.di.AppModule
 import net.mfilm.di.components.AppComponent
 import net.mfilm.di.components.DaggerAppComponent
 import net.mfilm.di.module.NetModule
-import net.mfilm.utils.AppConstants
-import net.mfilm.utils.AppToast
-import net.mfilm.utils.WITH_EXT
+import net.mfilm.utils.*
 import org.jetbrains.annotations.NotNull
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
@@ -36,7 +34,9 @@ class MApplication : Application() {
                 .build()
 
         mAppComponent.inject(this)
-
+        initAwesome()
+        initAnimations(this)
+        initIcons(this)
         CalligraphyConfig.initDefault(mCalligraphyConfig)
         instance = this
     }

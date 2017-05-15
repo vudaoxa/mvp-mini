@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_input_text"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="@dimen/dimen10"
+    android:layout_toLeftOf="@+id/btn_search"
+    android:layout_toRightOf="@+id/toolbar_title"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="gone">
+
+    <EditText
+        android:id="@+id/edt_search"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:hint="@string/search"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:singleLine="true"
+        android:text=""
+        android:textSize="15sp" />
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/img_clear"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:shadowColor="@color/shadow"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:text="@string/ion_ios_close_empty"
+        android:textColor="@color/button_effect_gray"
+        android:textSize="30sp" />
+</LinearLayout>

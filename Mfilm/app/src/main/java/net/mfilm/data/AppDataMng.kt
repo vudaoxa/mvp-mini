@@ -3,7 +3,7 @@ package net.mfilm.data
 import android.content.Context
 import io.reactivex.Observable
 import net.mfilm.data.db.DbHelper
-import net.mfilm.data.networkretrofit.RetrofitService
+import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.data.prefs.PrefsHelper
 import net.mfilm.di.AppContext
 import javax.inject.Inject

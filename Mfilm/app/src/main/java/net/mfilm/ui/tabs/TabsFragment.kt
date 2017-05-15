@@ -30,8 +30,8 @@ class TabsFragment : BaseStackFragment() {
             navigation.setOnNavigationItemSelectedListener { item ->
                 currentItem =
                         when (item.itemId) {
-                            R.id.navigation_home -> 0
-                            R.id.navigation_dashboard -> 1
+                            R.id.navigation_dashboard -> 0
+                            R.id.navigation_categories -> 1
                             else -> 2
                         }
                 return@setOnNavigationItemSelectedListener false

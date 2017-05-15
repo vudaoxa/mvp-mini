@@ -16,10 +16,9 @@
 package net.mfilm.ui.splash
 
 
-//import net.mfilm.data.networkretrofit.models.AccessToken
+//import net.mfilm.mangaPaging.networkretrofit.models.AccessToken
 //import net.mfilm.ui.login.LoginPresenter
 
-import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer

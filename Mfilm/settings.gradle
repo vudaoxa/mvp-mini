@@ -1,4 +1,5 @@
 include ':app',
         ':library:fragment-stack-manager',
-        ':library:recyclerviewenhanced'
+        ':library:recyclerviewenhanced',
+        ":library:nice-spinner-master"
 

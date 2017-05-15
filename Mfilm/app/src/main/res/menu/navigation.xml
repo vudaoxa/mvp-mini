@@ -2,18 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/home" />
-
-    <item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/categories" />
-
+        android:title="@string/dashboard" />
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/favorites" />
+        android:id="@+id/navigation_categories"
+        android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+        android:title="@string/categories" />
 
 </menu>

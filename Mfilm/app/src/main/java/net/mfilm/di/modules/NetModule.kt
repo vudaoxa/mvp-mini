@@ -8,8 +8,8 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import net.mfilm.BuildConfig
-import net.mfilm.data.networkretrofit.ApisService
-import net.mfilm.data.networkretrofit.RetrofitService
+import net.mfilm.data.network_retrofit.ApisService
+import net.mfilm.data.network_retrofit.RetrofitService
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

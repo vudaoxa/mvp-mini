@@ -10,6 +10,11 @@ import android.provider.Settings
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import com.joanzapata.iconify.IconDrawable
+import com.joanzapata.iconify.Iconify
+import com.joanzapata.iconify.fonts.FontAwesomeModule
+import com.joanzapata.iconify.fonts.IoniconsIcons
+import com.joanzapata.iconify.fonts.IoniconsModule
 import net.mfilm.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,6 +22,10 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
+fun initAwesome() {
+    Iconify.with(FontAwesomeModule())
+            .with(IoniconsModule())
+}
 var anim: Animation? = null
 var animIn: Animation? = null
 var animOut: Animation? = null
@@ -43,6 +52,26 @@ fun initAnimations(context: Context) {
     }
 }
 
+var icon_search: IconDrawable? = null
+var icon_share: IconDrawable? = null
+var icon_star: IconDrawable? = null
+var icon_star_blue: IconDrawable? = null
+var icon_send: IconDrawable? = null
+var icon_del: IconDrawable? = null
+fun initIcons(context: Context) {
+    icon_search = IconDrawable(context,
+            IoniconsIcons.ion_ios_search_strong).colorRes(R.color.white).actionBarSize()
+    icon_share = IconDrawable(context,
+            IoniconsIcons.ion_share).colorRes(R.color.grey_60).actionBarSize()
+    icon_star = IconDrawable(context,
+            IoniconsIcons.ion_ios_star).colorRes(R.color.grey_60).actionBarSize()
+    icon_star_blue = IconDrawable(context,
+            IoniconsIcons.ion_ios_star).colorRes(R.color.blue).actionBarSize()
+    icon_send = IconDrawable(context,
+            IoniconsIcons.ion_android_send).colorRes(R.color.white).actionBarSize()
+    icon_del = IconDrawable(context,
+            IoniconsIcons.ion_ios_trash).colorRes(R.color.red).actionBarSize()
+}
 fun View.show(show: Boolean) {
     if (show) {
         visibility = View.VISIBLE

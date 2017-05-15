@@ -1,4 +1,4 @@
-package net.mfilm.data.networkretrofit.support
+package net.mfilm.data.network_retrofit.support
 
 /**
  * Created by tusi on 4/2/17.

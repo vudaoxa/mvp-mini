@@ -12,5 +12,5 @@ const val TYPE_TOAST_SUCCESS = 1
 const val TYPE_TOAST_INFOR = 2
 const val TYPE_TOAST_ERROR = -1
 const val TYPE_TOAST_NOMART = 0
-const val SIZE_TABS = 3
+const val SIZE_TABS = 2
 const val WITH_EXT = "withExtensions"

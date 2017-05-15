@@ -36,13 +36,22 @@
                 <TextView
                     android:id="@+id/toolbar_title"
                     style="@style/TextStyle.Bold.16"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/dimen0"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:maxLines="1"
                     android:text="@string/app_name"
                     android:textColor="@color/white" />
-                <!--<include layout="@layout/layout_input_text"/>-->
-                <!--<include layout="@layout/item_main_action_btns"/>-->
+
+                <include layout="@layout/layout_input_text" />
+
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/actionBarItemBackground"
+                    android:padding="15dp"
+                    android:visibility="visible" />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

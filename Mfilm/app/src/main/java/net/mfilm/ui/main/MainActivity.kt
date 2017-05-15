@@ -16,9 +16,12 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
-import net.mfilm.ui.home.HomeFragment
+import net.mfilm.ui.tabs.TabsFragment
 import net.mfilm.utils.AppConstants
 import net.mfilm.utils.DebugLog
+import net.mfilm.utils.IndexTags
+import net.mfilm.utils.icon_search
+import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 import javax.inject.Inject
 
 class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView{
@@ -59,8 +62,13 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         toolbar_back.setOnClickListener { onBackPressed() }
+        btn_search.setImageDrawable(icon_search)
+        btn_search.setOnClickListener { goSearch() }
     }
 
+    override fun goSearch() {
+        DebugLog.e("---------goSearch-------------")
+    }
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -93,6 +101,12 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNewScreenRequested(indexTag: Int, typeContent: String?, obj: Any?) {
+        when (indexTag) {
+            IndexTags.FRAGMENT_HOME -> {
+                fragmentStackManager.clearStack()
+                fragmentStackManager.swapFragment(TabsFragment.newInstance())
+            }
+        }
     }
 
     override fun onNewScreenRequested(indexTag: Int, fragment: Fragment?, obj: Any?) {
@@ -109,15 +123,23 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         get() = R.id.container
 
     override val homeClass: Class<*>
-        get() = HomeFragment::class.java
+        get() = TabsFragment::class.java
 
-    override fun onMainScreenRequested() {
-        fragmentStackManager.clearStack()
-        fragmentStackManager.swapFragment(HomeFragment.newInstance())
+    override fun onMainScreenRequested() = fragmentStackManager.run {
+        clearStack()
+        swapFragment(TabsFragment.newInstance())
     }
 
     override fun onFragmentEntered(fragment: Fragment?) {
-
+        setToolbarTitle((fragment as BaseFragmentStack).title)
+        if (fragment.showBackButton()) {
+            showBtnBack()
+        } else {
+            showDrawer()
+        }
+        mMenu?.apply {
+            findItem(R.id.action_settings).isVisible = fragment is TabsFragment
+        }
     }
 
     // End fragment stack

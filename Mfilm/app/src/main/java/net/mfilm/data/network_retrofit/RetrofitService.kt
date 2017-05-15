@@ -1,4 +1,4 @@
-package net.mfilm.data.networkretrofit
+package net.mfilm.data.network_retrofit
 
 import javax.inject.Inject
 
