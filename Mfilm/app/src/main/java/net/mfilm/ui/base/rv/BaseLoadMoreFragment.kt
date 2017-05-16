@@ -10,10 +10,11 @@ import net.mfilm.utils.ICallbackLoadMore
  * Created by MRVU on 5/16/2017.
  */
 abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
+    var _pape = 1
     override var page: Int
-        get() = page
+        get() = _pape
         set(value) {
-            page = value
+            _pape = value
         }
 
     init {
@@ -35,7 +36,7 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
             if (countLoadmore > 1) {
                 hideKeyboard()
             }
-            this@BaseLoadMoreFragment.onLoadMore()
+//            this@BaseLoadMoreFragment.onLoadMore()
         }
     }
 

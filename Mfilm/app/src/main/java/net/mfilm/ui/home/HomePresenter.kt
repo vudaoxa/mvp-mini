@@ -22,7 +22,7 @@ constructor(val retrofitService: RetrofitService,
     override fun requestMangas(category: Int?, limit: Int, page: Int
                                , sort: String, search: String?) {
         if (!isViewAttached) return
-        mvpView?.showLoading()
+//        mvpView?.showLoading()
         val d = object : MDisposableObserver<MangasResponse>({ mvpView?.onError(R.string.error_conection) },
                 { mvpView?.onError(R.string.internet_no_conection) }) {
             override fun onNext(t: MangasResponse?) {

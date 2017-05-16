@@ -22,10 +22,6 @@ import javax.inject.Inject
  */
 class HomeFragment : BaseLoadMoreFragment(), HomeMVPView {
 
-    override var isDataEnd: Boolean
-        get() = false
-        set(value) {}
-
     companion object {
         fun newInstance(): HomeFragment {
             val args = Bundle()
@@ -35,10 +31,13 @@ class HomeFragment : BaseLoadMoreFragment(), HomeMVPView {
         }
     }
 
+    override var isDataEnd: Boolean
+        get() = false
+        set(value) {}
+
     @Inject
     lateinit var mPresenter: HomeMvpPresenter<HomeMVPView>
-    lateinit var mMangasRvAdapter: MangaRvAdapter
-
+    var mMangasRvAdapter: MangaRvAdapter? = null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -79,7 +78,7 @@ class HomeFragment : BaseLoadMoreFragment(), HomeMVPView {
     }
 
     override fun requestMangas() {
-        mPresenter.requestMangas(null, 10, 1, filters[spnFilterTracker.mPosition].content, null)
+        mPresenter.requestMangas(null, 10, page++, filters[spnFilterTracker.mPosition].content, null)
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
@@ -106,10 +105,24 @@ class HomeFragment : BaseLoadMoreFragment(), HomeMVPView {
     }
 
     override fun initMangas(mangas: List<Manga>) {
-
+        DebugLog.e("---------------initMangas---------------${mangas[0].coverUrl}")
+        mMangasRvAdapter?.apply {
+            onAdapterLoadMoreFinished {
+                mMangas?.addAll(mangas)
+                notifyDataSetChanged()
+            }
+        } ?: let {
+            mMangasRvAdapter = MangaRvAdapter(context, mangas.toMutableList(), this)
+            rv.adapter = mMangasRvAdapter
+        }
     }
 
     override fun onLoadMore() {
-        mMangasRvAdapter.onLoadMore()
+        DebugLog.e("--------------------onLoadMore----------------------")
+        mMangasRvAdapter?.onAdapterLoadMore { requestMangas() }
+    }
+
+    override fun onClick(position: Int, event: Int) {
+        DebugLog.e("---------------------onClick--------------------$position")
     }
 }

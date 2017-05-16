@@ -16,12 +16,12 @@ abstract class BaseRvAdapter(val mContext: Context) : RecyclerView.Adapter<Recyc
         this.mCallbackOnClick = mCallbackOnClick
     }
 
-    fun xx(f: () -> Unit) {
-        if (isFirstData) {
-            isFirstData = false
-            f()
-        } else {
-
-        }
-    }
+//    fun xx(f: () -> Unit) {
+//        if (isFirstData) {
+//            isFirstData = false
+//            f()
+//        } else {
+//
+//        }
+//    }
 }

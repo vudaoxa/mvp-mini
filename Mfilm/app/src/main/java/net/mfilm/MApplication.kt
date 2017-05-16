@@ -2,6 +2,7 @@ package net.mfilm
 
 import android.app.Application
 import android.support.annotation.StringRes
+import com.facebook.drawee.backends.pipeline.Fresco
 import net.mfilm.di.AppModule
 import net.mfilm.di.components.AppComponent
 import net.mfilm.di.components.DaggerAppComponent
@@ -37,6 +38,7 @@ class MApplication : Application() {
         initAwesome()
         initAnimations(this)
         initIcons(this)
+        Fresco.initialize(this)
         TimeUtils
         CalligraphyConfig.initDefault(mCalligraphyConfig)
         instance = this

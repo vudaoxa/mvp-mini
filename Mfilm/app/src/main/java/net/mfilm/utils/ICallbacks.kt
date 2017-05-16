@@ -21,9 +21,11 @@ interface ICallbackLoadMore {
 }
 
 interface IAdapterLoadMore {
-    fun onLoadMore()
+    fun onAdapterLoadMore()
+    fun onAdapterLoadMore(f: () -> Unit)
     fun reset()
-    fun onLoadMoreFinished()
+    fun onAdapterLoadMoreFinished()
+    fun onAdapterLoadMoreFinished(f: () -> Unit)
 }
 interface ICallbackRefresh {
     fun setRefreshing(refreshing: Boolean)

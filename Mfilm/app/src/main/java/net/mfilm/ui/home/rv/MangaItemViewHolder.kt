@@ -17,6 +17,7 @@ class MangaItemViewHolder(mContext: Context, type: Int, itemView: View, mCallbac
         if (obj is Manga) {
             obj.apply {
                 itemView.apply {
+                    coverUrl?.apply { img_thumb.setImageURI(this) }
                     tv_name.text = name
                     otherName.let { n ->
                         n?.apply {

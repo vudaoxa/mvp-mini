@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen5"
+    android:background="?selectableItemBackground">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img_thumb"
@@ -18,9 +20,7 @@
         fresco:progressBarImage="@drawable/ic_loading_image"
         fresco:progressBarImageScaleType="centerInside"
         fresco:retryImageScaleType="centerCrop"
-        fresco:viewAspectRatio="0.8"
-
-        />
+        fresco:viewAspectRatio="0.8" />
 
     <LinearLayout
         android:layout_width="match_parent"
