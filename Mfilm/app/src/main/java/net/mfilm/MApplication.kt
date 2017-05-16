@@ -37,6 +37,7 @@ class MApplication : Application() {
         initAwesome()
         initAnimations(this)
         initIcons(this)
+        TimeUtils
         CalligraphyConfig.initDefault(mCalligraphyConfig)
         instance = this
     }

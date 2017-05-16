@@ -11,6 +11,8 @@
     <string name="az">A-Z</string>
     <string name="hottest">Hottest</string>
     <string name="newest">Newest</string>
+    <string name="search">Search</string>
+    <string name="dashboard">Manga</string>
     <!--<string name=""></string>-->
     <!--App Message-->
 
@@ -38,6 +40,35 @@
     <string name="title_categories">Categories: </string>
     <string name="title_chaps_count">Chaps: </string>
     <string name="title_updated_at">Updated: </string>
+
+    <string name="date1">%1$d %2$s %3$d</string>
+    <string name="date2">%1$d %2$s at %3$s</string>
+    <string name="just_now">Just now</string>
+    <string name="mins_ago">%d mins</string>
+    <string name="hours_ago">%d hrs</string>
+    <string name="yesterday">Yesterday at %s</string>
+
+    <string name="week_date">%1$s at %2$s</string>
+    <string name="mon">Mon</string>
+    <string name="tue">Tue</string>
+    <string name="wed">Wed</string>
+    <string name="thu">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="sun">Sun</string>
+
+    <string name="jan">Jan</string>
+    <string name="feb">Feb</string>
+    <string name="mar">Mar</string>
+    <string name="apr">Apr</string>
+    <string name="may">May</string>
+    <string name="jun">Jun</string>
+    <string name="jul">Jul</string>
+    <string name="aug">Aug</string>
+    <string name="sep">Sep</string>
+    <string name="oct">Oct</string>
+    <string name="nov">Nov</string>
+    <string name="dec">Dec</string>
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->

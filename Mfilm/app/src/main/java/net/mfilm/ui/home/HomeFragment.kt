@@ -11,7 +11,8 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import net.mfilm.R
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangasResponse
-import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.base.rv.BaseLoadMoreFragment
+import net.mfilm.ui.home.rv.MangaRvAdapter
 import net.mfilm.utils.DebugLog
 import net.mfilm.utils.filters
 import javax.inject.Inject
@@ -19,7 +20,12 @@ import javax.inject.Inject
 /**
  * Created by tusi on 4/2/17.
  */
-class HomeFragment : BaseStackFragment(), HomeMVPView {
+class HomeFragment : BaseLoadMoreFragment(), HomeMVPView {
+
+    override var isDataEnd: Boolean
+        get() = false
+        set(value) {}
+
     companion object {
         fun newInstance(): HomeFragment {
             val args = Bundle()
@@ -31,16 +37,19 @@ class HomeFragment : BaseStackFragment(), HomeMVPView {
 
     @Inject
     lateinit var mPresenter: HomeMvpPresenter<HomeMVPView>
+    lateinit var mMangasRvAdapter: MangaRvAdapter
+
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun initViews() {
-
         buildSpnBanks()
         rv.apply {
             layoutManager = LinearLayoutManager(context)
+            setupOnLoadMore(this, mCallBackLoadMore)
         }
         requestMangas()
     }
@@ -82,7 +91,7 @@ class HomeFragment : BaseStackFragment(), HomeMVPView {
                         mp.mangas.let { mgs ->
                             mgs?.apply {
                                 if (mgs.isNotEmpty()) {
-
+                                    initMangas(mgs)
                                 } else onMangasNull()
                             } ?: let { onMangasNull() }
                         }
@@ -98,5 +107,9 @@ class HomeFragment : BaseStackFragment(), HomeMVPView {
 
     override fun initMangas(mangas: List<Manga>) {
 
+    }
+
+    override fun onLoadMore() {
+        mMangasRvAdapter.onLoadMore()
     }
 }

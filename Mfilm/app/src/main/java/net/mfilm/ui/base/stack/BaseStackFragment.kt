@@ -144,6 +144,4 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
     override fun onDestroy() {
         super.onDestroy()
     }
-
-
 }

@@ -116,7 +116,7 @@ class Manga : Serializable {
     var views: Int? = null
     @SerializedName("updated_time")
     @Expose
-    var updatedTime: Int? = null
+    var updatedTime: Long? = null
     @SerializedName("cover")
     @Expose
     var cover: String? = null
@@ -125,7 +125,7 @@ class Manga : Serializable {
     var totalChap: Int? = null
     @SerializedName("category")
     @Expose
-    var category: List<Category>? = null
+    var categories: List<Category>? = null
 }
 
 class MangasResponse : MResponse() {
