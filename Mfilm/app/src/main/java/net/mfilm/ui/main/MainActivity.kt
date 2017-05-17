@@ -23,6 +23,7 @@ import javax.inject.Inject
 
 class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView{
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -104,6 +105,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
                 fragmentStackManager.clearStack()
                 fragmentStackManager.swapFragment(HomePagerFragment.newInstance())
             }
+
         }
     }
 

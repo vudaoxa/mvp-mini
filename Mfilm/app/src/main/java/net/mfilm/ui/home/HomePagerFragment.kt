@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_pager_home.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.home.pager.HomePagerAdapter
@@ -24,9 +25,9 @@ class HomePagerFragment : BaseStackFragment() {
 
     internal var prevMenuItem: MenuItem? = null
     override fun initViews() {
-        kotlinx.android.synthetic.main.fragment_pager_home.viewpager.apply {
+        viewpager.apply {
             adapter = HomePagerAdapter(fragmentManager, SIZE_TABS)
-            kotlinx.android.synthetic.main.fragment_pager_home.navigation.setOnNavigationItemSelectedListener { item ->
+            navigation.setOnNavigationItemSelectedListener { item ->
                 currentItem =
                         when (item.itemId) {
                             R.id.navigation_dashboard -> 0
@@ -50,14 +51,14 @@ class HomePagerFragment : BaseStackFragment() {
         }
 
         override fun onPageSelected(position: Int) {
-            kotlinx.android.synthetic.main.fragment_pager_home.navigation.apply {
+            navigation.apply {
                 prevMenuItem?.apply {
                     isChecked = false
                 } ?: let {
                     menu.getItem(0).isChecked = false
                 }
                 menu.getItem(position).isChecked = true
-                prevMenuItem = kotlinx.android.synthetic.main.fragment_pager_home.navigation.menu.getItem(position)
+                prevMenuItem = navigation.menu.getItem(position)
             }
 
         }
