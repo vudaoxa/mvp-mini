@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="max_line_item_property">1</integer>
+    <integer name="max_line_item_des">3</integer>
+    <integer name="max_line_item_header">2</integer>
+</resources>

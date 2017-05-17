@@ -28,12 +28,12 @@
         "source": "C:\\Users\\Duc\\.android\\build-cache\\2e110f78c767c3846e797eb1df44aa8f256d8c26\\output\\res\\drawable\\abc_seekbar_thumb_material.xml"
     },
     {
-        "merged": "D:\\_vunq\\PROG\\android\\xcomic\\xcomic\\Mfilm\\library\\recyclerviewenhanced\\build\\intermediates\\res\\merged\\release\\drawable\\abc_textfield_search_material.xml",
-        "source": "C:\\Users\\Duc\\.android\\build-cache\\2e110f78c767c3846e797eb1df44aa8f256d8c26\\output\\res\\drawable\\abc_textfield_search_material.xml"
-    },
-    {
         "merged": "D:\\_vunq\\PROG\\android\\xcomic\\xcomic\\Mfilm\\library\\recyclerviewenhanced\\build\\intermediates\\res\\merged\\release\\drawable\\abc_dialog_material_background_light.xml",
         "source": "C:\\Users\\Duc\\.android\\build-cache\\2e110f78c767c3846e797eb1df44aa8f256d8c26\\output\\res\\drawable\\abc_dialog_material_background_light.xml"
+    },
+    {
+        "merged": "D:\\_vunq\\PROG\\android\\xcomic\\xcomic\\Mfilm\\library\\recyclerviewenhanced\\build\\intermediates\\res\\merged\\release\\drawable\\abc_textfield_search_material.xml",
+        "source": "C:\\Users\\Duc\\.android\\build-cache\\2e110f78c767c3846e797eb1df44aa8f256d8c26\\output\\res\\drawable\\abc_textfield_search_material.xml"
     },
     {
         "merged": "D:\\_vunq\\PROG\\android\\xcomic\\xcomic\\Mfilm\\library\\recyclerviewenhanced\\build\\intermediates\\res\\merged\\release\\drawable\\abc_tab_indicator_material.xml",

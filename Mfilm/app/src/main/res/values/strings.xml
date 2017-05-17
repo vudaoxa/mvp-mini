@@ -35,8 +35,8 @@
     <string name="internet_no_conection">Không có kết nối mạng</string>
     <string name="empty_data">Data empty</string>
 
-    <string name="title_other_name">Other name: </string>
-    <string name="title_author">Author: </string>
+    <string name="title_other_name">Other names: </string>
+    <string name="title_author">Authors: </string>
     <string name="title_categories">Categories: </string>
     <string name="title_chaps_count">Chaps: </string>
     <string name="title_updated_at">Updated: </string>
@@ -69,6 +69,8 @@
     <string name="oct">Oct</string>
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
+    <string name="read">Read</string>
+    <string name="related_mangas">More like %s</string>
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->

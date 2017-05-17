@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/dimen5"
-    android:background="?selectableItemBackground">
+    android:layout_height="wrap_content">
 
-    <include layout="@layout/layout_manga_thumb" />
+    <include layout="@layout/layout_manga_thumb_small" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,24 +34,18 @@
             android:text="tac gia: xxx" />
 
         <TextView
-            android:id="@+id/tv_categories"
+            android:id="@+id/tv_view_counts"
             style="@style/TextStyle.Regular.manga_intro_14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="the loai: xxx" />
+            android:text="luot xem: 149" />
 
         <TextView
-            android:id="@+id/tv_chaps_count"
+            android:id="@+id/tv_des"
             style="@style/TextStyle.Regular.manga_intro_14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="so chap: 20" />
-
-        <TextView
-            android:id="@+id/tv_updated_at"
-            style="@style/TextStyle.Regular.manga_intro_14"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="cap nhat: 18:45 15/05" />
+            android:maxLines="@integer/max_line_item_des"
+            android:text="mo ta: djdkdjkfdfjdkjdk" />
     </LinearLayout>
 </LinearLayout>

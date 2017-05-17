@@ -1,4 +1,4 @@
-package net.mfilm.ui.home.rv
+package net.mfilm.ui.mangas.rv
 
 import android.content.Context
 import android.view.View

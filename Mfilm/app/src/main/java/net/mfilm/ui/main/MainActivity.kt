@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
-import net.mfilm.ui.home.pager.HomePagerFragment
+import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.utils.*
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 import javax.inject.Inject
