@@ -1,18 +1,31 @@
 package net.mfilm.ui.mangas
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import net.mfilm.R
+import net.mfilm.data.network_retrofit.Manga
+import net.mfilm.data.network_retrofit.MangasResponse
+import net.mfilm.ui.base.rv.BaseLoadMoreFragment
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM_MANGA
+import net.mfilm.ui.mangas.rv.MangasRvAdapter
+import net.mfilm.utils.DebugLog
+import net.mfilm.utils.IndexTags
 import net.mfilm.utils.filters
 
 /**
  * Created by tusi on 4/2/17.
  */
-class MangasFragment : net.mfilm.ui.base.rv.BaseLoadMoreFragment(), MangasMVPView {
+class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
     companion object {
-        fun newInstance(): net.mfilm.ui.mangas.MangasFragment {
-            val args = android.os.Bundle()
-            val fragment = net.mfilm.ui.mangas.MangasFragment()
+        fun newInstance(): MangasFragment {
+            val args = Bundle()
+            val fragment = MangasFragment()
             fragment.arguments = args
             return fragment
         }
@@ -24,11 +37,11 @@ class MangasFragment : net.mfilm.ui.base.rv.BaseLoadMoreFragment(), MangasMVPVie
 
     @javax.inject.Inject
     lateinit var mPresenter: MangasMvpPresenter<MangasMVPView>
-    var mMangasRvAdapter: net.mfilm.ui.mangas.rv.MangaRvAdapter? = null
+    var mMangasRvAdapter: MangasRvAdapter? = null
 
 
-    override fun onCreateView(inflater: android.view.LayoutInflater?, container: android.view.ViewGroup?, savedInstanceState: android.os.Bundle?): android.view.View? {
-        return inflater!!.inflate(net.mfilm.R.layout.fragment_home, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater!!.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun initViews() {
@@ -45,13 +58,13 @@ class MangasFragment : net.mfilm.ui.base.rv.BaseLoadMoreFragment(), MangasMVPVie
         mPresenter.onAttach(this)
     }
 
-    inner class AdapterTracker : android.widget.AdapterView.OnItemSelectedListener {
+    inner class AdapterTracker : AdapterView.OnItemSelectedListener {
         var mPosition = 0
-        override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
 
         }
 
-        override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+        override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
             mPosition = position
         }
 
@@ -59,16 +72,16 @@ class MangasFragment : net.mfilm.ui.base.rv.BaseLoadMoreFragment(), MangasMVPVie
 
     val spnFilterTracker = AdapterTracker()
     fun buildSpnBanks() {
-        val banksAdapter = android.widget.ArrayAdapter(activity, R.layout.item_spn_filter, filters.map { getString(it.resId) })
+        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, filters.map { getString(it.resId) })
         spn_filter.setAdapter(banksAdapter)
         spn_filter.setOnItemSelectedListener(spnFilterTracker)
     }
 
     override fun requestMangas() {
-        mPresenter.requestMangas(null, 10, page++, net.mfilm.utils.filters[spnFilterTracker.mPosition].content, null)
+        mPresenter.requestMangas(null, 10, page++, filters[spnFilterTracker.mPosition].content, null)
     }
 
-    override fun onMangasResponse(mangasResponse: net.mfilm.data.network_retrofit.MangasResponse?) {
+    override fun onMangasResponse(mangasResponse: MangasResponse?) {
         hideLoading()
         mangasResponse.let { mr ->
             mr?.apply {
@@ -88,28 +101,30 @@ class MangasFragment : net.mfilm.ui.base.rv.BaseLoadMoreFragment(), MangasMVPVie
     }
 
     override fun onMangasNull() {
-        net.mfilm.utils.DebugLog.e("----------------onMangasNull-----------------")
+        DebugLog.e("----------------onMangasNull-----------------")
     }
 
-    override fun initMangas(mangas: List<net.mfilm.data.network_retrofit.Manga>) {
-        net.mfilm.utils.DebugLog.e("---------------initMangas---------------${mangas[0].coverUrl}")
+    override fun initMangas(mangas: List<Manga>) {
+        DebugLog.e("---------------initMangas---------------${mangas[0].coverUrl}")
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 mMangas?.addAll(mangas)
                 notifyDataSetChanged()
             }
         } ?: let {
-            mMangasRvAdapter = net.mfilm.ui.mangas.rv.MangaRvAdapter(context, mangas.toMutableList(), this)
+            mMangasRvAdapter = MangasRvAdapter(context, mangas.toMutableList(), this)
             rv.adapter = mMangasRvAdapter
         }
     }
 
     override fun onLoadMore() {
-        net.mfilm.utils.DebugLog.e("--------------------onLoadMore----------------------")
+        DebugLog.e("--------------------onLoadMore----------------------")
         mMangasRvAdapter?.onAdapterLoadMore { requestMangas() }
     }
 
     override fun onClick(position: Int, event: Int) {
-        net.mfilm.utils.DebugLog.e("---------------------onClick--------------------$position")
+        DebugLog.e("---------------------onClick--------------------$position")
+        if (event != TYPE_ITEM_MANGA) return
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = mMangasRvAdapter?.mMangas!![position])
     }
 }

@@ -17,13 +17,23 @@ import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.home.HomePagerFragment
+import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.utils.*
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 import javax.inject.Inject
 
 class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView{
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    override val resLayout: Int
+        get() = R.layout.activity_main
 
+    override val contentFrameId: Int
+        get() = R.id.container
+
+    override val homeClass: Class<*>
+        get() = HomePagerFragment::class.java
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        onNewScreenRequested(navs.filter { it.id == item.itemId }[0].indexTag, typeContent = null, obj = null)
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -35,9 +45,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     @Inject
     lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
     private var mDoubleBackToExitPressedOnce = false
-    internal var fragmentVideo: Fragment? = null
     internal var mOrientation = Configuration.ORIENTATION_PORTRAIT
-    private var mHeightFragmentVideoSmall = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,7 +113,24 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
                 fragmentStackManager.clearStack()
                 fragmentStackManager.swapFragment(HomePagerFragment.newInstance())
             }
+            IndexTags.FRAGMENT_MANGA -> {
 
+            }
+            IndexTags.FRAGMENT_MANGA_INFO -> {
+                fragmentStackManager.swapFragment(MangaInfoFragment.newInstance(obj))
+            }
+            IndexTags.FRAGMENT_CHAPTER_INFO -> {
+
+            }
+            IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
+
+            }
+            IndexTags.FRAGMENT_FAV -> {
+
+            }
+            IndexTags.FRAGMENT_HISTORY -> {
+
+            }
         }
     }
 
@@ -116,14 +141,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
      * OVERRIDE FRAGMENT STACK
      */
 
-    override val resLayout: Int
-        get() = R.layout.activity_main
 
-    override val contentFrameId: Int
-        get() = R.id.container
-
-    override val homeClass: Class<*>
-        get() = HomePagerFragment::class.java
 
     override fun onMainScreenRequested() = fragmentStackManager.run {
         clearStack()

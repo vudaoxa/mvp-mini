@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="@integer/max_line_item_header"
-            android:text="tokyo hot"
+            android:text="tokyo hot\n xxxfdfdfdd"
             android:textColor="@color/red" />
 
         <TextView

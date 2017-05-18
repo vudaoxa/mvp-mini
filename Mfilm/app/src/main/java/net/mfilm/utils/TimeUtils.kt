@@ -104,7 +104,8 @@ object TimeUtils {
         return res
     }
 
-    fun toFbFormatTime(context: Context, dt: Long): String {
+    fun toFbFormatTime(context: Context, dt: Long?): String? {
+        if (dt == null) return null
         val now = Date()
         val dateFormat = SimpleDateFormat("hh:mm dd/MM/yyyy")
 

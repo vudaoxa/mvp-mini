@@ -10,10 +10,12 @@ import android.net.ConnectivityManager
 import android.provider.Settings
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.TextUtils
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.TextView
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
@@ -21,15 +23,22 @@ import com.joanzapata.iconify.fonts.IoniconsIcons
 import com.joanzapata.iconify.fonts.IoniconsModule
 import net.mfilm.R
 import net.mfilm.ui.manga.Filter
+import net.mfilm.ui.manga.NavItem
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by tusi on 4/2/17.
  */
-fun getTitleHeader(context: Context, headerResId: Int, contentResId: Int): SpannableString {
+fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
+    if (!TextUtils.isEmpty(text)) {
+        tv.visibility = visible
+        tv.text = getTitledText(context, titleResId, content = text!!).toString()
+    } else tv.visibility = gone
+}
+
+fun getTitledText(context: Context, headerResId: Int, content: String): SpannableString {
     val header = context.getString(headerResId)
-    val content = context.getString(contentResId)
     val r = header + " " + content
     val res = SpannableString(r)
     res.apply {
@@ -41,17 +50,13 @@ fun getTitleHeader(context: Context, headerResId: Int, contentResId: Int): Spann
     return res
 }
 
-fun getTitleHeader(context: Context, headerResId: Int, content: String): SpannableString {
-    val header = context.getString(headerResId)
-    val r = header + " " + content
-    val res = SpannableString(r)
-    res.apply {
-        val start = header.length + 1
-        val end = start + content.length
-        setSpan(StyleSpan(Typeface.BOLD), start,
-                end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+var navs = mutableListOf<NavItem>()
+val navIds = listOf<Int>(R.id.nav_home, R.id.nav_fav, R.id.nav_history)
+val indexTags = listOf<Int>(IndexTags.FRAGMENT_HOME, IndexTags.FRAGMENT_FAV, IndexTags.FRAGMENT_HISTORY)
+fun initNavs() {
+    for (i in navIds.indices) {
+        navs.add(NavItem(navIds[i], indexTags[i]))
     }
-    return res
 }
 
 var filters = listOf<Filter>()
@@ -61,10 +66,12 @@ fun initFilters() {
     val filterTime = Filter(R.string.newest, TYPE_FILTER_TIME)
     filters = listOf(filterAz, filterViews, filterTime)
 }
+
 fun initAwesome() {
     Iconify.with(FontAwesomeModule())
             .with(IoniconsModule())
 }
+
 var anim: Animation? = null
 var animIn: Animation? = null
 var animOut: Animation? = null
@@ -111,6 +118,7 @@ fun initIcons(context: Context) {
     icon_del = IconDrawable(context,
             IoniconsIcons.ion_ios_trash).colorRes(R.color.red).actionBarSize()
 }
+
 fun View.show(show: Boolean) {
     if (show) {
         visibility = View.VISIBLE
@@ -119,6 +127,7 @@ fun View.show(show: Boolean) {
         visibility = View.GONE
     }
 }
+
 fun showLoadingDialog(context: Context): ProgressDialog {
     val progressDialog = ProgressDialog(context)
     progressDialog.show()

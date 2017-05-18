@@ -18,7 +18,7 @@ import net.mfilm.utils.ICallbackOnClick
 /**
  * Created by tusi on 5/16/17.
  */
-class MangaRvAdapter(mContext: Context, var mMangas: MutableList<Manga>?, mCallbackOnClick: ICallbackOnClick)
+class MangasRvAdapter(mContext: Context, var mMangas: MutableList<Manga>?, mCallbackOnClick: ICallbackOnClick)
     : BaseRvAdapter(mContext, mCallbackOnClick), IAdapterLoadMore {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {

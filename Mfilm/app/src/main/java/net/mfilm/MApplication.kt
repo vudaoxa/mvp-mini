@@ -38,6 +38,7 @@ class MApplication : Application() {
         initAwesome()
         initAnimations(this)
         initIcons(this)
+        initNavs()
         Fresco.initialize(this)
         TimeUtils
         CalligraphyConfig.initDefault(mCalligraphyConfig)
