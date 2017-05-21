@@ -28,7 +28,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -169,16 +168,19 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     fun showBtnBack(visi: Boolean) {
-        toolbar_back.visibility = if (visi) View.VISIBLE else View.GONE
+//        toolbar_back.visibility = if (visi) View.VISIBLE else View.GONE
+        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(visi)
     }
 
     fun showBtnBack() {
-        toolbar_back.visibility = View.VISIBLE
+//        toolbar_back.visibility = View.VISIBLE
+        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
         toolbar.navigationIcon = null
     }
 
     protected fun showDrawer() {
-        toolbar_back.visibility = (View.GONE)
+        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(false)
+//        toolbar_back.visibility = (View.GONE)
         syncStateDrawer()
     }
 
