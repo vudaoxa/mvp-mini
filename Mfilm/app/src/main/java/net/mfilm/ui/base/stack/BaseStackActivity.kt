@@ -58,7 +58,6 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     var mToggle: ActionBarDrawerToggle? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        initViews()
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.navigationBarColor = resources.getColor(R.color.colorPrimary)
         }
@@ -175,7 +174,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     fun showBtnBack() {
 //        toolbar_back.visibility = View.VISIBLE
         supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
-        toolbar.navigationIcon = null
+//        toolbar.navigationIcon = null
     }
 
     protected fun showDrawer() {

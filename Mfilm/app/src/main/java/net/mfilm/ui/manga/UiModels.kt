@@ -6,3 +6,4 @@ package net.mfilm.ui.manga
 class Filter(val resId: Int, val content: String)
 
 class NavItem(val id: Int, val indexTag: Int)
+class SpanCount(val tablet: Boolean, val orientation: Int, val spanCount: Int)

@@ -103,5 +103,6 @@
 
     <color name="color_bg_text_red">#e4322c</color>
 
-
+    <color name="colorDarkThemePrimary">#042233</color>
+    <color name="colorDarkThemePrimaryDark">#031621</color>
 </resources>

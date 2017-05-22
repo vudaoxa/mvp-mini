@@ -1,11 +1,9 @@
-package com.icom.xsvietlott.utils
+package net.mfilm.utils
 
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.observers.DisposableObserver
-import net.mfilm.utils.DURATION
-import net.mfilm.utils.DebugLog
 import retrofit2.HttpException
 import java.io.IOException
 import java.io.Serializable

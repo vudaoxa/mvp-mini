@@ -259,6 +259,7 @@
         <item name="colorAccent">@color/white</item>
     </style>
 
+    <!--from filmy-->
     <style name="FullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#000000</item>
         <item name="colorPrimaryDark">#000000</item>
@@ -294,30 +295,6 @@
     <style name="AppTheme.Base.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.Base.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-
-    <style name="MaterialSearchViewStyle">
-        <!-- Background for the search bar -->
-
-        <item name="searchBackground">@color/white</item>
-
-        <!-- Change voice icon -->
-        <item name="searchVoiceIcon">@drawable/ic_action_voice_search</item>
-
-        <!-- Change clear text icon -->
-        <item name="searchCloseIcon">@drawable/ic_action_navigation_close</item>
-
-        <!-- Change up icon -->
-        <item name="searchBackIcon">@drawable/ic_action_navigation_arrow_back</item>
-
-        <!-- Change icon for the suggestions -->
-        <item name="searchSuggestionIcon">@drawable/ic_suggestion</item>
-
-    </style>
-
-    <color name="white">#ffffff</color>
-    <color name="colorDarkThemePrimary">#042233</color>
-    <color name="colorDarkThemePrimaryDark">#031621</color>
 
     <style name="SplashTheme">
         <item name="android:windowBackground">@drawable/splash_background</item>

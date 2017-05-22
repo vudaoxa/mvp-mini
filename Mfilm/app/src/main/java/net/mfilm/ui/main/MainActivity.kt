@@ -11,7 +11,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.SearchView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import net.mfilm.MApplication
@@ -60,8 +59,9 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         toolbar?.apply {
             setSupportActionBar(this)
             supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.setDisplayShowTitleEnabled(false)
+            setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener { onBackPressed() }
         }
         mToggle = ActionBarDrawerToggle(
@@ -73,15 +73,20 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
 //        toolbar_back.setOnClickListener { onBackPressed() }
-//        btn_search.setImageDrawable(icon_search)
-//        btn_search.setOnClickListener { goSearch() }
+        btn_search.setImageDrawable(icon_search)
+        btn_search.setOnClickListener { goSearch() }
     }
 
+//    override fun onSupportNavigateUp(): Boolean {
+//        onBackPressed()
+//        return true
+//    }
+
     fun initSearch() {
-        search_view.apply {
-            setVoiceSearch(true)
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {})
-        }
+//        search_view.apply {
+//            setVoiceSearch(true)
+//            setOnQueryTextListener(object : SearchView.OnQueryTextListener {})
+//        }
     }
     override fun goSearch() {
         DebugLog.e("---------goSearch-------------")

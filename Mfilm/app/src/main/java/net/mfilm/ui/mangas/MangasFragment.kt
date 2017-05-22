@@ -1,6 +1,7 @@
 package net.mfilm.ui.mangas
 
 import android.os.Bundle
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,8 @@ import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.utils.DebugLog
 import net.mfilm.utils.IndexTags
 import net.mfilm.utils.filters
+import net.mfilm.utils.spanCounts
+import javax.inject.Inject
 
 /**
  * Created by tusi on 4/2/17.
@@ -35,10 +38,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
         get() = false
         set(value) {}
 
-    @javax.inject.Inject
+    @Inject
     lateinit var mPresenter: MangasMvpPresenter<MangasMVPView>
     var mMangasRvAdapter: MangasRvAdapter? = null
-
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_home, container, false)
@@ -46,10 +48,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
     override fun initViews() {
         buildSpnBanks()
-        rv.apply {
-            layoutManager = android.support.v7.widget.LinearLayoutManager(context)
-            setupOnLoadMore(this, mCallBackLoadMore)
-        }
+        initRv()
         requestMangas()
     }
 
@@ -64,10 +63,20 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
         }
 
-        override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             mPosition = position
         }
 
+    }
+
+    fun initRv() {
+        val tabletSize = resources.getBoolean(R.bool.isTablet)
+        val spanCount = spanCounts.filter { it.tablet == tabletSize && it.orientation == resources.configuration.orientation }[0].spanCount
+        rv.apply {
+            layoutManager = StaggeredGridLayoutManager(spanCount,
+                    StaggeredGridLayoutManager.VERTICAL)
+            setupOnLoadMore(this, mCallBackLoadMore)
+        }
     }
 
     val spnFilterTracker = AdapterTracker()
@@ -106,6 +115,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
     override fun initMangas(mangas: List<Manga>) {
         DebugLog.e("---------------initMangas---------------${mangas[0].coverUrl}")
+        hideLoading()
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 mMangas?.addAll(mangas)
