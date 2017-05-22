@@ -174,7 +174,8 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     fun showBtnBack() {
 //        toolbar_back.visibility = View.VISIBLE
         supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
-//        toolbar.navigationIcon = null
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.navigationIcon = null
     }
 
     protected fun showDrawer() {
