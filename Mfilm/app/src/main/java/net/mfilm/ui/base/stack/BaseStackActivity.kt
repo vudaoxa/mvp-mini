@@ -39,10 +39,7 @@ import net.mfilm.di.components.DaggerActComponent
 import net.mfilm.di.modules.ActModule
 import net.mfilm.ui.base.BaseFragment
 import net.mfilm.ui.base.MvpView
-import net.mfilm.utils.AppConstants
-import net.mfilm.utils.DebugLog
-import net.mfilm.utils.isNetConnected
-import net.mfilm.utils.showLoadingDialog
+import net.mfilm.utils.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import vn.tieudieu.fragmentstackmanager.BaseActivityFragmentStack
 
@@ -172,15 +169,12 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     fun showBtnBack() {
-//        toolbar_back.visibility = View.VISIBLE
-        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar_back.visibility = visible
         toolbar.navigationIcon = null
     }
 
     protected fun showDrawer() {
-        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(false)
-//        toolbar_back.visibility = (View.GONE)
+        toolbar_back.visibility = gone
         syncStateDrawer()
     }
 

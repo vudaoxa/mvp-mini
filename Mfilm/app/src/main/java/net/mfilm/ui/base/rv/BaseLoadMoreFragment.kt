@@ -36,13 +36,13 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
             if (countLoadmore > 1) {
                 hideKeyboard()
             }
-//            this@BaseLoadMoreFragment.onLoadMore()
         }
     }
 
     fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore) {
         rv.addOnScrollListener(
                 object : EndlessRvScrollListener(rv.layoutManager as StaggeredGridLayoutManager) {
+                    //                object : EndlessRvScrollListener(rv.layoutManager as LinearLayoutManager) {
                     override fun onLoadMore(page: Int, totalItemsCount: Int) {
                         mCallbackLoadMore.onLoadMore()
                     }

@@ -25,9 +25,9 @@ abstract class BaseFragmentStack : BaseFragment() {
         return title
     }
 
-    fun showBackButton(): Boolean {
-        return back
-    }
+    //    fun showBackButton(): Boolean {
+    //        return back
+    //    }
 
     val indexTag: Int
         get() = 0

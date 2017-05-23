@@ -58,11 +58,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun initViews() {
         toolbar?.apply {
             setSupportActionBar(this)
-            supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowTitleEnabled(false)
-            setNavigationIcon(R.drawable.ic_arrow_back)
-            setNavigationOnClickListener { onBackPressed() }
         }
         mToggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -72,15 +67,11 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         }
         nav_view.setNavigationItemSelectedListener(this)
 
-//        toolbar_back.setOnClickListener { onBackPressed() }
+        toolbar_back.setOnClickListener { onBackPressed() }
         btn_search.setImageDrawable(icon_search)
         btn_search.setOnClickListener { goSearch() }
     }
 
-//    override fun onSupportNavigateUp(): Boolean {
-//        onBackPressed()
-//        return true
-//    }
 
     fun initSearch() {
 //        search_view.apply {
@@ -113,20 +104,10 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.action_settings) {
-            return true
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onNewScreenRequested(indexTag: Int, typeContent: String?, obj: Any?) {
         when (indexTag) {
             IndexTags.FRAGMENT_HOME -> {
-                fragmentStackManager.clearStack()
-                fragmentStackManager.swapFragment(HomePagerFragment.newInstance())
+                onMainScreenRequested()
             }
             IndexTags.FRAGMENT_MANGA -> {
 
@@ -165,13 +146,13 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onFragmentEntered(fragment: Fragment?) {
         setToolbarTitle((fragment as BaseFragmentStack).title)
-        if (fragment.showBackButton()) {
+        if (fragment.back) {
             showBtnBack()
         } else {
             showDrawer()
         }
         mMenu?.apply {
-            findItem(R.id.action_settings).isVisible = fragment is HomePagerFragment
+            findItem(R.id.action_settings).isVisible = fragment.javaClass == homeClass
         }
     }
 
