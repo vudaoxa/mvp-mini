@@ -8,9 +8,13 @@ interface ICallbackOnClick {
 }
 
 abstract class ALoadMore(val f: () -> Unit) {
-    var countLoadmore: Int = 0
+    protected var countLoadMore: Int = 0
     //    abstract fun onLoadMore(f: ()->Unit)
     abstract fun onLoadMore()
+
+    fun reset() {
+        countLoadMore = 0
+    }
 }
 
 interface ICallbackLoadMore {
@@ -33,4 +37,5 @@ interface ICallbackRefresh {
     val pullToRefreshColorResources: IntArray
     fun onRefresh()
     fun initSwipe()
+    fun reset()
 }

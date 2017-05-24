@@ -1,6 +1,7 @@
 package net.mfilm.ui.mangas
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -47,8 +48,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
     }
 
     override fun initViews() {
-        buildSpnBanks()
+        initSpnFilters()
         initRv()
+        initSwipe()
         requestMangas()
     }
 
@@ -65,8 +67,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             mPosition = position
+            reset()
+            requestMangas()
         }
-
     }
 
     fun initRv() {
@@ -80,10 +83,44 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
     }
 
     val spnFilterTracker = AdapterTracker()
-    fun buildSpnBanks() {
+    fun initSpnFilters() {
         val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, filters.map { getString(it.resId) })
         spn_filter.setAdapter(banksAdapter)
         spn_filter.setOnItemSelectedListener(spnFilterTracker)
+    }
+
+    override fun reset() {
+        super.reset()
+        mMangasRvAdapter?.reset()
+    }
+
+    override fun initSwipe() {
+        swipeContainer.apply {
+            if (pullToRefreshEnabled()) {
+                setOnRefreshListener { onRefresh() }
+                setColorSchemeResources(*pullToRefreshColorResources)
+            } else {
+                isEnabled = false
+            }
+        }
+    }
+
+    override fun pullToRefreshEnabled() = true
+    override val pullToRefreshColorResources: IntArray
+        get() = intArrayOf(R.color.colorPrimary, R.color.blue, R.color.green)
+
+    override fun onRefresh() {
+        Handler().postDelayed({
+            reset()
+            requestMangas()
+            setRefreshing(false)
+        }, 2000)
+    }
+
+    override fun setRefreshing(refreshing: Boolean) {
+        swipeContainer.apply {
+            isRefreshing = refreshing
+        }
     }
 
     override fun requestMangas() {

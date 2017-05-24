@@ -52,8 +52,7 @@ class MApplication : Application() {
     }
 
     fun showMessage(@AppConstants.TypeToast typeToast: Int, @StringRes resIdString: Int) {
-        val message = mAppComponent.application().resources.getString(resIdString)
-        mAppToast.showMessageByType(typeToast, message)
+        mAppToast.showMessageByType(typeToast, resIdString)
     }
 
     fun useExtensionRenderers(): Boolean {

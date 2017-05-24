@@ -6,7 +6,6 @@ import io.reactivex.functions.Consumer
 import io.reactivex.observers.DisposableObserver
 import retrofit2.HttpException
 import java.io.IOException
-import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 /**
@@ -50,7 +49,7 @@ class ValveUtil {
     }
 }
 
-abstract class MDisposableObserver<V : Serializable>(val fError1: () -> Unit, val fError2: () -> Unit) : DisposableObserver<V>() {
+abstract class MDisposableObserver<V : Any>(val fHttpExp: () -> Unit, val fIOExp: () -> Unit) : DisposableObserver<V>() {
     override fun onComplete() {
 
     }
@@ -59,11 +58,11 @@ abstract class MDisposableObserver<V : Serializable>(val fError1: () -> Unit, va
         when (e) {
             is HttpException -> {
                 DebugLog.e("connect failed---------")
-                fError1()
+                fHttpExp()
             }
             is IOException -> {
                 DebugLog.e("no internet connection ----------------")
-                fError2()
+                fIOExp()
             }
         }
     }

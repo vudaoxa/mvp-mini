@@ -4,5 +4,4 @@
     android:id="@+id/tv_row_spn"
     android:layout_width="match_parent"
     android:layout_height="30dp"
-    android:gravity="center_vertical"
-    android:textDirection="locale" />
+    android:gravity="center_vertical" />

@@ -30,8 +30,8 @@ class MangasRvAdapter(mContext: Context, var mMangas: MutableList<Manga>?, mCall
                 val view = LayoutInflater.from(mContext).inflate(R.layout.layout_progress_view_small, parent, false)
                 return LoadingViewHolder(view)
             }
-        }
 
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
@@ -48,6 +48,7 @@ class MangasRvAdapter(mContext: Context, var mMangas: MutableList<Manga>?, mCall
     }
 
     override fun getItemViewType(position: Int): Int {
+        if (position >= itemCount) return -10
         mMangas?.apply {
             val item = this[position]
             if (item.id != null) return TYPE_ITEM_MANGA
@@ -59,19 +60,19 @@ class MangasRvAdapter(mContext: Context, var mMangas: MutableList<Manga>?, mCall
     override fun getItemCount() = mMangas?.size ?: 0
 
     override fun onAdapterLoadMore() {
-        DebugLog.e("-------------onAdapterLoadMore-----------------")
-        mMangas?.apply {
-            isLoading = true
-            add(Manga())
-            Handler().post { notifyItemInserted(itemCount - 1) }
-        }
+//        DebugLog.e("-------------onAdapterLoadMore-----------------")
+//        mMangas?.apply {
+//            isMoreLoading = true
+//            add(Manga())
+//            Handler().post { notifyItemInserted(itemCount - 1) }
+//        }
     }
 
     override fun onAdapterLoadMore(f: () -> Unit) {
         DebugLog.e("-------------onAdapterLoadMore-----------------")
-        if (isLoading) return
+        if (isMoreLoading) return
         mMangas?.apply {
-            isLoading = true
+            isMoreLoading = true
             add(Manga())
             Handler().post {
                 notifyItemInserted(itemCount - 1)
@@ -81,38 +82,38 @@ class MangasRvAdapter(mContext: Context, var mMangas: MutableList<Manga>?, mCall
     }
 
     override fun onAdapterLoadMoreFinished() {
-        if (isLoading) {
-            mMangas?.apply {
-                val l = itemCount
-                if (l > 0) {
-                    removeAt(l - 1)
-                    notifyItemRemoved(l - 1)
-                }
-            }
-            isLoading = false
-        }
+//        if (isMoreLoading) {
+//            mMangas?.apply {
+//                val l = itemCount
+//                if (l > 0) {
+//                    removeAt(l - 1)
+//                    notifyItemRemoved(l - 1)
+//                }
+//            }
+//            isMoreLoading = false
+//        }
     }
 
     override fun onAdapterLoadMoreFinished(f: () -> Unit) {
         DebugLog.e("------------------onAdapterLoadMoreFinished---------------------")
-        if (isLoading) {
-            Handler().post {
-                mMangas?.apply {
-                    val l = itemCount
-                    if (l > 0) {
-                        val x = removeAt(l - 1)
-                        DebugLog.e("---------removeAt----------------$x")
-                        notifyItemRemoved(l - 1)
+        Handler().post {
+            mMangas?.apply {
+                val l = itemCount
+                if (l > 0) {
+                    val x = removeAt(l - 1)
+                    DebugLog.e("---------removeAt----------------$x")
+                    notifyItemRemoved(l - 1)
 //                        notifyDataSetChanged()
-                    }
                 }
-                isLoading = false
-                f()
             }
+            isMoreLoading = false
+            f()
         }
     }
 
     override fun reset() {
         DebugLog.e("-----------------reset-----------------")
+        mMangas?.clear()
+//        notifyDataSetChanged()
     }
 }

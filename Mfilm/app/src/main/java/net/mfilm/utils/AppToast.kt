@@ -23,7 +23,6 @@ constructor(@AppContext val mContext: Context) {
         Toasty.info(mContext, mContext.getString(resIdString), Toast.LENGTH_SHORT, true).show()
     }
 
-
     private fun showMessageSuccess(@NotNull message: String) {
         Toasty.success(mContext, message, Toast.LENGTH_SHORT, true).show()
     }
@@ -49,13 +48,30 @@ constructor(@AppContext val mContext: Context) {
         Toasty.normal(mContext, mContext.getString(resIdString), Toast.LENGTH_SHORT).show()
     }
 
+    private fun showMessageWarning(@NotNull message: String) {
+        Toasty.warning(mContext, message, Toast.LENGTH_SHORT, true).show()
+    }
 
+    private fun showMessageWarning(@NotNull message: Int) {
+        Toasty.warning(mContext, mContext.getString(message), Toast.LENGTH_SHORT, true).show()
+    }
     fun showMessageByType(typeToast: Int, message: String) {
         when (typeToast) {
-            TYPE_TOAST_NOMART -> showMessageNomarl(message)
+            TYPE_TOAST_NOMARl -> showMessageNomarl(message)
             TYPE_TOAST_INFOR -> showMessageInfo(message)
             TYPE_TOAST_SUCCESS -> showMessageSuccess(message)
-            TYPE_TOAST_ERROR -> showMessageSuccess(message)
+            TYPE_TOAST_ERROR -> showMessageError(message)
+            TYPE_TOAST_WARNING -> showMessageWarning(message)
+        }
+    }
+
+    fun showMessageByType(typeToast: Int, message: Int) {
+        when (typeToast) {
+            TYPE_TOAST_NOMARl -> showMessageNomarl(message)
+            TYPE_TOAST_INFOR -> showMessageInfo(message)
+            TYPE_TOAST_SUCCESS -> showMessageSuccess(message)
+            TYPE_TOAST_ERROR -> showMessageError(message)
+            TYPE_TOAST_WARNING -> showMessageWarning(message)
         }
     }
 }

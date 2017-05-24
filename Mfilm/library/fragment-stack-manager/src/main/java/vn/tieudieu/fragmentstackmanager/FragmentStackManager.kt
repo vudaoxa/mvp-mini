@@ -169,7 +169,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
 
             for (i in stackFragments!!.indices.reversed()) {
                 if (stackFragments!![i].javaClass == mInitializationParams!!.homeClass) {
-                    continue
+//                    continue
                 }
                 ft.remove(stackFragments!![i])
                 stackFragments!!.removeAt(i)
