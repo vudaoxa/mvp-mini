@@ -100,8 +100,8 @@ class MangasRvAdapter(mContext: Context, var mMangas: MutableList<Manga>?, mCall
             mMangas?.apply {
                 val l = itemCount
                 if (l > 0) {
-                    val x = removeAt(l - 1)
-                    DebugLog.e("---------removeAt----------------$x")
+                    removeAt(l - 1)
+//                    DebugLog.e("---------removeAt----------------$x")
                     notifyItemRemoved(l - 1)
 //                        notifyDataSetChanged()
                 }

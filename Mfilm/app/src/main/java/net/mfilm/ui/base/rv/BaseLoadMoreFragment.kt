@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.utils.ALoadMore
+import net.mfilm.utils.DebugLog
 import net.mfilm.utils.ICallbackLoadMore
 import net.mfilm.utils.PAGE_START
 
@@ -42,8 +43,8 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
     fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore?) {
         rv.addOnScrollListener(
                 object : EndlessRvScrollListener(rv.layoutManager as StaggeredGridLayoutManager) {
-                    //                object : EndlessRvScrollListener(rv.layoutManager as LinearLayoutManager) {
                     override fun onLoadMore(page: Int, totalItemsCount: Int) {
+                        DebugLog.e("------------onLoadMore($page, $totalItemsCount)----------------")
                         mCallbackLoadMore?.onLoadMore()
                     }
                 })
