@@ -47,6 +47,16 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
                         DebugLog.e("------------onLoadMore($page, $totalItemsCount)----------------")
                         mCallbackLoadMore?.onLoadMore()
                     }
+
+                    override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
+                        super.onScrolled(view, dx, dy)
+                        DebugLog.e("--------------onScrolled($dx, $dy)--------------")
+                    }
+
+                    override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        DebugLog.e("--------------onScrollStateChanged($newState)--------------")
+                    }
                 })
     }
 }

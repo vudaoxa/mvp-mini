@@ -67,8 +67,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             mPosition = position
-            reset()
-            requestMangas()
+            onRefresh()
         }
     }
 
