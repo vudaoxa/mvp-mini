@@ -59,4 +59,8 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
                     }
                 })
     }
+
+    fun nullByAdapter(adapterExisted: Boolean) {
+        DebugLog.e("------------------------nullByAdapter----------$adapterExisted---------")
+    }
 }

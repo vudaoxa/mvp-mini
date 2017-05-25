@@ -147,14 +147,20 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
     override fun onMangasNull() {
         DebugLog.e("----------------onMangasNull-----------------")
+        mMangasRvAdapter?.apply {
+            onAdapterLoadMoreFinished {
+                nullByAdapter(true)
+            }
+        } ?: let { nullByAdapter(false) }
     }
 
+    //notEmpty condition
     override fun initMangas(mangas: List<Manga>) {
-        DebugLog.e("---------------initMangas---------------${mangas[0].coverUrl}")
+        DebugLog.e("---------------initMangas---------------${mangas.size}")
         hideLoading()
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
-                mMangas?.addAll(mangas)
+                mData?.addAll(mangas)
                 notifyDataSetChanged()
             }
         } ?: let {
@@ -171,6 +177,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
     override fun onClick(position: Int, event: Int) {
         DebugLog.e("---------------------onClick--------------------$position")
         if (event != TYPE_ITEM_MANGA) return
-        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = mMangasRvAdapter?.mMangas!![position])
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = mMangasRvAdapter?.mData!![position])
     }
 }
