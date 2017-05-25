@@ -48,7 +48,7 @@ android {
             exclude group: 'com.android.support', module: 'support-annotations'
         })
         compile project(':library:fragment-stack-manager')
-        compile project(':library:recyclerviewenhanced')
+//        compile project(':library:recyclerviewenhanced')
         compile project(':library:nice-spinner-master')
 
         compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
@@ -61,6 +61,7 @@ android {
         testCompile 'junit:junit:4.12'
 
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        compile "com.afollestad.material-dialogs:core:$rootProject.materialDialogVersion"
 //        compile "com.miguelcatalan:materialsearchview:$rootProject.searchViewVersion"
         compile "com.github.xiprox.errorview:library:$rootProject.errorViewVersion"
         compile "com.github.paolorotolo:appintro:$rootProject.appIntroVersion"

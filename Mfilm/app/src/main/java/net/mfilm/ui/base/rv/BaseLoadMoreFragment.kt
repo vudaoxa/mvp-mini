@@ -38,26 +38,28 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
     override fun reset() {
         page = PAGE_START
         mCallBackLoadMore?.reset()
+        mEndlessRvScrollListener?.reset()
     }
 
+    private var mEndlessRvScrollListener: EndlessRvScrollListener? = null
     fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore?) {
-        rv.addOnScrollListener(
-                object : EndlessRvScrollListener(rv.layoutManager as StaggeredGridLayoutManager) {
-                    override fun onLoadMore(page: Int, totalItemsCount: Int) {
-                        DebugLog.e("------------onLoadMore($page, $totalItemsCount)----------------")
-                        mCallbackLoadMore?.onLoadMore()
-                    }
+        mEndlessRvScrollListener = object : EndlessRvScrollListener(rv.layoutManager as StaggeredGridLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int) {
+                DebugLog.e("------------onLoadMore($page, $totalItemsCount)----------------")
+                mCallbackLoadMore?.onLoadMore()
+            }
 
-                    override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
-                        super.onScrolled(view, dx, dy)
-                        DebugLog.e("--------------onScrolled($dx, $dy)--------------")
-                    }
-
-                    override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-                        super.onScrollStateChanged(recyclerView, newState)
-                        DebugLog.e("--------------onScrollStateChanged($newState)--------------")
-                    }
-                })
+//                    override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
+//                        super.onScrolled(view, dx, dy)
+//                        DebugLog.e("--------------onScrolled($dx, $dy)--------------")
+//                    }
+//
+//                    override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+//                        super.onScrollStateChanged(recyclerView, newState)
+//                        DebugLog.e("--------------onScrollStateChanged($newState)--------------")
+//                    }
+        }
+        rv.addOnScrollListener(mEndlessRvScrollListener)
     }
 
     fun nullByAdapter(adapterExisted: Boolean) {

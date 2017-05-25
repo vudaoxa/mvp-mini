@@ -39,7 +39,7 @@ ext {
     supportLibraryVersion = '25.1.1'
     gsonVersion = '2.8.0'
     calligraphyVersion = '2.2.0'
-
+    materialDialogVersion = '0.9.4.3'
     errorViewVersion = '2.+'
     appIntroVersion = '4.0.0'
     rx2AndroidNetworking = '0.0.1'

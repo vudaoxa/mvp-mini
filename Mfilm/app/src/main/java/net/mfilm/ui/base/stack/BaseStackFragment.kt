@@ -17,13 +17,13 @@ package  net.mfilm.ui.base.stack
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.view.View
 import net.mfilm.di.components.ActComponent
 import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.anim
+import net.mfilm.utils.handler
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 
 /**
@@ -109,11 +109,11 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
         if (fragment == null || fragment.isAdded || fragment.isInLayout) {
             return
         }
-        Handler().postDelayed({
+        handler({
             ft.add(containerId, fragment)
             view.startAnimation(anim)
             view.postOnAnimationDelayed({ ft.commit() }, 250)
-        }, 150)
+        })
     }
 
     fun removeChildFragment(containerId: Int) {

@@ -1,7 +1,6 @@
 package net.mfilm.ui.mangas.rv
 
 import android.content.Context
-import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM_MANGA
 import net.mfilm.utils.DebugLog
 import net.mfilm.utils.IAdapterLoadMore
 import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.handler
 
 /**
  * Created by tusi on 5/16/17.
@@ -72,10 +72,10 @@ class MangasRvAdapter(mContext: Context, var mData: MutableList<Manga>?, mCallba
         mData?.apply {
             isMoreLoading = true
             add(Manga())
-            Handler().post {
+            handler({
                 notifyItemInserted(itemCount - 1)
                 f()
-            }
+            }, 0)
         }
     }
 
@@ -94,7 +94,7 @@ class MangasRvAdapter(mContext: Context, var mData: MutableList<Manga>?, mCallba
 
     override fun onAdapterLoadMoreFinished(f: () -> Unit) {
         DebugLog.e("------------------onAdapterLoadMoreFinished---------------------")
-        Handler().post {
+        handler({
             mData?.apply {
                 val l = itemCount
                 if (l > 0) {
@@ -106,7 +106,7 @@ class MangasRvAdapter(mContext: Context, var mData: MutableList<Manga>?, mCallba
             }
             isMoreLoading = false
             f()
-        }
+        }, 0)
     }
 
     override fun reset() {

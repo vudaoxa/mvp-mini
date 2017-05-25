@@ -4,16 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.Menu
 import android.view.MenuItem
+import com.afollestad.materialdialogs.MaterialDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.home.HomePagerFragment
@@ -53,6 +52,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         mMainPresenter.onAttach(this)
         initViews()
         initFilters()
+        obtainTabletSize(this)
     }
 
     override fun initViews() {
@@ -82,23 +82,21 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun goSearch() {
         DebugLog.e("---------goSearch-------------")
     }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             if (fragmentStackManager.currentFragment.javaClass == homeClass) {
-                if (mDoubleBackToExitPressedOnce) {
-                    finish()
-                    return
-                }
-                this.mDoubleBackToExitPressedOnce = true
-                MApplication.instance.showMessage(AppConstants.TYPE_TOAST_NOMART, R.string.text_all_click_back_exit_app)
-                Handler().postDelayed({ mDoubleBackToExitPressedOnce = false }, AppConstants.TIME_DELAY_ON_FINISH)
-            } else
-                super.onBackPressed()
+                showConfirmExit()
+            } else super.onBackPressed()
         }
     }
 
+    private fun showConfirmExit() {
+        DialogUtil.showMessageConfirm(this, R.string.notifications, R.string.confirm_exit,
+                MaterialDialog.SingleButtonCallback { _, _ -> finish() })
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true

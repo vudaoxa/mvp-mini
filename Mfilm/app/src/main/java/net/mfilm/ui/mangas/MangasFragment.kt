@@ -1,7 +1,7 @@
 package net.mfilm.ui.mangas
 
+import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +15,7 @@ import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.rv.BaseLoadMoreFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_MANGA
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
-import net.mfilm.utils.DebugLog
-import net.mfilm.utils.IndexTags
-import net.mfilm.utils.filters
-import net.mfilm.utils.spanCounts
+import net.mfilm.utils.*
 import javax.inject.Inject
 
 /**
@@ -42,7 +39,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
     @Inject
     lateinit var mPresenter: MangasMvpPresenter<MangasMVPView>
     var mMangasRvAdapter: MangasRvAdapter? = null
-
+    lateinit var mMangasRvLayoutManager: StaggeredGridLayoutManager
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_mangas, container, false)
     }
@@ -67,16 +64,17 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             mPosition = position
-            onRefresh()
+            reset()
+            requestMangas()
         }
     }
 
     fun initRv() {
-        val tabletSize = resources.getBoolean(R.bool.isTablet)
         val spanCount = spanCounts.filter { it.tablet == tabletSize && it.orientation == resources.configuration.orientation }[0].spanCount
         rv.apply {
-            layoutManager = StaggeredGridLayoutManager(spanCount,
+            mMangasRvLayoutManager = StaggeredGridLayoutManager(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
+            layoutManager = mMangasRvLayoutManager
             setupOnLoadMore(this, mCallBackLoadMore)
         }
     }
@@ -93,6 +91,16 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
         mMangasRvAdapter?.reset()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        val spanCount = spanCounts.filter { it.tablet == tabletSize && it.orientation == newConfig?.orientation }[0].spanCount
+        handler({
+            rv.apply {
+                mMangasRvLayoutManager.spanCount = spanCount
+                requestLayout()
+            }
+        })
+    }
     override fun initSwipe() {
         swipeContainer.apply {
             if (pullToRefreshEnabled()) {
@@ -109,7 +117,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
         get() = intArrayOf(R.color.colorPrimary, R.color.blue, R.color.green)
 
     override fun onRefresh() {
-        Handler().postDelayed({
+        handler({
             reset()
             requestMangas()
             setRefreshing(false)

@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
+import android.os.Handler
 import android.provider.Settings
 import android.text.Spannable
 import android.text.SpannableString
@@ -32,8 +33,12 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
-var spanCounts = listOf<SpanCount>()
+var tabletSize = false
 
+fun obtainTabletSize(mContext: Context) {
+    tabletSize = mContext.resources.getBoolean(R.bool.isTablet)
+}
+var spanCounts = listOf<SpanCount>()
 fun initSpanCounts() {
     val spanTabletPortrait = SpanCount(true, Configuration.ORIENTATION_PORTRAIT, 6)
     val spanTabletLandscape = SpanCount(true, Configuration.ORIENTATION_LANDSCAPE, 8)
@@ -43,11 +48,14 @@ fun initSpanCounts() {
 }
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
     if (!TextUtils.isEmpty(text)) {
-        tv.visibility = visible
+        tv.show(true)
         tv.text = getTitledText(context, titleResId, content = text!!).toString()
-    } else tv.visibility = gone
+    } else tv.show(false)
 }
 
+fun handler(f: () -> Unit, x: Long = 150) {
+    Handler().postDelayed({ f() }, x)
+}
 fun getTitledText(context: Context, headerResId: Int, content: String): SpannableString {
     val header = context.getString(headerResId)
     val r = header + " " + content
@@ -132,10 +140,10 @@ fun initIcons(context: Context) {
 
 fun View.show(show: Boolean) {
     if (show) {
-        visibility = View.VISIBLE
+        visibility = visible
         startAnimation(anim)
     } else {
-        visibility = View.GONE
+        visibility = gone
     }
 }
 

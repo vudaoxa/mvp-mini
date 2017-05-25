@@ -4,6 +4,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
+import net.mfilm.utils.DebugLog
 
 abstract class EndlessRvScrollListener : RecyclerView.OnScrollListener {
     internal var mLayoutManager: RecyclerView.LayoutManager
@@ -33,6 +34,9 @@ abstract class EndlessRvScrollListener : RecyclerView.OnScrollListener {
         visibleThreshold = visibleThreshold * layoutManager.spanCount
     }
 
+    fun reset() {
+        loading = false
+    }
     fun getLastVisibleItem(lastVisibleItemPositions: IntArray): Int {
         var maxSize = 0
         for (i in lastVisibleItemPositions.indices) {
@@ -83,7 +87,10 @@ abstract class EndlessRvScrollListener : RecyclerView.OnScrollListener {
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading && lastVisibleItemPosition + visibleThreshold > totalItemCount) {
+        val x = !loading && lastVisibleItemPosition + visibleThreshold > totalItemCount
+        DebugLog.e("------------onScrolled---------$loading ----" +
+                "--- $lastVisibleItemPosition------- $visibleThreshold------ $totalItemCount----- $x")
+        if (x) {
             currentPage++
             onLoadMore(currentPage, totalItemCount)
             loading = true

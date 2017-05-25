@@ -30,8 +30,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
+//import kotlinx.android.synthetic.main.activity_main.*
+//import kotlinx.android.synthetic.main.app_bar_main.*
 import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.di.components.ActComponent
@@ -169,7 +169,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     fun showBtnBack() {
-        toolbar_back.visibility = visible
+        toolbar_back.show(true)
         toolbar.navigationIcon = null
     }
 
