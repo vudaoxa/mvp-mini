@@ -22,27 +22,30 @@ abstract class BaseActivityFragmentStack : BaseActivity(), ScreenManager {
 
     private fun initializeFragmentSwapper(savedInstanceState: Bundle?) {
         val builder = InitializationParams.Builder()
-        builder.screenManager(this)
-        builder.contentFrame(contentFrameId)
-        builder.fragmentManager(supportFragmentManager)
-        builder.enableAnimation(false)
-        builder.setHomeClass(homeClass)
-
+        builder.apply {
+            screenManager(this@BaseActivityFragmentStack)
+            contentFrame(contentFrameId)
+            fragmentManager(supportFragmentManager)
+            enableAnimation(true)
+            setHomeClass(homeClass)
+        }
         mFragmentStackManager = FragmentStackManager()
-        mFragmentStackManager!!.initialize(builder.build())
-        mFragmentStackManager!!.onRestoreInstanceState(savedInstanceState)
+        mFragmentStackManager?.apply {
+            initialize(builder.build())
+            onRestoreInstanceState(savedInstanceState)
+        }
     }
 
     override fun onBackPressed() {
-        mFragmentStackManager!!.popFragment()
+        mFragmentStackManager?.popFragment()
     }
 
     override fun onSwapFragmentRequested(fragment: Fragment) {
-        mFragmentStackManager!!.swapFragment(fragment)
+        mFragmentStackManager?.swapFragment(fragment)
     }
 
     override fun onBackFragmentRequested() {
-        mFragmentStackManager!!.popFragment()
+        mFragmentStackManager?.popFragment()
     }
 
     override fun onCloseRequested() {
@@ -51,12 +54,10 @@ abstract class BaseActivityFragmentStack : BaseActivity(), ScreenManager {
 
     protected val fragmentStackManager: FragmentStackManager<Fragment>
         get() {
-            if (mFragmentStackManager == null) {
-                throw IllegalArgumentException()
-            }
-            return mFragmentStackManager!!
+            mFragmentStackManager?.apply { return this }
+            throw IllegalArgumentException()
         }
 
     protected val currentFragment: Fragment
-        get() = mFragmentStackManager!!.currentFragment
+        get() = mFragmentStackManager?.currentFragment!!
 }
