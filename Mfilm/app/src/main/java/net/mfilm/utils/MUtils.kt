@@ -127,9 +127,9 @@ fun initIcons(context: Context) {
     icon_search = IconDrawable(context,
             IoniconsIcons.ion_ios_search_strong).colorRes(R.color.white).actionBarSize()
     icon_share = IconDrawable(context,
-            IoniconsIcons.ion_share).colorRes(R.color.grey_60).actionBarSize()
+            IoniconsIcons.ion_share).colorRes(R.color.white).actionBarSize()
     icon_star = IconDrawable(context,
-            IoniconsIcons.ion_ios_star).colorRes(R.color.grey_60).actionBarSize()
+            IoniconsIcons.ion_ios_star).colorRes(R.color.white).actionBarSize()
     icon_star_blue = IconDrawable(context,
             IoniconsIcons.ion_ios_star).colorRes(R.color.blue).actionBarSize()
     icon_send = IconDrawable(context,

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginRight="@dimen/dimen10"
-    android:layout_toLeftOf="@+id/btn_search"
+    android:layout_toLeftOf="@+id/layout_btns"
     android:layout_toRightOf="@+id/toolbar_title"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -18,8 +18,8 @@
         android:hint="@string/search"
         android:imeOptions="actionSearch"
         android:inputType="text"
+        android:maxLines="1"
         android:minHeight="48dp"
-        android:singleLine="true"
         android:text=""
         android:textSize="15sp" />
 

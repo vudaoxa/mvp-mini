@@ -1,11 +1,23 @@
 <resources>
 
+    <style name="AppTheme" parent="AppTheme.Base"></style>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="divider">@color/dividerColor</item>
+    </style>
+
+    <style name="AppTheme.Base.Dark" parent="Theme.AppCompat.NoActionBar">
+
+        <item name="colorPrimary">@color/colorDarkThemePrimary</item>
+        <item name="colorPrimaryDark">@color/colorDarkThemePrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="divider">@color/dividerColorDarkTheme</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -48,6 +60,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:textAppearance">@style/TextAppearance.Text.Regular</item>
     </style>
+
     <style name="TextStyle.Regular.16.center" parent="TextStyle">
         <item name="android:layout_margin">@dimen/dimen5</item>
         <item name="android:gravity">center</item>
@@ -76,6 +89,7 @@
     <style name="TextStyle.Regular.no_pading_center" parent="TextStyle.Regular.no_pading">
         <item name="android:gravity">center</item>
     </style>
+
     <style name="TextStyle.Regular.no_pading_16" parent="TextStyle.Regular.no_pading">
         <item name="android:textSize">@dimen/txt_size_16</item>
     </style>
@@ -83,6 +97,7 @@
     <style name="TextStyle.Regular.no_pading_14" parent="TextStyle.Regular.no_pading">
         <item name="android:textSize">@dimen/txt_size_14</item>
     </style>
+
     <style name="TextStyle.Regular.20" parent="TextStyle">
         <item name="android:textColor">@color/grey_90</item>
         <item name="android:padding">@dimen/dimen5</item>
@@ -161,6 +176,7 @@
     <style name="Button.Primary.Wrap" parent="Button.Primary">
         <item name="android:minWidth">@dimen/dimen100</item>
     </style>
+
     <style name="TextAppearance.Text.Bold" parent="android:TextAppearance">
         <item name="fontPath">fonts/source-sans-pro/SourceSansPro-Bold.ttf</item>
     </style>
@@ -210,14 +226,14 @@
         <item name="android:textSize">@dimen/txt_size_14</item>
     </style>
 
-    <!--<style name="AppTheme.Button.Grey" parent="Widget.AppCompat.Button">-->
-    <!--<item name="android:background">@drawable/button</item>-->
-    <!--<item name="android:textColor">@android:color/white</item>-->
-    <!--<item name="android:layout_height">@dimen/view_single_height</item>-->
-    <!--<item name="android:textAllCaps">false</item>-->
-    <!--<item name="android:textSize">@dimen/mdl_navigation_drawer_row_title_size</item>-->
-    <!--</style>-->
-
+    <style name="ToolBar_Btn">
+        <!--<item name="tabTextAppearance">@style/MyCustomTabText</item>-->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">?actionBarItemBackground</item>
+        <item name="android:padding">@dimen/dimen15</item>
+    </style>
     <style name="VerticalLinearLayout">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -299,4 +315,6 @@
     <style name="SplashTheme">
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
+
+
 </resources>

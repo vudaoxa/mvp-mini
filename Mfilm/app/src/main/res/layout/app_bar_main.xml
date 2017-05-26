@@ -44,15 +44,9 @@
                     android:text="@string/app_name"
                     android:textColor="@color/white" />
 
-                <!--<include layout="@layout/layout_input_text" />-->
+                <include layout="@layout/layout_input_text" />
 
-                <ImageButton
-                    android:id="@+id/btn_search"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/actionBarItemBackground"
-                    android:padding="15dp"
-                    android:visibility="visible" />
+                <include layout="@layout/item_main_action_btns" />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

@@ -1,5 +1,11 @@
 package net.mfilm.utils
 
+import android.support.design.widget.NavigationView
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.widget.Toolbar
+import android.widget.ImageButton
+import android.widget.TextView
+
 /**
  * Created by tusi on 5/16/17.
  */
@@ -38,4 +44,20 @@ interface ICallbackRefresh {
     fun onRefresh()
     fun initSwipe()
     fun reset()
+}
+
+interface ICallbackToolbar {
+    val mToolbarTitle: TextView
+    val mToolbarBack: ImageButton
+    val mToolbar: Toolbar
+    val mDrawerLayout: DrawerLayout
+    val mBtnSearch: ImageButton
+    val mBtnShare: ImageButton
+    val mBtnFollow: ImageButton
+    val mNavView: NavigationView
+    fun onAbout()
+    fun onSettings()
+    fun onSearch()
+    fun onShare()
+    fun onFollow()
 }

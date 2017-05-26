@@ -7,12 +7,15 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.view.Menu
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.widget.ImageButton
+import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.item_main_action_btns.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.home.HomePagerFragment
@@ -22,6 +25,22 @@ import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 import javax.inject.Inject
 
 class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView{
+    override val mToolbar: Toolbar
+        get() = toolbar
+    override val mToolbarBack: ImageButton
+        get() = toolbar_back
+    override val mToolbarTitle: TextView
+        get() = toolbar_title
+    override val mDrawerLayout: DrawerLayout
+        get() = drawer_layout
+    override val mBtnSearch: ImageButton
+        get() = btn_search
+    override val mBtnFollow: ImageButton
+        get() = btn_star
+    override val mBtnShare: ImageButton
+        get() = btn_twitter
+    override val mNavView: NavigationView
+        get() = nav_view
     override val resLayout: Int
         get() = R.layout.activity_main
 
@@ -33,7 +52,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         onNewScreenRequested(navs.filter { it.id == item.itemId }[0].indexTag, typeContent = null, obj = null)
-        drawer_layout.closeDrawer(GravityCompat.START)
+        mDrawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -41,51 +60,41 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         DebugLog.e("---------------onSettings-----------")
     }
 
+    override fun onAbout() {
+
+    }
+
+    override fun onSearch() {
+
+    }
+
+    override fun onShare() {
+
+    }
+
+    override fun onFollow() {
+
+    }
     @Inject
     lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
-    private var mDoubleBackToExitPressedOnce = false
     internal var mOrientation = Configuration.ORIENTATION_PORTRAIT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
         mMainPresenter.onAttach(this)
-        initViews()
         initFilters()
         obtainTabletSize(this)
     }
 
-    override fun initViews() {
-        toolbar?.apply {
-            setSupportActionBar(this)
-        }
-        mToggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        mToggle?.apply {
-            drawer_layout.addDrawerListener(this)
-            syncState()
-        }
-        nav_view.setNavigationItemSelectedListener(this)
-
-        toolbar_back.setOnClickListener { onBackPressed() }
-        btn_search.setImageDrawable(icon_search)
-        btn_search.setOnClickListener { goSearch() }
-    }
-
-
-    fun initSearch() {
-//        search_view.apply {
-//            setVoiceSearch(true)
-//            setOnQueryTextListener(object : SearchView.OnQueryTextListener {})
-//        }
-    }
-    override fun goSearch() {
-        DebugLog.e("---------goSearch-------------")
+    override fun initViews(savedInstanceState: Bundle?) {
+        super.initViews(savedInstanceState)
+        mNavView.setNavigationItemSelectedListener(this)
     }
 
     override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START)
         } else {
             if (fragmentStackManager.currentFragment.javaClass == homeClass) {
                 showConfirmExit()
@@ -96,10 +105,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     private fun showConfirmExit() {
         DialogUtil.showMessageConfirm(this, R.string.notifications, R.string.confirm_exit,
                 MaterialDialog.SingleButtonCallback { _, _ -> finish() })
-    }
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
     }
 
     override fun onNewScreenRequested(indexTag: Int, typeContent: String?, obj: Any?) {
@@ -149,8 +154,16 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             showDrawer()
         }
+        var home = fragment.javaClass == homeClass
+        DebugLog.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
+//        when(fragment){
+//            is HomePagerFragment->{
+//                home=true
+//            }
+//        }
         mMenu?.apply {
-            findItem(R.id.action_settings).isVisible = fragment.javaClass == homeClass
+            findItem(R.id.action_settings).isVisible = home
+            findItem(R.id.action_about).isVisible = home
         }
     }
 
@@ -200,7 +213,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     @Synchronized private fun exitFullScreenVideo(): Boolean {
         return true
     }
-
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)

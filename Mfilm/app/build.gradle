@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
     defaultConfig {
         applicationId "net.xcomic"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -106,12 +106,13 @@ android {
 kapt {
     generateStubs = true
 }
-
 dependencies {
 }
-
 tasks.whenTaskAdded { task ->
     if (task.name.equals("lint")) {
         task.enabled = false
     }
+}
+repositories {
+    mavenCentral()
 }

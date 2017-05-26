@@ -30,8 +30,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-//import kotlinx.android.synthetic.main.activity_main.*
-//import kotlinx.android.synthetic.main.app_bar_main.*
 import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.di.components.ActComponent
@@ -47,7 +45,7 @@ import vn.tieudieu.fragmentstackmanager.BaseActivityFragmentStack
  * Created by janisharali on 27/01/17.
  */
 
-abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFragment.Callback {
+abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFragment.Callback, ICallbackToolbar {
     private var mProgressDialog: ProgressDialog? = null
     lateinit var activityComponent: ActComponent
         private set
@@ -100,6 +98,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     override fun onFailure() {
         onError(R.string.error_conection)
     }
+
     override fun onError(message: String?) {
         DebugLog.e(message)
         hideLoading()
@@ -155,31 +154,34 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
             R.id.action_settings -> {
                 onSettings()
             }
+            R.id.action_about -> {
+                onAbout()
+            }
         }
         return true
     }
 
     fun setToolbarTitle(title: String?) {
-        toolbar_title.text = if (!TextUtils.isEmpty(title)) title else getString(R.string.app_name)
+        mToolbarTitle.text = if (!TextUtils.isEmpty(title)) title else getString(R.string.app_name)
     }
 
     fun showBtnBack(visi: Boolean) {
-//        toolbar_back.visibility = if (visi) View.VISIBLE else View.GONE
-        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(visi)
+        mToolbarBack.show(visi)
     }
 
     fun showBtnBack() {
-        toolbar_back.show(true)
-        toolbar.navigationIcon = null
+        mToolbarBack.show(true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mToolbar.navigationIcon = null
+        }
     }
-
     protected fun showDrawer() {
-        toolbar_back.visibility = gone
+        mToolbarBack.visibility = gone
         syncStateDrawer()
     }
 
     protected fun syncStateDrawer() {
-        drawer_layout.post({ mToggle?.syncState() })
+        mDrawerLayout.post({ mToggle?.syncState() })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -189,7 +191,21 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         return true
     }
 
-//    abstract fun playVideo(mPlayer: MPlayer)
-    abstract fun onSettings()
-    abstract fun initViews()
+    override fun initViews(savedInstanceState: Bundle?) {
+        super.initViews(savedInstanceState)
+        setSupportActionBar(mToolbar)
+        mToggle = ActionBarDrawerToggle(
+                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        mToggle?.apply {
+            mDrawerLayout.addDrawerListener(this)
+            syncState()
+        }
+        mToolbarBack.setOnClickListener { onBackPressed() }
+        mBtnSearch.setImageDrawable(icon_search)
+        mBtnFollow.setImageDrawable(icon_star)
+        mBtnShare.setImageDrawable(icon_share)
+        mBtnSearch.setOnClickListener { onSearch() }
+        mBtnFollow.setOnClickListener { onFollow() }
+        mBtnSearch.setOnClickListener { onShare() }
+    }
 }
