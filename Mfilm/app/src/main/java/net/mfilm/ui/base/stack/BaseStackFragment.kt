@@ -17,6 +17,7 @@ package  net.mfilm.ui.base.stack
 
 import android.content.Context
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.view.View
@@ -24,6 +25,7 @@ import net.mfilm.di.components.ActComponent
 import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.anim
 import net.mfilm.utils.handler
+import net.mfilm.utils.isVisOk
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 
 /**
@@ -103,12 +105,12 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
     val activityComponent: ActComponent
         get() = baseActivity!!.activityComponent
 
-    fun attachChildFragment(view: View, containerId: Int, fragment: Fragment?) {
-        val fm = childFragmentManager
-        val ft = fm.beginTransaction()
-        if (fragment == null || fragment.isAdded || fragment.isInLayout) {
+    fun attachChildFragment(view: View, @IdRes containerId: Int, fragment: Fragment?) {
+        if (fragment == null || fragment.isVisOk()) {
             return
         }
+        val fm = childFragmentManager
+        val ft = fm.beginTransaction()
         handler({
             ft.add(containerId, fragment)
             view.startAnimation(anim)
@@ -116,7 +118,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
         })
     }
 
-    fun removeChildFragment(containerId: Int) {
+    fun removeChildFragment(@IdRes containerId: Int) {
         // remove
         try {
             val fm = childFragmentManager

@@ -4,7 +4,9 @@
     <string name="action_about">About</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="font_serif">sans-serif-condensed</string>
     <string name="ion_ios_close_empty">{ion-ios-close-empty}</string>
+    <string name="ion_close_round">{ion-close-round}</string>
     <string name="home">Home</string>
     <string name="categories">Categories</string>
     <string name="favorites">Favorites</string>
@@ -76,6 +78,8 @@
     <string name="dec">Dec</string>
     <string name="read">Read</string>
     <string name="related_mangas">More like %s</string>
+    <string name="close_description">close description</string>
+    <string name="chapters">Chapters</string>
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->

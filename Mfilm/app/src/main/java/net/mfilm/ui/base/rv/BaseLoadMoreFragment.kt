@@ -1,5 +1,7 @@
 package net.mfilm.ui.base.rv
 
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import net.mfilm.ui.base.stack.BaseStackFragment
@@ -42,10 +44,45 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
     }
 
     private var mEndlessRvScrollListener: EndlessRvScrollListener? = null
+
     fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore?) {
-        mEndlessRvScrollListener = object : EndlessRvScrollListener(rv.layoutManager as StaggeredGridLayoutManager) {
+        when (rv.layoutManager) {
+            is LinearLayoutManager -> {
+                setupOnLoadMore(rv, mCallbackLoadMore, rv.layoutManager as LinearLayoutManager)
+            }
+            is StaggeredGridLayoutManager -> {
+                setupOnLoadMore(rv, mCallbackLoadMore, rv.layoutManager as StaggeredGridLayoutManager)
+            }
+            is GridLayoutManager -> {
+                setupOnLoadMore(rv, mCallbackLoadMore, rv.layoutManager as GridLayoutManager)
+            }
+        }
+    }
+
+    fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore?, linearLayoutManager: LinearLayoutManager) {
+        mEndlessRvScrollListener = object : EndlessRvScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int) {
-                DebugLog.e("------------onLoadMore($page, $totalItemsCount)----------------")
+                DebugLog.e("-----LinearLayoutManager-------onLoadMore ($page, $totalItemsCount)----------------")
+                mCallbackLoadMore?.onLoadMore()
+            }
+        }
+        rv.addOnScrollListener(mEndlessRvScrollListener)
+    }
+
+    fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore?, gridLayoutManager: GridLayoutManager) {
+        mEndlessRvScrollListener = object : EndlessRvScrollListener(gridLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int) {
+                DebugLog.e("------GridLayoutManager------onLoadMore($page, $totalItemsCount)----------------")
+                mCallbackLoadMore?.onLoadMore()
+            }
+        }
+        rv.addOnScrollListener(mEndlessRvScrollListener)
+    }
+
+    fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore?, staggeredGridLayoutManager: StaggeredGridLayoutManager) {
+        mEndlessRvScrollListener = object : EndlessRvScrollListener(staggeredGridLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int) {
+                DebugLog.e("------StaggeredGridLayoutManager------onLoadMore($page, $totalItemsCount)----------------")
                 mCallbackLoadMore?.onLoadMore()
             }
 
@@ -60,6 +97,7 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
 //                    }
         }
         rv.addOnScrollListener(mEndlessRvScrollListener)
+
     }
 
     fun nullByAdapter(adapterExisted: Boolean) {

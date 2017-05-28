@@ -71,8 +71,8 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
     private fun notifyCloseRequest() {
         Log.e(TAG, "notifyCloseRequest()")
         mUiHandler.post {
-            if (mInitializationParams!!.screenManager != null) {
-                mInitializationParams!!.screenManager.onCloseRequested()
+            mInitializationParams?.screenManager?.apply {
+                onCloseRequested()
             }
         }
     }
@@ -98,12 +98,11 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
         return null
     }
 
-    override fun swapFragment(fragment: F) {
+    override fun swapFragment(fragment: F, transparent: Boolean) {
         val operation = Runnable {
             Log.e(TAG, "swapFragment()")
             val ft = mInitializationParams!!.fragmentManager.beginTransaction()
             if (mInitializationParams!!.isAnimationEnabled) {
-                // ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_right_in, 0, 0);
                 ft.setCustomAnimations(R.anim.slide_left_in, 0, 0, 0)
             }
             ft.add(mInitializationParams!!.contentFrame, fragment)
@@ -114,7 +113,6 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
                 }
             }
             stackFragments!!.push(fragment)
-            //                ft.commitNow();
             ft.commit()
             mInitializationParams!!.fragmentManager.executePendingTransactions()
             findCurrentFragment()
@@ -123,16 +121,13 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
         performOperationIfAllowed(operation)
 
         // hide old fragment if animation anable
-        if (mInitializationParams!!.isAnimationEnabled) {
+        if (mInitializationParams!!.isAnimationEnabled && !transparent) {
             val operationHide = Runnable {
                 val ft = mInitializationParams!!.fragmentManager.beginTransaction()
                 if (stackFragments!!.size > 1) {
-                    if (mInitializationParams!!.isAnimationEnabled) {
-                        ft.hide(stackFragments!![stackFragments!!.size - 2])
-                    }
+                    ft.hide(stackFragments!![stackFragments!!.size - 2])
                 }
                 ft.commit()
-                //                    ft.commitNow();
             }
             performOperationIfAllowed(operationHide, true)
         }

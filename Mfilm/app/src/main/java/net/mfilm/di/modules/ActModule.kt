@@ -25,11 +25,14 @@ import net.mfilm.di.PerActivity
 import net.mfilm.ui.about.AboutMvpPresenter
 import net.mfilm.ui.about.AboutMvpView
 import net.mfilm.ui.about.AboutPresenter
+import net.mfilm.ui.chapters.ChaptersMvpPresenter
+import net.mfilm.ui.chapters.ChaptersMvpView
+import net.mfilm.ui.chapters.ChaptersPresenter
 import net.mfilm.ui.main.MainMvpPresenter
 import net.mfilm.ui.main.MainMvpView
 import net.mfilm.ui.main.MainPresenter
-import net.mfilm.ui.mangas.MangasMVPView
 import net.mfilm.ui.mangas.MangasMvpPresenter
+import net.mfilm.ui.mangas.MangasMvpView
 import net.mfilm.ui.mangas.MangasPresenter
 import net.mfilm.ui.splash.SplashMvpPresenter
 import net.mfilm.ui.splash.SplashMvpView
@@ -82,7 +85,12 @@ class ActModule(val mActivity: Activity) {
     }
 
     @Provides
-    fun provideHomePresenter(presenter: MangasPresenter<MangasMVPView>): MangasMvpPresenter<MangasMVPView> {
+    fun provideHomePresenter(presenter: MangasPresenter<MangasMvpView>): MangasMvpPresenter<MangasMvpView> {
+        return presenter
+    }
+
+    @Provides
+    fun provideChaptersPresenter(presenter: ChaptersPresenter<ChaptersMvpView>): ChaptersMvpPresenter<ChaptersMvpView> {
         return presenter
     }
 }

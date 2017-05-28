@@ -36,7 +36,7 @@
 
                 <TextView
                     android:id="@+id/toolbar_title"
-                    style="@style/TextStyle.Bold.16"
+                    style="@style/TextStyle.Canaro.20"
                     android:layout_width="@dimen/dimen0"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

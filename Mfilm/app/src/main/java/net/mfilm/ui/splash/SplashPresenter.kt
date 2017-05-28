@@ -15,10 +15,6 @@
 
 package net.mfilm.ui.splash
 
-
-//import net.mfilm.mangasPaging.networkretrofit.models.AccessToken
-//import net.mfilm.ui.login.LoginPresenter
-
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
@@ -27,6 +23,7 @@ import net.mfilm.R
 import net.mfilm.data.DataMng
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.utils.DebugLog
+import net.mfilm.utils.handler
 import javax.inject.Inject
 
 /**
@@ -41,27 +38,30 @@ constructor(dataManager: DataMng, compositeDisposable: CompositeDisposable)
         super.onAttach(mvpView)
 
 //        mvpView.startSyncService()
-        compositeDisposable.add(
-                dataManager.seedDatabaseQuestions()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Consumer<Boolean> { aBoolean ->
-                    DebugLog.d("xyz--subscribe-accept--" + aBoolean!!)
-
-                    if (!isViewAttached) {
-                        return@Consumer
-                    }
-                    decideNextActivity()
-                }, Consumer<Throwable> { throwable ->
-                    DebugLog.d("xyz--Consumer-accept--" + throwable.message)
-                    if (!isViewAttached) {
-                        return@Consumer
-                    }
-                    mvpView.onError(R.string.some_error)
-                    decideNextActivity()
-                }))
+        handler({ process() })
     }
 
+    fun process() {
+        compositeDisposable.add(
+                dataManager.seedDatabaseQuestions()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(Consumer<Boolean> { aBoolean ->
+                            DebugLog.d("xyz--subscribe-accept--" + aBoolean!!)
+
+                            if (!isViewAttached) {
+                                return@Consumer
+                            }
+                            decideNextActivity()
+                        }, Consumer<Throwable> { throwable ->
+                            DebugLog.d("xyz--Consumer-accept--" + throwable.message)
+                            if (!isViewAttached) {
+                                return@Consumer
+                            }
+                            mvpView?.onError(R.string.some_error)
+                            decideNextActivity()
+                        }))
+    }
 
     private fun decideNextActivity() {
         mvpView!!.openMainActivity()

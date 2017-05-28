@@ -57,7 +57,6 @@ android {
         compile "com.android.support:design:$rootProject.supportLibraryVersion"
         compile "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
         compile "com.android.support:animated-vector-drawable:$rootProject.supportLibraryVersion"
-        compile "com.android.support.constraint:constraint-layout:$rootProject.constraintVersion"
         testCompile 'junit:junit:4.12'
 
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,10 +19,11 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.item_main_action_btns.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
+import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.filmy.FullReadFragment
 import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.utils.*
-import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 import javax.inject.Inject
 
 class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView{
@@ -41,6 +43,14 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         get() = btn_twitter
     override val mNavView: NavigationView
         get() = nav_view
+    override val mLayoutBtnsInfo: LinearLayout
+        get() = layout_btns_info
+    override val actionSettingsId: Int
+        get() = R.id.action_settings
+    override val actionAboutId: Int
+        get() = R.id.action_about
+    override val optionsMenuId: Int
+        get() = R.menu.main
     override val resLayout: Int
         get() = R.layout.activity_main
 
@@ -112,11 +122,15 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
             IndexTags.FRAGMENT_HOME -> {
                 onMainScreenRequested()
             }
+        //search, category
             IndexTags.FRAGMENT_MANGA -> {
 
             }
             IndexTags.FRAGMENT_MANGA_INFO -> {
                 fragmentStackManager.swapFragment(MangaInfoFragment.newInstance(obj))
+            }
+            IndexTags.FRAGMENT_FULL_READ -> {
+                fragmentStackManager.swapFragment(FullReadFragment.newInstance(obj), true)
             }
             IndexTags.FRAGMENT_CHAPTER_INFO -> {
 
@@ -147,26 +161,24 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         swapFragment(HomePagerFragment.newInstance())
     }
 
-    override fun onFragmentEntered(fragment: Fragment?) {
-        setToolbarTitle((fragment as BaseFragmentStack).title)
-        if (fragment.back) {
-            showBtnBack()
-        } else {
-            showDrawer()
+    override fun onFragmentEntered(f: Fragment?) {
+        super.onFragmentEntered(f)
+        val fragment = f as BaseStackFragment
+        val home = fragment.javaClass == homeClass
+        var info = false
+//        DebugLog.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
+        when (fragment) {
+            is MangaInfoFragment -> {
+                info = true
+            }
         }
-        var home = fragment.javaClass == homeClass
-        DebugLog.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
-//        when(fragment){
-//            is HomePagerFragment->{
-//                home=true
-//            }
-//        }
+        mLayoutBtnsInfo.show(info)
+        mBtnSearch.show(!info)
         mMenu?.apply {
-            findItem(R.id.action_settings).isVisible = home
-            findItem(R.id.action_about).isVisible = home
+            findItem(actionSettingsId).isVisible = home
+            findItem(actionAboutId).isVisible = home
         }
     }
-
     // End fragment stack
 
 

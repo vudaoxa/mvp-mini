@@ -10,6 +10,8 @@ import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.os.Handler
 import android.provider.Settings
+import android.support.annotation.StringRes
+import android.support.v4.app.Fragment
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextUtils
@@ -33,6 +35,7 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
+fun Fragment.isVisOk() = isVisible && isAdded && isInLayout
 var tabletSize = false
 
 fun obtainTabletSize(mContext: Context) {
@@ -47,16 +50,26 @@ fun initSpanCounts() {
     spanCounts = listOf(spanTabletPortrait, spanTabletLandscape, spanPhonePortrait, spanPhoneLandscape)
 }
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
-    if (!TextUtils.isEmpty(text)) {
-        tv.show(true)
-        tv.text = getTitledText(context, titleResId, content = text!!).toString()
-    } else tv.show(false)
+    text?.apply {
+        if (!TextUtils.isEmpty(this)) {
+            tv.show(true)
+            when (titleResId) {
+                -1 -> {
+                    tv.text = getTitledText(this)
+                }
+                else -> {
+                    tv.text = getTitledText(context, titleResId, this)
+                }
+            }
+        } else tv.show(false)
+    } ?: context.let { tv.show(false) }
 }
 
 fun handler(f: () -> Unit, x: Long = 150) {
     Handler().postDelayed({ f() }, x)
 }
-fun getTitledText(context: Context, headerResId: Int, content: String): SpannableString {
+
+fun getTitledText(context: Context, @StringRes headerResId: Int, content: String): SpannableString {
     val header = context.getString(headerResId)
     val r = header + " " + content
     val res = SpannableString(r)
@@ -69,6 +82,15 @@ fun getTitledText(context: Context, headerResId: Int, content: String): Spannabl
     return res
 }
 
+fun getTitledText(content: String): SpannableString {
+    val res = SpannableString(content)
+    res.apply {
+        val end = content.length
+        setSpan(StyleSpan(Typeface.BOLD), 0,
+                end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+    return res
+}
 var navs = mutableListOf<NavItem>()
 val navIds = listOf<Int>(R.id.nav_home, R.id.nav_fav, R.id.nav_history)
 val indexTags = listOf<Int>(IndexTags.FRAGMENT_HOME, IndexTags.FRAGMENT_FAV, IndexTags.FRAGMENT_HISTORY)
@@ -123,6 +145,7 @@ var icon_star: IconDrawable? = null
 var icon_star_blue: IconDrawable? = null
 var icon_send: IconDrawable? = null
 var icon_del: IconDrawable? = null
+var icon_close: IconDrawable? = null
 fun initIcons(context: Context) {
     icon_search = IconDrawable(context,
             IoniconsIcons.ion_ios_search_strong).colorRes(R.color.white).actionBarSize()
@@ -136,6 +159,8 @@ fun initIcons(context: Context) {
             IoniconsIcons.ion_android_send).colorRes(R.color.white).actionBarSize()
     icon_del = IconDrawable(context,
             IoniconsIcons.ion_ios_trash).colorRes(R.color.red).actionBarSize()
+    icon_close = IconDrawable(context,
+            IoniconsIcons.ion_ios_close_empty).colorRes(R.color.white).actionBarSize()
 }
 
 fun View.show(show: Boolean) {

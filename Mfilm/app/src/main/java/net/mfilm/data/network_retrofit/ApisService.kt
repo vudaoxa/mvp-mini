@@ -17,11 +17,12 @@ interface ApisService {
     fun requestMangas(@Query("category") category: Int?, @Query("limit") limit: Int, @Query("page") page: Int
                       , @Query("sort") sort: String, @Query("search") search: String?): Observable<MangasResponse>
 
+    //not use
     @GET(NetConstants.API_MANGA_DETAIL)
     fun requestMangaDetail(@Path("id") id: Int): Observable<MangaDetailResponse>
 
     @GET(NetConstants.API_CHAPTERS)
-    fun requestChapters(@Query("manga") manga: Int): Observable<ChaptersResponse>
+    fun requestChapters(@Query("manga") mangaId: Int, @Query("limit") limit: Int, @Query("page") page: Int): Observable<ChaptersResponse>
 
     @GET(NetConstants.API_CHAPTER_DETAIL)
     fun requestChapterDetail(@Path("id") id: Int): Observable<ChapterDetailResponse>

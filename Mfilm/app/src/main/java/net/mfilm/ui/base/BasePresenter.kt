@@ -51,18 +51,9 @@ constructor(val dataManager: DataMng, val compositeDisposable: CompositeDisposab
         if (!isViewAttached) throw MvpViewNotAttachedException()
     }
 
-//    override fun handleApiError(error: RpError) {
-//
-//    }
-
     override fun setUserAsLoggedOut() {
 //        dataManager.accessToken = null
     }
 
-    class MvpViewNotAttachedException : RuntimeException("Please call Presenter.onAttach(MvpView) before" + " requesting price to the Presenter")
-
-    companion object {
-
-        private val TAG = "RoundedImageView"
-    }
+    inner class MvpViewNotAttachedException : RuntimeException("Please call Presenter.onAttach(MvpView) before" + " requesting price to the Presenter")
 }

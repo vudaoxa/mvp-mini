@@ -38,7 +38,6 @@ class CategoriesResponse : MResponse() {
 }
 
 open class MPaging : Serializable {
-
     @SerializedName("total")
     @Expose
     var total: Int? = null
@@ -148,11 +147,9 @@ class Chapters : MPaging() {
     @SerializedName("data")
     @Expose
     var data: List<Chapter>? = null
-
 }
 
 class Chapter : Serializable {
-
     @SerializedName("id")
     @Expose
     var id: Int? = null
@@ -168,14 +165,12 @@ class Chapter : Serializable {
     @SerializedName("manga_id")
     @Expose
     var mangaId: Int? = null
-
 }
 
 class ChaptersResponse : MResponse() {
     @SerializedName("data")
     @Expose
     var chapters: Chapters? = null
-
 }
 
 class ChapterDetail : Serializable {

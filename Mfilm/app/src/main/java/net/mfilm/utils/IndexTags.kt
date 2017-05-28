@@ -13,6 +13,7 @@ object IndexTags {
     const val FRAGMENT_CHAPTER_INFO = 6
     const val FRAGMENT_CHAPTER_IMAGES = 7
     const val FRAGMENT_MANGA = 8
+    const val FRAGMENT_FULL_READ = 9
 //    const val FRAGMENT_FAV = 1
 
 }

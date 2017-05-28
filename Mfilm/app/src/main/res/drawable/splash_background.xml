@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
-    <item android:drawable="@color/black" />
+    <item android:drawable="@color/navy_blue_dark" />
     <item
+        android:bottom="@dimen/dimen4"
         android:drawable="@drawable/ic_superhero"
-        android:gravity="center" />
+        android:gravity="center"
+        android:left="@dimen/dimen4"
+        android:right="@dimen/dimen4"
+        android:top="@dimen/dimen4"></item>
 </layer-list>

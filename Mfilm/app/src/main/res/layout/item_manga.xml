@@ -11,7 +11,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/dimen2"
         app:cardPreventCornerOverlap="true">
 
         <LinearLayout
@@ -29,7 +29,7 @@
 
                 <TextView
                     android:id="@+id/tv_name"
-                    style="@style/TextStyle.Regular.16"
+                    style="@style/TextStyle.Sans.Regular.16"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="tokyo hot" />

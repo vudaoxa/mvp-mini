@@ -7,22 +7,25 @@ import android.view.ViewGroup
 import net.lc.holders.LoadingViewHolder
 import net.mfilm.R
 import net.mfilm.data.network_retrofit.Manga
-import net.mfilm.ui.base.rv.adapters.BaseRvAdapter
-import net.mfilm.ui.base.rv.holders.TYPE_ITEM_LOADING
-import net.mfilm.ui.base.rv.holders.TYPE_ITEM_MANGA
-import net.mfilm.utils.DebugLog
-import net.mfilm.utils.IAdapterLoadMore
+import net.mfilm.ui.base.rv.adapters.BaseRvLoadMoreAdapter
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.utils.ICallbackOnClick
-import net.mfilm.utils.handler
 
 /**
  * Created by tusi on 5/16/17.
  */
-class MangasRvAdapter(mContext: Context, var mData: MutableList<Manga>?, mCallbackOnClick: ICallbackOnClick)
-    : BaseRvAdapter(mContext, mCallbackOnClick), IAdapterLoadMore {
+class MangasRvAdapter<V : Manga>(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick)
+    : BaseRvLoadMoreAdapter<V>(mContext, mData, mCallbackOnClick) {
+    override fun isMainItem(item: V): Boolean {
+        return item.id != null
+    }
+
+    override val loadingItem: V
+        get() = Manga() as V
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            TYPE_ITEM_MANGA -> {
+            TYPE_ITEM -> {
                 val view = LayoutInflater.from(mContext).inflate(R.layout.item_manga, parent, false)
                 return MangaItemViewHolder(mContext, viewType, view, mCallbackOnClick)
             }
@@ -44,74 +47,5 @@ class MangasRvAdapter(mContext: Context, var mData: MutableList<Manga>?, mCallba
                 holder.isIndeterminate = true
             }
         }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        mData?.apply {
-            val item = this[position]
-            if (item.id != null) return TYPE_ITEM_MANGA
-            return TYPE_ITEM_LOADING
-        }
-        return -10
-    }
-
-    override fun getItemCount() = mData?.size ?: 0
-
-    override fun onAdapterLoadMore() {
-//        DebugLog.e("-------------onAdapterLoadMore-----------------")
-//        mData?.apply {
-//            isMoreLoading = true
-//            add(Manga())
-//            Handler().post { notifyItemInserted(itemCount - 1) }
-//        }
-    }
-
-    override fun onAdapterLoadMore(f: () -> Unit) {
-        DebugLog.e("-------------onAdapterLoadMore-----------------")
-        if (isMoreLoading) return
-        mData?.apply {
-            isMoreLoading = true
-            add(Manga())
-            handler({
-                notifyItemInserted(itemCount - 1)
-                f()
-            }, 0)
-        }
-    }
-
-    override fun onAdapterLoadMoreFinished() {
-//        if (isMoreLoading) {
-//            mData?.apply {
-//                val l = itemCount
-//                if (l > 0) {
-//                    removeAt(l - 1)
-//                    notifyItemRemoved(l - 1)
-//                }
-//            }
-//            isMoreLoading = false
-//        }
-    }
-
-    override fun onAdapterLoadMoreFinished(f: () -> Unit) {
-        DebugLog.e("------------------onAdapterLoadMoreFinished---------------------")
-        handler({
-            mData?.apply {
-                val l = itemCount
-                if (l > 0) {
-                    removeAt(l - 1)
-//                    DebugLog.e("---------removeAt----------------$x")
-                    notifyItemRemoved(l - 1)
-//                        notifyDataSetChanged()
-                }
-            }
-            isMoreLoading = false
-            f()
-        }, 0)
-    }
-
-    override fun reset() {
-        DebugLog.e("-----------------reset-----------------")
-        mData?.clear()
-//        notifyDataSetChanged()
     }
 }

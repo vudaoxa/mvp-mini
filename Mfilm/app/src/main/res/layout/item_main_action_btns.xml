@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_btns"
+    style="@style/LinearLayout_center_vertical"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <ImageButton
+        android:id="@+id/btn_search"
+        style="@style/ToolBar_Btn"
+        android:visibility="gone" />
     <LinearLayout
-        android:id="@+id/layout_btns_fixed"
+        android:id="@+id/layout_btns_info"
+        style="@style/LinearLayout_center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
-
         <ImageButton
-            android:id="@+id/btn_search"
+            android:id="@+id/btn_twitter"
             style="@style/ToolBar_Btn"
             android:visibility="visible" />
 
         <ImageButton
-            android:id="@+id/btn_twitter"
-            style="@style/ToolBar_Btn"
-            android:visibility="gone" />
-
-        <ImageButton
             android:id="@+id/btn_star"
             style="@style/ToolBar_Btn"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </LinearLayout>
 

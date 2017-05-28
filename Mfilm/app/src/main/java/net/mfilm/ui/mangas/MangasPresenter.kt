@@ -15,7 +15,7 @@ import javax.inject.Inject
  * Created by Dieu on 09/03/2017.
  */
 
-class MangasPresenter<V : MangasMVPView> @Inject
+class MangasPresenter<V : MangasMvpView> @Inject
 constructor(val retrofitService: RetrofitService,
             dataManager: DataMng, compositeDisposable: CompositeDisposable) :
         BasePresenter<V>(dataManager, compositeDisposable), MangasMvpPresenter<V> {

@@ -33,6 +33,7 @@
     <color name="fb">#3b5998</color>
     <color name="google">#d34836</color>
 
+    <color name="grey_translucent">#aa000000</color>
     <color name="shadow">#22000000</color>
     <color name="grey_10">#FAFAFA</color>
     <color name="grey_20">#eeeeee</color>

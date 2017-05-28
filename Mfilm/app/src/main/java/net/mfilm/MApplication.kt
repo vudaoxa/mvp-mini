@@ -43,6 +43,7 @@ class MApplication : Application() {
         Fresco.initialize(this)
         TimeUtils
         CalligraphyConfig.initDefault(mCalligraphyConfig)
+
         instance = this
     }
 

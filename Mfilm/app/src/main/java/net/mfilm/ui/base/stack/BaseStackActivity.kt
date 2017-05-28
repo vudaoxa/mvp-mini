@@ -22,14 +22,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
+import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBarDrawerToggle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.di.components.ActComponent
@@ -40,6 +38,7 @@ import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import vn.tieudieu.fragmentstackmanager.BaseActivityFragmentStack
+import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 
 /**
  * Created by janisharali on 27/01/17.
@@ -105,16 +104,6 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         MApplication.instance.showMessage(AppConstants.TYPE_TOAST_ERROR, message!!)
     }
 
-    private fun showSnackBar(message: String) {
-        val snackbar = Snackbar.make(findViewById(android.R.id.content),
-                message, Snackbar.LENGTH_LONG)
-        val sbView = snackbar.view
-        val textView = sbView
-                .findViewById(android.support.design.R.id.snackbar_text) as TextView
-        textView.setTextColor(ContextCompat.getColor(this, R.color.white))
-        snackbar.show()
-    }
-
     override fun onError(@StringRes resId: Int) {
 //        onError(getString(resId))
         DebugLog.e(getString(resId))
@@ -133,6 +122,21 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     }
 
+    override fun onFragmentEntered(fragment: Fragment?) {
+        setToolbarTitle((fragment as BaseFragmentStack).title)
+        fragment.apply {
+            if (fullScreen) {
+                supportActionBar?.hide()
+            } else {
+                supportActionBar?.show()
+                if (back) {
+                    showBtnBack()
+                } else {
+                    showDrawer()
+                }
+            }
+        }
+    }
     override fun hideKeyboard() {
         val view = this.currentFocus
         if (view != null) {
@@ -151,10 +155,10 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_settings -> {
+            actionSettingsId -> {
                 onSettings()
             }
-            R.id.action_about -> {
+            actionAboutId -> {
                 onAbout()
             }
         }
@@ -171,11 +175,10 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     fun showBtnBack() {
         mToolbarBack.show(true)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mToolbar.navigationIcon = null
-        }
+        mToolbar.navigationIcon = null
     }
     protected fun showDrawer() {
+//        supportActionBar?.show()
         mToolbarBack.visibility = gone
         syncStateDrawer()
     }
@@ -186,7 +189,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
+        menuInflater.inflate(optionsMenuId, menu)
         mMenu = menu
         return true
     }

@@ -9,6 +9,7 @@ import java.lang.IllegalArgumentException
 abstract class BaseFragmentStack : BaseFragment() {
     var title: String? = null
     var back = false
+    var fullScreen = false
     protected var screenManager: ScreenManager? = null
         private set
 
@@ -20,15 +21,6 @@ abstract class BaseFragmentStack : BaseFragment() {
             throw IllegalArgumentException()
         }
     }
-
-    fun getFragmentTitle(): String? {
-        return title
-    }
-
-    //    fun showBackButton(): Boolean {
-    //        return back
-    //    }
-
     val indexTag: Int
         get() = 0
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/default_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/dimen5">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/main_content"
@@ -36,10 +36,10 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeContainer"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <RelativeLayout
@@ -47,34 +47,25 @@
                 android:layout_height="wrap_content">
 
                 <Button
-                    android:id="@+id/btn_read"
-                    style="@style/Button.Primary"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_alignParentRight="true"
-
-                    android:text="@string/read" />
+                    android:text="@string/read"
+                    android:theme="@style/PrimaryFlatButton" />
             </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_few_thumbs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <include
+                android:id="@+id/container_chapters"
+                layout="@layout/layout_container" />
 
-            <TextView
-                android:id="@+id/tv_more"
-                style="@style/TextStyle.Regular.16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="@string/related_mangas"
-                android:visibility="gone" />
+            <include
+                android:id="@+id/container_thumbs"
+                layout="@layout/layout_container" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_related_mangas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+            <include
+                android:id="@+id/container_related_mangas"
+                layout="@layout/layout_container" />
+        </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

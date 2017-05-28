@@ -28,6 +28,5 @@ package net.mfilm.ui.base
 interface MvpPresenter<V : MvpView> {
     fun onAttach(mvpView: V)
     fun onDetach()
-    //    fun handleApiError(error: RpError)
     fun setUserAsLoggedOut()
 }

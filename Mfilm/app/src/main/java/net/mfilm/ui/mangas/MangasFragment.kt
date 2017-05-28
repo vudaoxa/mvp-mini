@@ -13,7 +13,8 @@ import net.mfilm.R
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.rv.BaseLoadMoreFragment
-import net.mfilm.ui.base.rv.holders.TYPE_ITEM_MANGA
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM
+import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.utils.*
 import javax.inject.Inject
@@ -21,7 +22,7 @@ import javax.inject.Inject
 /**
  * Created by tusi on 4/2/17.
  */
-class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
+class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
 
     companion object {
         fun newInstance(): MangasFragment {
@@ -37,9 +38,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
         set(value) {}
 
     @Inject
-    lateinit var mPresenter: MangasMvpPresenter<MangasMVPView>
-    var mMangasRvAdapter: MangasRvAdapter? = null
-    lateinit var mMangasRvLayoutManager: StaggeredGridLayoutManager
+    lateinit var mPresenter: MangasMvpPresenter<MangasMvpView>
+    var mMangasRvAdapter: MangasRvAdapter<Manga>? = null
+    lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_mangas, container, false)
     }
@@ -72,9 +73,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
     fun initRv() {
         val spanCount = spanCounts.filter { it.tablet == tabletSize && it.orientation == resources.configuration.orientation }[0].spanCount
         rv.apply {
-            mMangasRvLayoutManager = StaggeredGridLayoutManager(spanCount,
+            mMangasRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
-            layoutManager = mMangasRvLayoutManager
+            layoutManager = mMangasRvLayoutManagerWrapper
             setupOnLoadMore(this, mCallBackLoadMore)
         }
     }
@@ -86,6 +87,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
         spn_filter.setOnItemSelectedListener(spnFilterTracker)
     }
 
+    //use when refresh(by filter, or reload)
     override fun reset() {
         super.reset()
         mMangasRvAdapter?.reset()
@@ -96,7 +98,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
         val spanCount = spanCounts.filter { it.tablet == tabletSize && it.orientation == newConfig?.orientation }[0].spanCount
         handler({
             rv.apply {
-                mMangasRvLayoutManager.spanCount = spanCount
+                mMangasRvLayoutManagerWrapper.spanCount = spanCount
                 requestLayout()
             }
         })
@@ -131,7 +133,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
     }
 
     override fun requestMangas() {
-        mPresenter.requestMangas(null, 10, page++, filters[spnFilterTracker.mPosition].content, null)
+        mPresenter.requestMangas(null, LIMIT, page++, filters[spnFilterTracker.mPosition].content, null)
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
@@ -184,7 +186,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMVPView {
 
     override fun onClick(position: Int, event: Int) {
         DebugLog.e("---------------------onClick--------------------$position")
-        if (event != TYPE_ITEM_MANGA) return
+        if (event != TYPE_ITEM) return
         screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = mMangasRvAdapter?.mData!![position])
     }
 }
