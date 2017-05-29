@@ -13,6 +13,7 @@ import net.mfilm.R
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.chapters.ChaptersFragment
+import net.mfilm.ui.chapters.ChaptersMvpView
 import net.mfilm.utils.IndexTags
 import net.mfilm.utils.TimeUtils
 import net.mfilm.utils.handler
@@ -34,6 +35,8 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
         }
     }
 
+    private var mChaptersMvpView: ChaptersMvpView? = null
+    private var mChaptersFragment: ChaptersFragment? = null
     private lateinit var manga: Manga
     override val chaptersContainerView: View
         get() = container_chapters
@@ -84,16 +87,14 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
             setText(context, tv_des, -1, summary)
 //            layout_manga_info_text.setOnClickListener { viewFullRead() }
             layout_manga_info.setOnClickListener { viewFullRead() }
+            btn_read.setOnClickListener { onReadBtnClicked() }
         }
     }
 
     fun viewFullRead() {
         handler({
             screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_FULL_READ, typeContent = null, obj = manga)
-        })
-//                val fullReadFragment = FullReadFragment.newInstance(manga)
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.container, fullReadFragment, "DESC").commit()
+        }, 0)
     }
 
     override fun attachChaptersFragment() {
@@ -109,7 +110,10 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
     }
 
     override fun obtainChaptersFragment(): Fragment? {
-        return ChaptersFragment.newInstance(manga)
+        mChaptersFragment?.apply { return this }
+        mChaptersFragment = ChaptersFragment.newInstance(manga)
+        mChaptersMvpView = mChaptersFragment
+        return mChaptersFragment
     }
 
     override fun obtainThumbsFragment(): Fragment? {
@@ -118,5 +122,19 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
 
     override fun obtainRelatedMangasFragment(): Fragment? {
         return null
+    }
+
+    //it's the bridge between chaptersFragment and chapterImageViewer
+//    override fun onChapterClicked(chapter: Chapter) {
+//        chapter.apply {
+//            screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, typeContent = null, obj = this)
+////            showFresco(context, )
+//        }
+//
+//    }
+
+    override fun onReadBtnClicked() {
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, typeContent = null,
+                obj = mChaptersMvpView?.currentReadingChapter)
     }
 }

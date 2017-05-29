@@ -25,6 +25,7 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.joanzapata.iconify.fonts.IoniconsIcons
 import com.joanzapata.iconify.fonts.IoniconsModule
+import com.stfalcon.frescoimageviewer.ImageViewer
 import net.mfilm.R
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.NavItem
@@ -35,6 +36,11 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
+fun showFresco(context: Context, list: List<String>, startPosition: Int = 0) {
+    ImageViewer.Builder(context, list)
+            .setStartPosition(startPosition)
+            .show()
+}
 fun Fragment.isVisOk() = isVisible && isAdded && isInLayout
 var tabletSize = false
 

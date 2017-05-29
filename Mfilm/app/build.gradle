@@ -94,7 +94,7 @@ android {
         compile "com.joanzapata.iconify:android-iconify-fontawesome:$rootProject.iconifyVersion"
         compile "com.joanzapata.iconify:android-iconify-ionicons:$rootProject.iconifyVersion"
 
-
+        compile "com.github.stfalcon:frescoimageviewer:$rootProject.frescoViewerVersion"
     }
     repositories {
 //        mavenCentral()

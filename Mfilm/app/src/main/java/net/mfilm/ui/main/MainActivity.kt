@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.item_main_action_btns.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.chapter_images.ChapterImagesFragment
 import net.mfilm.ui.filmy.FullReadFragment
 import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.ui.manga_info.MangaInfoFragment
@@ -136,7 +137,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
-
+                fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(obj))
             }
             IndexTags.FRAGMENT_FAV -> {
 

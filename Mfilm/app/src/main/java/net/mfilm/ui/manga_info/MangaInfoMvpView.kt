@@ -22,4 +22,6 @@ interface MangaInfoMvpView : MvpView {
     val thumbsContainerId: Int
     val relatedMangasContainerView: View
     val relatedMangasContainerId: Int
+    //    fun onChapterClicked(chapter: Chapter)
+    fun onReadBtnClicked()
 }

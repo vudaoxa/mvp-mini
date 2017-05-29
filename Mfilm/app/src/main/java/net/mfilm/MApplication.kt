@@ -3,6 +3,8 @@ package net.mfilm
 import android.app.Application
 import android.support.annotation.StringRes
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.core.ImagePipelineConfig
+import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
 import net.mfilm.di.AppModule
 import net.mfilm.di.components.AppComponent
 import net.mfilm.di.components.DaggerAppComponent
@@ -11,6 +13,7 @@ import net.mfilm.utils.*
 import org.jetbrains.annotations.NotNull
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
+
 
 /**
  * Created by Dieu on 02/03/2017.
@@ -40,7 +43,12 @@ class MApplication : Application() {
         initIcons(this)
         initNavs()
         initSpanCounts()
-        Fresco.initialize(this)
+        val config = ImagePipelineConfig.newBuilder(this)
+                .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
+                .setResizeAndRotateEnabledForNetwork(true)
+                .setDownsampleEnabled(true)
+                .build()
+        Fresco.initialize(this, config)
         TimeUtils
         CalligraphyConfig.initDefault(mCalligraphyConfig)
 

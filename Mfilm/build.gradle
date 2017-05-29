@@ -68,5 +68,6 @@ ext {
     constraintVersion = '1.0.1'
 
     draggablepanelVersion = '1.9'
+    frescoViewerVersion = '0.5.0'
 }
 

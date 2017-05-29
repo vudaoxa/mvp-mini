@@ -12,6 +12,7 @@ import net.mfilm.ui.base.rv.BaseLoadMoreFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.chapters.rv.ChaptersRvAdapter
+import net.mfilm.ui.manga_info.MangaInfoMvpView
 import net.mfilm.utils.AppConstants
 import net.mfilm.utils.DebugLog
 import net.mfilm.utils.LIMIT
@@ -19,22 +20,11 @@ import net.mfilm.utils.show
 import java.io.Serializable
 import javax.inject.Inject
 
+
 /**
  * Created by tusi on 5/27/17.
  */
 class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
-    @Inject
-    lateinit var mChaptersPresenter: ChaptersMvpPresenter<ChaptersMvpView>
-    var mChaptersRvAdatepr: ChaptersRvAdapter<Chapter>? = null
-    override var isDataEnd: Boolean
-        get() = false
-        set(value) {}
-
-    override fun onLoadMore() {
-        DebugLog.e("--------------------onLoadMore----------------------")
-        mChaptersRvAdatepr?.onAdapterLoadMore { requestChapters() }
-    }
-
     companion object {
         fun newInstance(obj: Any?): ChaptersFragment {
             val fragment = ChaptersFragment()
@@ -45,17 +35,26 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         }
     }
 
-    private lateinit var manga: Manga
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        manga = arguments.getSerializable(AppConstants.EXTRA_DATA) as Manga
-    }
+    @Inject
+    lateinit var mChaptersPresenter: ChaptersMvpPresenter<ChaptersMvpView>
+    var mChaptersRvAdapter: ChaptersRvAdapter<Chapter>? = null
 
+    private lateinit var manga: Manga
+    private var mCurrentReadingChapter: Chapter? = null
+    override var currentReadingChapter: Chapter?
+        get() {
+            mCurrentReadingChapter?.apply { return this }
+            return null
+        }
+        set(value) {
+            mCurrentReadingChapter = value
+        }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(net.mfilm.R.layout.fragment_chapters, container, false)
     }
 
     override fun initFields() {
+        manga = arguments.getSerializable(AppConstants.EXTRA_DATA) as Manga
         activityComponent.inject(this)
         mChaptersPresenter.onAttach(this)
     }
@@ -96,7 +95,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun onChaptersNull() {
         DebugLog.e("----------------onChaptersNull------------------")
-        mChaptersRvAdatepr?.apply {
+        mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 nullByAdapter(true)
             }
@@ -106,27 +105,51 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override fun initChapters(chapters: List<Chapter>) {
         DebugLog.e("----------------initChapters-----------------${chapters.size}-------")
         root_view.show(true)
-        mChaptersRvAdatepr?.apply {
+        mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
             }
         } ?: let {
-            mChaptersRvAdatepr = ChaptersRvAdapter(context, chapters.toMutableList(), this)
-            rv.adapter = mChaptersRvAdatepr
+            mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
+            rv.adapter = mChaptersRvAdapter
+            mCurrentReadingChapter = chapters[0]
         }
     }
 
     override fun onClick(position: Int, event: Int) {
         when (event) {
             TYPE_ITEM -> {
-
+                mChaptersRvAdapter?.apply {
+                    mData.let { d ->
+                        d?.apply {
+                            val chapter = d[position]
+                            parentFragment?.apply {
+                                if (this is MangaInfoMvpView) {
+                                    mCurrentReadingChapter = chapter
+                                    onReadBtnClicked()
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
+    }
+
+    override var isDataEnd: Boolean
+        get() = false
+        set(value) {}
+
+    override fun onLoadMore() {
+        DebugLog.e("--------------------onLoadMore----------------------")
+        mChaptersRvAdapter?.onAdapterLoadMore { requestChapters() }
     }
 
 //    override fun onConfigurationChanged(newConfig: Configuration?) {
 //        super.onConfigurationChanged(newConfig)
 //        view?.requestLayout()
 //    }
+
+
 }
