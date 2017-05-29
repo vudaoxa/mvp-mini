@@ -16,7 +16,6 @@ import net.mfilm.ui.chapters.ChaptersFragment
 import net.mfilm.ui.chapters.ChaptersMvpView
 import net.mfilm.utils.IndexTags
 import net.mfilm.utils.TimeUtils
-import net.mfilm.utils.handler
 import net.mfilm.utils.setText
 import java.io.Serializable
 
@@ -92,9 +91,7 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
     }
 
     fun viewFullRead() {
-        handler({
-            screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_FULL_READ, typeContent = null, obj = manga)
-        }, 0)
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_FULL_READ, typeContent = null, obj = manga)
     }
 
     override fun attachChaptersFragment() {
