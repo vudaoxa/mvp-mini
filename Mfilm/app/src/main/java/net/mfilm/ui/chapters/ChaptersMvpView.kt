@@ -13,6 +13,13 @@ interface ChaptersMvpView : MvpView, ICallbackOnClick {
     fun onChaptersResponse(chaptersResponse: ChaptersResponse?)
     fun onChaptersNull()
     fun initChapters(chapters: List<Chapter>)
+    var currentReadingPosition: Int?
+    var prevPosition: Int?
+    var nextPosition: Int?
     var currentReadingChapter: Chapter?
+    var prevChapter: Chapter?
+    var nextChapter: Chapter?
+    val chapters: List<Chapter>?
+    fun loadMoreOnDemand()
 //    fun onResumeReading()
 }

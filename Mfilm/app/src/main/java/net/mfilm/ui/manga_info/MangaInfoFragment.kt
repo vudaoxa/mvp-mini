@@ -13,7 +13,6 @@ import net.mfilm.R
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.chapters.ChaptersFragment
-import net.mfilm.ui.chapters.ChaptersMvpView
 import net.mfilm.utils.IndexTags
 import net.mfilm.utils.TimeUtils
 import net.mfilm.utils.setText
@@ -34,7 +33,7 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
         }
     }
 
-    private var mChaptersMvpView: ChaptersMvpView? = null
+    //    private var mChaptersMvpView: ChaptersMvpView? = null
     private var mChaptersFragment: ChaptersFragment? = null
     private lateinit var manga: Manga
     override val chaptersContainerView: View
@@ -109,7 +108,7 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
     override fun obtainChaptersFragment(): Fragment? {
         mChaptersFragment?.apply { return this }
         mChaptersFragment = ChaptersFragment.newInstance(manga)
-        mChaptersMvpView = mChaptersFragment
+//        mChaptersMvpView = mChaptersFragment
         return mChaptersFragment
     }
 
@@ -132,6 +131,6 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
 
     override fun onReadBtnClicked() {
         screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, typeContent = null,
-                obj = mChaptersMvpView?.currentReadingChapter)
+                obj = mChaptersFragment)
     }
 }

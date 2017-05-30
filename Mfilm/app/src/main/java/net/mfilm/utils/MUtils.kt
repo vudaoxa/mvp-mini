@@ -25,7 +25,6 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.joanzapata.iconify.fonts.IoniconsIcons
 import com.joanzapata.iconify.fonts.IoniconsModule
-import com.stfalcon.frescoimageviewer.ImageViewer
 import net.mfilm.R
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.NavItem
@@ -36,17 +35,14 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
-fun showFresco(context: Context, list: List<String>, startPosition: Int = 0) {
-    ImageViewer.Builder(context, list)
-            .setStartPosition(startPosition)
-            .show()
-}
+
 fun Fragment.isVisOk() = isVisible && isAdded && isInLayout
 var tabletSize = false
 
 fun obtainTabletSize(mContext: Context) {
     tabletSize = mContext.resources.getBoolean(R.bool.isTablet)
 }
+
 var spanCounts = listOf<SpanCount>()
 fun initSpanCounts() {
     val spanTabletPortrait = SpanCount(true, Configuration.ORIENTATION_PORTRAIT, 6)
@@ -55,6 +51,7 @@ fun initSpanCounts() {
     val spanPhoneLandscape = SpanCount(false, Configuration.ORIENTATION_LANDSCAPE, 5)
     spanCounts = listOf(spanTabletPortrait, spanTabletLandscape, spanPhonePortrait, spanPhoneLandscape)
 }
+
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
     text?.apply {
         if (!TextUtils.isEmpty(this)) {
@@ -97,6 +94,7 @@ fun getTitledText(content: String): SpannableString {
     }
     return res
 }
+
 var navs = mutableListOf<NavItem>()
 val navIds = listOf<Int>(R.id.nav_home, R.id.nav_fav, R.id.nav_history)
 val indexTags = listOf<Int>(IndexTags.FRAGMENT_HOME, IndexTags.FRAGMENT_FAV, IndexTags.FRAGMENT_HISTORY)

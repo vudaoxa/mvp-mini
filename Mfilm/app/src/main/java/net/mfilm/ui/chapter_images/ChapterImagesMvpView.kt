@@ -1,5 +1,6 @@
 package net.mfilm.ui.chapter_images
 
+import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.MvpView
@@ -12,4 +13,6 @@ interface ChapterImagesMvpView : MvpView {
     fun onChapterImagesResponse(chapterImagesResponse: ChapterImagesResponse?)
     fun onChapterImagesNull()
     fun initChapterImages(images: List<ChapterImage>)
+    val prevChapter: Chapter?
+    val nextChapter: Chapter?
 }

@@ -73,6 +73,7 @@
         <item name="android:layout_marginRight">@dimen/dimen5</item>
         <item name="android:padding">@dimen/dimen0</item>
         <item name="android:maxLines">@integer/max_line_item_property</item>
+        <item name="android:textColor">@color/white</item>
     </style>
     <style name="TextStyle.Regular.no_pading" parent="TextStyle">
         <item name="android:textColor">@color/grey_90</item>

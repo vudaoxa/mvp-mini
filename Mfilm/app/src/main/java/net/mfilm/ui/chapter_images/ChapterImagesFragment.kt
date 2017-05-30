@@ -8,9 +8,9 @@ import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.chapters.ChaptersFragment
 import net.mfilm.utils.AppConstants
 import net.mfilm.utils.DebugLog
-import net.mfilm.utils.showFresco
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -30,20 +30,32 @@ class ChapterImagesFragment : BaseStackFragment(), ChapterImagesMvpView {
 
     @Inject
     lateinit var mChapterImagesPresenter: ChapterImagesMvpPresenter<ChapterImagesMvpView>
-    var chapter: Chapter? = null
+    private var mChaptersFragment: ChaptersFragment? = null
+    //    private var mChaptersMvpView: ChaptersMvpView? = null
+    //    var chapter: Chapter? = null
+    override val prevChapter: Chapter?
+        get() = mChaptersFragment?.prevChapter
+    override val nextChapter: Chapter?
+        get() = mChaptersFragment?.nextChapter
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(net.mfilm.R.layout.fragment_chapter_images, container, false)
     }
 
     override fun initFields() {
-        chapter = arguments.getSerializable(AppConstants.EXTRA_DATA) as? Chapter?
+//        chapter = arguments.getSerializable(AppConstants.EXTRA_DATA) as? Chapter?
+        mChaptersFragment = arguments.getSerializable(AppConstants.EXTRA_DATA) as? ChaptersFragment?
         activityComponent.inject(this)
         mChapterImagesPresenter.onAttach(this)
     }
 
     override fun initViews() {
-        chapter?.apply {
-            requestChapterImages(id!!)
+        mChaptersFragment?.apply {
+            currentReadingChapter.let { c ->
+                c?.apply {
+                    requestChapterImages(c.id!!)
+                }
+            }
         }
     }
 
@@ -71,6 +83,6 @@ class ChapterImagesFragment : BaseStackFragment(), ChapterImagesMvpView {
     }
 
     override fun initChapterImages(images: List<ChapterImage>) {
-        showFresco(context, images.map { it.url!! })
+        mChapterImagesPresenter.showFresco(context, images.map { it.url!! }.toMutableList())
     }
 }
