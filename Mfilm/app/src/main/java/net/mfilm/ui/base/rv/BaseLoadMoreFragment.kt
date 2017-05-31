@@ -21,6 +21,7 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
             _pape = value
         }
     var mCallBackLoadMore: ALoadMore? = null
+    private var mEndlessRvScrollListener: EndlessRvScrollListener? = null
     init {
         mCallBackLoadMore = object : ALoadMore({ onLoadMore() }) {
             override fun onLoadMore() {
@@ -42,8 +43,6 @@ abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
         mCallBackLoadMore?.reset()
         mEndlessRvScrollListener?.reset()
     }
-
-    private var mEndlessRvScrollListener: EndlessRvScrollListener? = null
 
     fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore?) {
         when (rv.layoutManager) {

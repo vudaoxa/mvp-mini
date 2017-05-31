@@ -137,7 +137,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
-                fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(obj))
             }
             IndexTags.FRAGMENT_FAV -> {
 
@@ -149,6 +148,11 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNewScreenRequested(indexTag: Int, fragment: Fragment?, obj: Any?) {
+        when (indexTag) {
+            IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
+                fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(fragment))
+            }
+        }
     }
 
     /**

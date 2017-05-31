@@ -3,6 +3,7 @@ package net.mfilm.ui.mangas
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -142,6 +143,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
             mr?.apply {
                 mr.mangasPaging.let { mp ->
                     mp?.apply {
+                        isDataEnd = TextUtils.isEmpty(nextPageUrl)
                         mp.mangas.let { mgs ->
                             mgs?.apply {
                                 if (mgs.isNotEmpty()) {

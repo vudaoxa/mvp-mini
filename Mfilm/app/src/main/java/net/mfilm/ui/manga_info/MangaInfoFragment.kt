@@ -130,7 +130,7 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
 //    }
 
     override fun onReadBtnClicked() {
-        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, typeContent = null,
-                obj = mChaptersFragment)
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = mChaptersFragment,
+                obj = null)
     }
 }

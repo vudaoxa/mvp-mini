@@ -15,4 +15,10 @@ interface ChapterImagesMvpView : MvpView {
     fun initChapterImages(images: List<ChapterImage>)
     val prevChapter: Chapter?
     val nextChapter: Chapter?
+    fun loadMoreOnDemand()
+    fun onChaptersResponse()
+    var chapters: MutableList<Chapter>
+    fun addChapter(chapter: Chapter)
+    fun nextChapter()
+
 }

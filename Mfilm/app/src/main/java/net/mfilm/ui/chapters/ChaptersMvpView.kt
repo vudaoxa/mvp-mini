@@ -3,6 +3,7 @@ package net.mfilm.ui.chapters
 import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChaptersResponse
 import net.mfilm.ui.base.MvpView
+import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.utils.ICallbackOnClick
 
 /**
@@ -20,6 +21,10 @@ interface ChaptersMvpView : MvpView, ICallbackOnClick {
     var prevChapter: Chapter?
     var nextChapter: Chapter?
     val chapters: List<Chapter>?
+    fun nextChapter()
     fun loadMoreOnDemand()
+    fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView)
+    //    var chapterImagesFragment: ChapterImagesFragment?
+    var chapterImagesFragment: ChapterImagesMvpView?
 //    fun onResumeReading()
 }

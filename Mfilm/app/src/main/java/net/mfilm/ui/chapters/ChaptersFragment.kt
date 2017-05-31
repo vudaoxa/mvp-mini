@@ -1,6 +1,7 @@
 package net.mfilm.ui.chapters
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.base.rv.BaseLoadMoreFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
+import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.ui.chapters.rv.ChaptersRvAdapter
 import net.mfilm.ui.manga_info.MangaInfoMvpView
 import net.mfilm.utils.AppConstants
@@ -24,7 +26,7 @@ import javax.inject.Inject
 /**
  * Created by tusi on 5/27/17.
  */
-class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView, Serializable {
+class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     companion object {
         fun newInstance(obj: Any?): ChaptersFragment {
             val fragment = ChaptersFragment()
@@ -38,11 +40,19 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView, Serializable {
     @Inject
     lateinit var mChaptersPresenter: ChaptersMvpPresenter<ChaptersMvpView>
     var mChaptersRvAdapter: ChaptersRvAdapter<Chapter>? = null
+    //    private var mChapterImagesFragment: ChapterImagesFragment?=null
+    private var mChapterImagesFragment: ChapterImagesMvpView? = null
 
     private lateinit var manga: Manga
     private var mCurrentReadingChapter: Chapter? = null
     private var mPrevChapter: Chapter? = null
     private var mNextChapter: Chapter? = null
+    //    override var chapterImagesFragment: ChapterImagesFragment?
+    override var chapterImagesFragment: ChapterImagesMvpView?
+        get() = mChapterImagesFragment
+        set(value) {
+            mChapterImagesFragment = value
+        }
     override var prevChapter: Chapter?
         get() = mPrevChapter
         set(value) {
@@ -52,7 +62,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView, Serializable {
         get() {
             mNextChapter?.apply { return this }
             loadMoreOnDemand()
-            xx
             return null
         }
         set(value) {
@@ -89,7 +98,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView, Serializable {
             mCurrentPosition = value!!
             chapters?.apply {
                 currentReadingChapter = get(mCurrentPosition)
-                if (mCurrentPosition < size) nextPosition = mCurrentPosition + 1
+                if (mCurrentPosition < size - 1) nextPosition = mCurrentPosition + 1
                 if (mCurrentPosition > 0) prevPosition = mCurrentPosition - 1
             }
         }
@@ -127,6 +136,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView, Serializable {
             cr?.apply {
                 cr.chapters.let { cs ->
                     cs?.apply {
+                        isDataEnd = TextUtils.isEmpty(nextPageUrl)
                         cs.data.let { dt ->
                             dt?.apply {
                                 if (dt.isNotEmpty()) {
@@ -156,12 +166,18 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView, Serializable {
             onAdapterLoadMoreFinished {
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
+                mChapterImagesFragment?.apply {
+                    this@ChaptersFragment.nextChapter()
+                }
             }
         } ?: let {
             mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
             rv.adapter = mChaptersRvAdapter
             currentReadingPosition = 0
 //            currentReadingChapter = chapters[0]
+        }
+        mChapterImagesFragment?.apply {
+            onChaptersResponse()
         }
     }
 
@@ -171,7 +187,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView, Serializable {
                 mChaptersRvAdapter?.apply {
                     mData.let { d ->
                         d?.apply {
-                            val chapter = d[position]
+                            //                            val chapter = d[position]
                             parentFragment?.apply {
                                 if (this is MangaInfoMvpView) {
                                     currentReadingPosition = position
@@ -197,6 +213,22 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView, Serializable {
 
     override fun loadMoreOnDemand() {
         mCallBackLoadMore?.onLoadMore()
+    }
+
+    override fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
+        nextChapter.let { n ->
+            n?.apply {
+                nextChapter()
+                chapterImagesMvpView.nextChapter()
+            } ?: let {
+                loadMoreOnDemand()
+                chapterImagesFragment = chapterImagesMvpView
+            }
+        }
+    }
+
+    override fun nextChapter() {
+        currentReadingPosition = currentReadingPosition!! + 1
     }
 //    override fun onConfigurationChanged(newConfig: Configuration?) {
 //        super.onConfigurationChanged(newConfig)

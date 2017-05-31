@@ -7,6 +7,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import net.mfilm.R
 import net.mfilm.data.DataMng
+import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
@@ -40,26 +41,35 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
         compositeDisposable.add(d)
     }
 
-    override fun showFresco(context: Context, list: MutableList<String>, startPosition: Int) {
+    //    how to add more images to the tail of imageviewer
+    override fun showFresco(context: Context, chapter: Chapter, list: MutableList<String>, startPosition: Int) {
         val builder = ImageViewer.Builder(context, list)
         val overlayView = ImageOverlayView(context)
         builder.apply {
             setStartPosition(startPosition)
             setImageChangeListener { position ->
-                val text = "${position} / ${list.size}"
+                val text = "${chapter.name} ${position + 1} / ${list.size}"
                 DebugLog.e("--------------OnImageChangeListener-------------$text")
-                if (list.size - position == 3) {
-                    DebugLog.e("---------load more-----------")
+                if (position == list.size - 1) {
+                    DebugLog.e("---------load next chapter-----------")
+                    loadMore()
+                }
+                if (position == 0) {
+                    DebugLog.e("-----------load prev chapter-------")
                 }
                 overlayView.setShareText(list[position])
                 overlayView.setDescription(text)
             }
             setOverlayView(overlayView)
+            setOnDismissListener {
+                DebugLog.e("---------------onDismiss------------------")
+            }
             show()
         }
+
     }
 
     override fun loadMore() {
-
+        mvpView?.loadMoreOnDemand()
     }
 }
