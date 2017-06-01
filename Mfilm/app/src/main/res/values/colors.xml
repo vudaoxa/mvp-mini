@@ -30,6 +30,7 @@
     <color name="light_gray">#dbdbdb</color>
     <color name="transparent">#00000000</color>
     <color name="translucent_white">#88ffffff</color>
+    <color name="translucent_ripple">#22FAFAFA</color>
     <color name="fb">#3b5998</color>
     <color name="google">#d34836</color>
 
