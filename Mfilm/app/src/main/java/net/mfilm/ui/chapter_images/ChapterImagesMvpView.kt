@@ -19,6 +19,8 @@ interface ChapterImagesMvpView : MvpView {
     fun onChaptersResponse()
     var chapters: MutableList<Chapter>
     fun addChapter(chapter: Chapter)
+    fun addChapter(chapter: Chapter, f: () -> Unit)
+    //    fun addChapter(chapter: Chapter, f:(Int)->Unit)
     fun nextChapter()
 
 }

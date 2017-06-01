@@ -46,6 +46,26 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         chapters.add(chapter)
     }
 
+    override fun addChapter(chapter: Chapter, f: () -> Unit) {
+
+        chapters.apply {
+            fun doIt() {
+                add(chapter)
+                f()
+            }
+            if (isEmpty()) {
+                doIt()
+            } else {
+                if (last() != chapter) {
+                    DebugLog.e("--------------next chapter ----- $chapter")
+                    doIt()
+                } else {
+                    DebugLog.e("--------------same--------------")
+                }
+            }
+
+        }
+    }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(net.mfilm.R.layout.fragment_chapter_images, container, false)
     }
@@ -61,8 +81,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         mChaptersFragment?.apply {
             currentReadingChapter.let { c ->
                 c?.apply {
-                    addChapter(c)
-                    requestChapterImages(c.id!!)
+                    addChapter(c, { requestChapterImages(c.id!!) })
                 }
             }
         }
@@ -92,7 +111,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun initChapterImages(images: List<ChapterImage>) {
-        mChapterImagesPresenter.showFresco(context, chapters.last(), images.map { it.url!! }.toMutableList())
+        context?.apply {
+            mChapterImagesPresenter.showFresco(this, chapters.last(), images.map { it.url!! }.toMutableList(), images.size - 2)
+        }
     }
 
     override fun loadMoreOnDemand() {

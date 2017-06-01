@@ -34,10 +34,12 @@ interface ICallbackLoadMore {
 interface IAdapterLoadMore {
     //    fun onAdapterLoadMore()
     fun onAdapterLoadMore(f: () -> Unit)
+
     fun reset()
     //    fun onAdapterLoadMoreFinished()
     fun onAdapterLoadMoreFinished(f: () -> Unit)
 }
+
 interface ICallbackRefresh {
     fun setRefreshing(refreshing: Boolean)
     fun pullToRefreshEnabled(): Boolean
@@ -60,9 +62,15 @@ interface ICallbackToolbar {
     val mBtnFollow: ImageButton
     val mNavView: NavigationView
     val mLayoutBtnsInfo: LinearLayout
+    val mLayoutInputText: LinearLayout
+    //    var mMenu: Menu?
+//    var mToggle: ActionBarDrawerToggle?
+    fun showConfirmExit()
+
     fun onAbout()
     fun onSettings()
-    fun onSearch()
+    fun onSearch(search: Boolean)
     fun onShare()
     fun onFollow()
+
 }

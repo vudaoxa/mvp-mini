@@ -23,6 +23,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
+import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.text.TextUtils
 import android.view.Menu
@@ -175,10 +176,20 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     fun showBtnBack() {
         mToolbarBack.show(true)
+        hideDrawerToggle()
+    }
+
+    fun hideDrawerToggle() {
         mToolbar.navigationIcon = null
     }
+
+    fun showOptionsMenu(show: Boolean) {
+        mMenu?.apply {
+            findItem(actionSettingsId).isVisible = show
+            findItem(actionAboutId).isVisible = show
+        }
+    }
     protected fun showDrawer() {
-//        supportActionBar?.show()
         mToolbarBack.visibility = gone
         syncStateDrawer()
     }
@@ -207,8 +218,46 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         mBtnSearch.setImageDrawable(icon_search)
         mBtnFollow.setImageDrawable(icon_star)
         mBtnShare.setImageDrawable(icon_share)
-        mBtnSearch.setOnClickListener { onSearch() }
+        mBtnSearch.setOnClickListener { onSearch(true) }
         mBtnFollow.setOnClickListener { onFollow() }
-        mBtnSearch.setOnClickListener { onShare() }
+        mBtnShare.setOnClickListener { onShare() }
+    }
+
+    override fun onSearch(search: Boolean) {
+        DebugLog.e("-------------------onSearch-------------$search")
+        /*
+        * hide toggle menu --  1
+        * hide toolbar title-- 1
+        * hide btns----1
+        * hide options menu----1
+        * hide rootview-----1
+        * show btn back--1
+        * */
+
+        mToolbarTitle.show(!search)
+        mBtnSearch.show(!search)
+        mLayoutInputText.show(search)
+        containerView.show(!search)
+        showOptionsMenu(!search)
+        if (search) {
+            showBtnBack()
+        } else {
+            showDrawer()
+            hideKeyboard()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (mLayoutInputText.isVisible()) {
+            onSearch(false)
+        } else {
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                if (fragmentStackManager.currentFragment.javaClass == homeClass) {
+                    showConfirmExit()
+                } else super.onBackPressed()
+            }
+        }
     }
 }

@@ -176,6 +176,7 @@ fun View.show(show: Boolean) {
     }
 }
 
+fun View.isVisible() = visibility == visible
 fun showLoadingDialog(context: Context): ProgressDialog {
     val progressDialog = ProgressDialog(context)
     progressDialog.show()

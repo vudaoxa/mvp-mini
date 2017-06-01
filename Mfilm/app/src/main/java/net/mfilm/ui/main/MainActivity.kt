@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -17,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.item_main_action_btns.*
+import kotlinx.android.synthetic.main.layout_input_text.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.base.stack.BaseStackFragment
@@ -46,6 +48,8 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         get() = nav_view
     override val mLayoutBtnsInfo: LinearLayout
         get() = layout_btns_info
+    override val mLayoutInputText: LinearLayout
+        get() = layout_input_text
     override val actionSettingsId: Int
         get() = R.id.action_settings
     override val actionAboutId: Int
@@ -58,6 +62,8 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override val contentFrameId: Int
         get() = R.id.container
 
+    override val containerView: View
+        get() = container
     override val homeClass: Class<*>
         get() = HomePagerFragment::class.java
 
@@ -72,19 +78,15 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onAbout() {
-
-    }
-
-    override fun onSearch() {
-
+        DebugLog.e("---------------onAbout-----------")
     }
 
     override fun onShare() {
-
+        DebugLog.e("---------------onShare-----------")
     }
 
     override fun onFollow() {
-
+        DebugLog.e("---------------onFollow-----------")
     }
     @Inject
     lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
@@ -103,17 +105,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         mNavView.setNavigationItemSelectedListener(this)
     }
 
-    override fun onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            if (fragmentStackManager.currentFragment.javaClass == homeClass) {
-                showConfirmExit()
-            } else super.onBackPressed()
-        }
-    }
-
-    private fun showConfirmExit() {
+    override fun showConfirmExit() {
         DialogUtil.showMessageConfirm(this, R.string.notifications, R.string.confirm_exit,
                 MaterialDialog.SingleButtonCallback { _, _ -> finish() })
     }
@@ -159,8 +151,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
      * OVERRIDE FRAGMENT STACK
      */
 
-
-
     override fun onMainScreenRequested() = fragmentStackManager.run {
         clearStack()
         swapFragment(HomePagerFragment.newInstance())
@@ -179,10 +169,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         }
         mLayoutBtnsInfo.show(info)
         mBtnSearch.show(!info)
-        mMenu?.apply {
-            findItem(actionSettingsId).isVisible = home
-            findItem(actionAboutId).isVisible = home
-        }
+        showOptionsMenu(home)
     }
     // End fragment stack
 

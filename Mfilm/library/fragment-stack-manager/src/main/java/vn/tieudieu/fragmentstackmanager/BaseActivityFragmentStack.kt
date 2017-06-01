@@ -2,6 +2,7 @@ package vn.tieudieu.fragmentstackmanager
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.View
 
 /**
  * Created by chienchieu on 28/01/2016.
@@ -16,6 +17,7 @@ abstract class BaseActivityFragmentStack : BaseActivity(), ScreenManager {
         initializeFragmentSwapper(savedInstanceState)
     }
 
+    protected abstract val containerView: View
     protected abstract val contentFrameId: Int
 
     protected abstract val homeClass: Class<*>

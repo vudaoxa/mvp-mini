@@ -15,10 +15,7 @@ import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.ui.chapters.rv.ChaptersRvAdapter
 import net.mfilm.ui.manga_info.MangaInfoMvpView
-import net.mfilm.utils.AppConstants
-import net.mfilm.utils.DebugLog
-import net.mfilm.utils.LIMIT
-import net.mfilm.utils.show
+import net.mfilm.utils.*
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -79,26 +76,35 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override var prevPosition: Int?
         get() = mPrevPosition
         set(value) {
-            mPrevPosition = value!!
             chapters?.apply {
-                prevChapter = get(mPrevPosition)
+                if (value!! >= 0) {
+                    mPrevPosition = value
+                    prevChapter = get(mPrevPosition)
+                }
             }
         }
     override var nextPosition: Int?
         get() = mNextPosition
         set(value) {
-            mNextPosition = value!!
             chapters?.apply {
-                nextChapter = get(mNextPosition)
+                if (value!! <= size - 1) {
+                    mNextPosition = value
+                    nextChapter = get(mNextPosition)
+                }
             }
         }
     override var currentReadingPosition: Int?
         get() = mCurrentPosition
         set(value) {
-            mCurrentPosition = value!!
             chapters?.apply {
-                currentReadingChapter = get(mCurrentPosition)
-                if (mCurrentPosition < size - 1) nextPosition = mCurrentPosition + 1
+                if (value!! <= size - 1) {
+                    mCurrentPosition = value
+                    currentReadingChapter = get(mCurrentPosition)
+                    if (mCurrentPosition < size - 1) nextPosition = mCurrentPosition + 1
+                } else {
+                    nextChapter = null
+                }
+
                 if (mCurrentPosition > 0) prevPosition = mCurrentPosition - 1
             }
         }
@@ -161,20 +167,21 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun initChapters(chapters: List<Chapter>) {
         DebugLog.e("----------------initChapters-----------------${chapters.size}-------")
+        if (!isVisOk()) return
         root_view.show(true)
         mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
+                val x = mData?.size
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
                 mChapterImagesFragment?.apply {
-                    this@ChaptersFragment.nextChapter()
+                    currentReadingPosition = x
                 }
             }
         } ?: let {
             mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
             rv.adapter = mChaptersRvAdapter
             currentReadingPosition = 0
-//            currentReadingChapter = chapters[0]
         }
         mChapterImagesFragment?.apply {
             onChaptersResponse()
@@ -215,18 +222,49 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         mCallBackLoadMore?.onLoadMore()
     }
 
+//    override fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
+//        fun loadMore(){
+//            loadMoreOnDemand()
+//            chapterImagesFragment = chapterImagesMvpView
+//        }
+////        chapters?.apply {
+////            if(nextPosition == size - 1){
+////                loadMore()
+////            }else{
+////
+////            }
+////        }
+//        nextChapter.let { n ->
+//            n?.apply {
+//                nextChapter()
+//                chapterImagesMvpView.nextChapter()
+//////                if(nextPosition == )
+////                if(currentReadingPosition == nextPosition){
+////                    loadMore()
+////                }else{
+////                    nextChapter()
+////                    chapterImagesMvpView.nextChapter()
+////                }
+//            } ?: let {
+//                loadMore()
+//            }
+//        }
+//    }
+
     override fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
+        fun loadMore() {
+            loadMoreOnDemand()
+            chapterImagesFragment = chapterImagesMvpView
+        }
         nextChapter.let { n ->
             n?.apply {
                 nextChapter()
                 chapterImagesMvpView.nextChapter()
             } ?: let {
-                loadMoreOnDemand()
-                chapterImagesFragment = chapterImagesMvpView
+                loadMore()
             }
         }
     }
-
     override fun nextChapter() {
         currentReadingPosition = currentReadingPosition!! + 1
     }
