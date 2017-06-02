@@ -68,6 +68,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         get() = mCurrentReadingChapter
         set(value) {
             mCurrentReadingChapter = value
+            DebugLog.e("-----------currentReadingChapter---------$mCurrentReadingChapter")
         }
 
     private var mPrevPosition = 0
@@ -96,12 +97,15 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override var currentReadingPosition: Int?
         get() = mCurrentPosition
         set(value) {
+
             chapters?.apply {
+                DebugLog.e("-----------currentReadingPosition--------------$value------${size - 1}")
                 if (value!! <= size - 1) {
                     mCurrentPosition = value
                     currentReadingChapter = get(mCurrentPosition)
                     if (mCurrentPosition < size - 1) nextPosition = mCurrentPosition + 1
                 } else {
+                    loadMoreOnDemand()
                     nextChapter = null
                 }
 
@@ -167,15 +171,17 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun initChapters(chapters: List<Chapter>) {
         DebugLog.e("----------------initChapters-----------------${chapters.size}-------")
-        if (!isVisOk()) return
+//        if (!isVisOk()) return
         root_view.show(true)
         mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 val x = mData?.size
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
-                mChapterImagesFragment?.apply {
+                chapterImagesFragment?.apply {
                     currentReadingPosition = x
+                } ?: let {
+                    DebugLog.e("--------------chapterImagesFragment null---1----------------")
                 }
             }
         } ?: let {
@@ -183,9 +189,14 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             rv.adapter = mChaptersRvAdapter
             currentReadingPosition = 0
         }
-        mChapterImagesFragment?.apply {
-            onChaptersResponse()
-        }
+        handler({
+            chapterImagesFragment?.apply {
+                onChaptersResponse()
+            } ?: let {
+                DebugLog.e("--------------chapterImagesFragment null---2----------------")
+            }
+        }, 250)
+
     }
 
     override fun onClick(position: Int, event: Int) {
@@ -219,53 +230,28 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     }
 
     override fun loadMoreOnDemand() {
+        DebugLog.e("------------loadMoreOnDemand---------------")
         mCallBackLoadMore?.onLoadMore()
     }
 
-//    override fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
-//        fun loadMore(){
-//            loadMoreOnDemand()
-//            chapterImagesFragment = chapterImagesMvpView
-//        }
-////        chapters?.apply {
-////            if(nextPosition == size - 1){
-////                loadMore()
-////            }else{
-////
-////            }
-////        }
-//        nextChapter.let { n ->
-//            n?.apply {
-//                nextChapter()
-//                chapterImagesMvpView.nextChapter()
-//////                if(nextPosition == )
-////                if(currentReadingPosition == nextPosition){
-////                    loadMore()
-////                }else{
-////                    nextChapter()
-////                    chapterImagesMvpView.nextChapter()
-////                }
-//            } ?: let {
-//                loadMore()
-//            }
-//        }
-//    }
-
     override fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
+        chapterImagesFragment = chapterImagesMvpView
         fun loadMore() {
+            DebugLog.e("-----------------loadMore----------$chapterImagesFragment")
             loadMoreOnDemand()
-            chapterImagesFragment = chapterImagesMvpView
         }
+//        nextChapter()
         nextChapter.let { n ->
             n?.apply {
                 nextChapter()
-                chapterImagesMvpView.nextChapter()
+                chapterImagesFragment?.nextChapter()
             } ?: let {
                 loadMore()
             }
         }
     }
     override fun nextChapter() {
+        DebugLog.e("----------------nextChapter---------$currentReadingPosition")
         currentReadingPosition = currentReadingPosition!! + 1
     }
 //    override fun onConfigurationChanged(newConfig: Configuration?) {

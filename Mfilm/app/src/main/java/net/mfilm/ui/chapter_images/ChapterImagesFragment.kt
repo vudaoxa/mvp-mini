@@ -42,9 +42,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             mChapters = value
         }
 
-    override fun addChapter(chapter: Chapter) {
-        chapters.add(chapter)
-    }
+//    override fun addChapter(chapter: Chapter) {
+//        chapters.add(chapter)
+//    }
 
     override fun addChapter(chapter: Chapter, f: () -> Unit) {
 
@@ -56,11 +56,12 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             if (isEmpty()) {
                 doIt()
             } else {
-                if (last() != chapter) {
+                if (last().id != chapter.id) {
                     DebugLog.e("--------------next chapter ----- $chapter")
                     doIt()
                 } else {
                     DebugLog.e("--------------same--------------")
+                    loadMoreOnDemand()
                 }
             }
 
@@ -81,6 +82,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         mChaptersFragment?.apply {
             currentReadingChapter.let { c ->
                 c?.apply {
+                    DebugLog.e("----------initViews---------$c---------")
                     addChapter(c, { requestChapterImages(c.id!!) })
                 }
             }
@@ -128,6 +130,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     //it's called from ChaptersFragment
     override fun onChaptersResponse() {
+        DebugLog.e("----------------onChaptersResponse--------------")
         initViews()
     }
 }

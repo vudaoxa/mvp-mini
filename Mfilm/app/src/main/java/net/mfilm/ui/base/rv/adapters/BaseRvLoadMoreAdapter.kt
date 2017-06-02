@@ -24,7 +24,7 @@ abstract class BaseRvLoadMoreAdapter<V : Any>(mContext: Context, mData: MutableL
 
     override fun getItemCount() = mData?.size ?: 0
     override fun onAdapterLoadMore(f: () -> Unit) {
-        DebugLog.e("-------------onAdapterLoadMore-----------------")
+        DebugLog.e("-------------onAdapterLoadMore----------$isMoreLoading-------")
         if (isMoreLoading) return
         mData?.apply {
             isMoreLoading = true
@@ -37,7 +37,7 @@ abstract class BaseRvLoadMoreAdapter<V : Any>(mContext: Context, mData: MutableL
     }
 
     override fun onAdapterLoadMoreFinished(f: () -> Unit) {
-        DebugLog.e("------------------onAdapterLoadMoreFinished---------------------")
+
         handler({
             mData?.apply {
                 val l = itemCount
@@ -47,6 +47,7 @@ abstract class BaseRvLoadMoreAdapter<V : Any>(mContext: Context, mData: MutableL
                 }
             }
             isMoreLoading = false
+            DebugLog.e("------------------onAdapterLoadMoreFinished----------------$isMoreLoading-----")
             f()
         })
     }
