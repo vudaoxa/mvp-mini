@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/tv_name"
-        style="@style/TextStyle.Regular.14"
+        style="@style/TextStyle.Sans.Regular.14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/main_background"

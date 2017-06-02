@@ -41,19 +41,20 @@
 
     <!--=========================text styles========================-->
     <style name="TextStyle">
-        <item name="android:layout_marginTop">@dimen/dimen2</item>
-        <item name="android:layout_marginBottom">@dimen/dimen2</item>
-        <item name="android:layout_marginLeft">@dimen/dimen2</item>
-        <item name="android:layout_marginRight">@dimen/dimen2</item>
-        <item name="android:textColor">@color/black_effective</item>
-    </style>
-
-    <style name="TextStyle.Sans.Regular" parent="TextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/dimen5</item>
         <item name="android:textColor">@color/grey_90</item>
         <item name="android:padding">@dimen/dimen5</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textAppearance">@style/TextAppearance.Text.Sans.Regular</item>
+    </style>
+
+    <style name="TextStyle.Black" parent="TextStyle">
+        <item name="android:textColor">@color/black_effective</item>
+    </style>
+
+    <style name="TextStyle.Sans.Regular" parent="TextStyle.Black">
+        <item name="android:textAppearance">@style/TextAppearance.Sans.Regular</item>
     </style>
 
     <style name="TextStyle.Sans.Regular.16" parent="TextStyle.Sans.Regular">
@@ -64,68 +65,84 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="TextStyle.Regular.14" parent="TextStyle.Sans.Regular">
+    <style name="TextStyle.Sans.Regular.14" parent="TextStyle.Sans.Regular">
         <item name="android:textSize">@dimen/txt_size_14</item>
     </style>
 
-    <style name="TextStyle.Regular.manga_intro_14" parent="TextStyle.Regular.14">
+    <style name="TextStyle.Sans.Regular.14.manga_intro" parent="TextStyle.Sans.Regular.14.padding.0">
         <item name="android:layout_marginLeft">@dimen/dimen5</item>
         <item name="android:layout_marginRight">@dimen/dimen5</item>
-        <item name="android:padding">@dimen/dimen0</item>
         <item name="android:maxLines">@integer/max_line_item_property</item>
         <item name="android:textColor">@color/white</item>
     </style>
-    <style name="TextStyle.Regular.no_pading" parent="TextStyle">
-        <item name="android:textColor">@color/grey_90</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textAppearance">@style/TextAppearance.Text.Sans.Regular</item>
+
+    <style name="TextStyle.Sans.Regular.padding.0" parent="TextStyle.Sans.Regular">
+        <item name="android:padding">@dimen/dimen0</item>
     </style>
 
-    <style name="TextStyle.Regular.no_pading_center" parent="TextStyle.Regular.no_pading">
+    <style name="TextStyle.Sans.Regular.center.padding.0" parent="TextStyle.Sans.Regular.padding.0">
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="TextStyle.Regular.no_pading_16" parent="TextStyle.Regular.no_pading">
+    <style name="TextStyle.Sans.Regular.16.padding.0" parent="TextStyle.Sans.Regular.padding.0">
         <item name="android:textSize">@dimen/txt_size_16</item>
     </style>
 
-    <style name="TextStyle.Regular.no_pading_14" parent="TextStyle.Regular.no_pading">
+    <style name="TextStyle.Sans.Regular.14.padding.0" parent="TextStyle.Sans.Regular.padding.0">
         <item name="android:textSize">@dimen/txt_size_14</item>
     </style>
 
-    <style name="TextStyle.Regular.20" parent="TextStyle.Sans.Regular">
+    <style name="TextStyle.Sans.Regular.20" parent="TextStyle.Sans.Regular">
         <item name="android:textSize">@dimen/txt_size_20</item>
     </style>
 
-    <style name="TextStyle.Regular.center" parent="TextStyle.Sans.Regular">
+    <style name="TextStyle.Sans.Regular.center.min_width.150" parent="TextStyle.Sans.Regular.center">
         <item name="android:minWidth">@dimen/dimen150</item>
+    </style>
+
+    <style name="TextStyle.Sans.Regular.center" parent="TextStyle.Sans.Regular">
         <item name="android:gravity">center</item>
-        <item name="android:layout_margin">@dimen/dimen5</item>
     </style>
 
-    <style name="TextStyle.Bold" parent="TextStyle.Sans.Regular">
-        <item name="android:textAppearance">@style/TextAppearance.Text.Sans.Bold</item>
+    <style name="TextStyle.Sans.Bold" parent="TextStyle.Sans.Regular">
+        <item name="android:textAppearance">@style/TextAppearance.Sans.Bold</item>
     </style>
 
-    <style name="TextStyle.Bold.14" parent="TextStyle.Bold">
+    <style name="TextStyle.Sans.Bold.14" parent="TextStyle.Sans.Bold">
         <item name="android:textSize">@dimen/txt_size_14</item>
     </style>
 
-    <style name="TextStyle.Bold.16" parent="TextStyle.Bold">
+    <style name="TextStyle.Sans.Bold.16" parent="TextStyle.Sans.Bold">
         <item name="android:textSize">@dimen/txt_size_16</item>
     </style>
 
-    <style name="TextStyle.Bold.20" parent="TextStyle.Bold">
+    <style name="TextStyle.Sans.Bold.20" parent="TextStyle.Sans.Bold">
         <item name="android:textSize">@dimen/txt_size_20</item>
     </style>
 
-    <style name="TextStyle.Serif" parent="TextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_90</item>
-        <item name="android:padding">@dimen/dimen5</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textAppearance">@style/TextAppearance.Text.Serif</item>
+    <style name="TextStyle.Sans.Bold.center.min_width.150" parent="TextStyle.Sans.Bold.center">
+        <item name="android:minWidth">@dimen/dimen150</item>
+    </style>
+
+    <style name="TextStyle.Sans.Bold.center" parent="TextStyle.Sans.Bold">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TextAppearance.Sans.Bold" parent="android:TextAppearance">
+        <item name="fontPath">fonts/source-sans-pro/SourceSansPro-Bold.ttf</item>
+    </style>
+
+    <style name="TextAppearance.Sans.Regular" parent="android:TextAppearance">
+        <item name="fontPath">fonts/source-sans-pro/SourceSansPro-Regular.ttf</item>
+    </style>
+
+    <style name="TextAppearance.Sans.Italic" parent="android:TextAppearance">
+        <item name="fontPath">fonts/source-sans-pro/SourceSansPro-Italic.ttf</item>
+    </style>
+
+    <!--font serif-->
+    <style name="TextStyle.Serif" parent="TextStyle.Black">
+        <item name="android:textAppearance">@style/TextAppearance.Serif</item>
     </style>
 
     <style name="TextStyle.Serif.20" parent="TextStyle.Serif">
@@ -136,45 +153,23 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextStyle.Bold.center" parent="TextStyle.Bold">
-        <item name="android:minWidth">@dimen/dimen150</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_margin">@dimen/dimen5</item>
-    </style>
-
-    <style name="TextAppearance.Text.Serif" parent="android:TextAppearance">
+    <style name="TextAppearance.Serif" parent="android:TextAppearance">
         <item name="android:fontFamily">@string/font_serif</item>
     </style>
 
-    <style name="TextAppearance.Text.Sans.Bold" parent="android:TextAppearance">
-        <item name="fontPath">fonts/source-sans-pro/SourceSansPro-Bold.ttf</item>
-    </style>
-
-    <style name="TextAppearance.Text.Sans.Regular" parent="android:TextAppearance">
-        <item name="fontPath">fonts/source-sans-pro/SourceSansPro-Regular.ttf</item>
-    </style>
-
-    <style name="TextAppearance.Text.Sans.Italic" parent="android:TextAppearance">
-        <item name="fontPath">fonts/source-sans-pro/SourceSansPro-Italic.ttf</item>
-    </style>
-
-    <style name="TextAppearance.Text.Canaro" parent="android:TextAppearance">
+    <!--font canaro-->
+    <style name="TextAppearance.Canaro" parent="android:TextAppearance">
         <item name="fontPath">fonts/canaro_extra_bold.otf</item>
     </style>
 
-    <style name="TextStyle.Canaro" parent="TextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_90</item>
-        <item name="android:padding">@dimen/dimen5</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textAppearance">@style/TextAppearance.Text.Canaro</item>
+    <style name="TextStyle.Canaro" parent="TextStyle.Black">
+        <item name="android:textAppearance">@style/TextAppearance.Canaro</item>
     </style>
 
     <style name="TextStyle.Canaro.20" parent="TextStyle.Canaro">
         <item name="android:textSize">@dimen/txt_size_20</item>
     </style>
-    <!--=========================end button styles========================-->
+    <!--=========================end text styles========================-->
 
     <style name="ProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
         <item name="android:layout_width">match_parent</item>
@@ -235,7 +230,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/txt_size_16</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textAppearance">@style/TextAppearance.Text.Sans.Regular</item>
+        <item name="android:textAppearance">@style/TextAppearance.Sans.Regular</item>
     </style>
 
     <style name="Button.Primary.Medium" parent="Button.Primary">
