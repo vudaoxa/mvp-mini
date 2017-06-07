@@ -37,6 +37,7 @@ import net.mfilm.di.modules.ActModule
 import net.mfilm.ui.base.BaseFragment
 import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.*
+import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import vn.tieudieu.fragmentstackmanager.BaseActivityFragmentStack
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
@@ -100,14 +101,14 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun onError(message: String?) {
-        DebugLog.e(message)
+        Timber.e(message)
         hideLoading()
         MApplication.instance.showMessage(AppConstants.TYPE_TOAST_ERROR, message!!)
     }
 
     override fun onError(@StringRes resId: Int) {
 //        onError(getString(resId))
-        DebugLog.e(getString(resId))
+        Timber.e(getString(resId))
         hideLoading()
         MApplication.instance.showMessage(AppConstants.TYPE_TOAST_ERROR, resId)
     }
@@ -224,7 +225,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun onSearch(search: Boolean) {
-        DebugLog.e("-------------------onSearch-------------$search")
+        Timber.e("-------------------onSearch-------------$search")
         /*
         * hide toggle menu --  1
         * hide toolbar title-- 1

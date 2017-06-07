@@ -22,8 +22,8 @@ import io.reactivex.schedulers.Schedulers
 import net.mfilm.R
 import net.mfilm.data.DataMng
 import net.mfilm.ui.base.BasePresenter
-import net.mfilm.utils.DebugLog
 import net.mfilm.utils.handler
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -47,14 +47,14 @@ constructor(dataManager: DataMng, compositeDisposable: CompositeDisposable)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(Consumer<Boolean> { aBoolean ->
-                            DebugLog.d("xyz--subscribe-accept--" + aBoolean!!)
+                            Timber.d("xyz--subscribe-accept--" + aBoolean!!)
 
                             if (!isViewAttached) {
                                 return@Consumer
                             }
                             decideNextActivity()
                         }, Consumer<Throwable> { throwable ->
-                            DebugLog.d("xyz--Consumer-accept--" + throwable.message)
+                            Timber.d("xyz--Consumer-accept--" + throwable.message)
                             if (!isViewAttached) {
                                 return@Consumer
                             }

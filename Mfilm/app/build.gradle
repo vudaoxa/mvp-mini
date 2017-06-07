@@ -85,6 +85,7 @@ android {
         compile "com.squareup.okhttp3:okhttp:rootProject.$okhttpVersion"
         compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttpVersion"
 
+        compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
         compile "com.facebook.fresco:fresco:$rootProject.frescoVersion"
 
         //Toast

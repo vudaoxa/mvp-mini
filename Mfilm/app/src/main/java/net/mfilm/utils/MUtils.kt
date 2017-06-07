@@ -97,7 +97,7 @@ fun getTitledText(content: String): SpannableString {
 
 var navs = mutableListOf<NavItem>()
 val navIds = listOf<Int>(R.id.nav_home, R.id.nav_fav, R.id.nav_history)
-val indexTags = listOf<Int>(IndexTags.FRAGMENT_HOME, IndexTags.FRAGMENT_FAV, IndexTags.FRAGMENT_HISTORY)
+val indexTags = listOf<Any?>(IndexTags.FRAGMENT_HOME, IndexTags.FRAGMENT_FAV, IndexTags.FRAGMENT_HISTORY)
 fun initNavs() {
     for (i in navIds.indices) {
         navs.add(NavItem(navIds[i], indexTags[i]))

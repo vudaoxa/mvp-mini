@@ -3,6 +3,7 @@ package net.mfilm.utils
 import android.content.Context
 import android.util.SparseIntArray
 import net.mfilm.R
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -124,24 +125,24 @@ object TimeUtils {
 //        cal.set(Calendar.YEAR, year)
         val time = String.format("%02d:%02d", hour, minute)
         var res = ""
-        DebugLog.e("toFbFormatTime ${now.year} ${now.month} ${now.date} ${now.hours} ${now.minutes} ${now.seconds} -----${now.time - System.currentTimeMillis()}" +
+        Timber.e("toFbFormatTime ${now.year} ${now.month} ${now.date} ${now.hours} ${now.minutes} ${now.seconds} -----${now.time - System.currentTimeMillis()}" +
                 "---- ${cal.get(Calendar.DAY_OF_WEEK)}")
-        DebugLog.e("toFbFormatTime ${year} ${month} ${date} ${hour} ${minute}  ")
+        Timber.e("toFbFormatTime ${year} ${month} ${date} ${hour} ${minute}  ")
         val yxx = now.year + 1900
         val sMonth = context.getString(monthsMaps.get(month) as Int)
         if (year < yxx - 1) {
             //date1
-            DebugLog.e("oooooooo")
+            Timber.e("oooooooo")
             res = context.getString(R.string.date1, date, sMonth, year)
         } else {
             val tt = if (year == yxx - 1) 12 else 0
             val countMonth = tt + now.month + 1 - month
-            DebugLog.e("countMonth --- $countMonth")
+            Timber.e("countMonth --- $countMonth")
             if (countMonth > 2) {
                 res = context.getString(R.string.date1, date, sMonth, year)
             } else {
                 val countDate = TimeUnit.DAYS.convert(now.time - mDate.time, TimeUnit.MILLISECONDS)
-                DebugLog.e("countDate--------$countDate")
+                Timber.e("countDate--------$countDate")
                 if (countDate > 7) {
                     res = context.getString(R.string.date2, date, sMonth, time)
                 } else {
@@ -163,7 +164,7 @@ object TimeUtils {
                         }
                     } else {
                         val weekDay = cal.get(Calendar.DAY_OF_WEEK)
-                        DebugLog.e("weekDay-------------$weekDay")
+                        Timber.e("weekDay-------------$weekDay")
                         res = context.getString(R.string.week_date, context.getString(weekDatesMaps.get(weekDay)), time)
                     }
                 }

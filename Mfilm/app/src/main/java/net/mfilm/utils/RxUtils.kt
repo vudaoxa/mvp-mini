@@ -5,6 +5,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.observers.DisposableObserver
 import retrofit2.HttpException
+import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -37,7 +38,7 @@ class ValveUtil {
         consumer = Consumer {
             if (valveOpened) {
                 //statistics
-                DebugLog.e(it.toString() + "-----")
+                Timber.e(it.toString() + "-----")
                 f()
 //                mLCPresenter.requestChannelsInfo(this@LiveCountFragment, Constants.API_KEY,
 //                        Constants.PART_STATISTICS, id, null, DURATION * 1000)
@@ -57,11 +58,11 @@ abstract class MDisposableObserver<V : Any>(val fHttpExp: () -> Unit, val fIOExp
     override fun onError(e: Throwable?) {
         when (e) {
             is HttpException -> {
-                DebugLog.e("connect failed---------")
+                Timber.e("connect failed---------")
                 fHttpExp()
             }
             is IOException -> {
-                DebugLog.e("no internet connection ----------------")
+                Timber.e("no internet connection ----------------")
                 fIOExp()
             }
         }

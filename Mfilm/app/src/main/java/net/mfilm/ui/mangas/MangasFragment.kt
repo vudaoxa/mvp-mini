@@ -18,6 +18,7 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.utils.*
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -158,7 +159,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     }
 
     override fun onMangasNull() {
-        DebugLog.e("----------------onMangasNull-----------------")
+        Timber.e("----------------onMangasNull-----------------")
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 nullByAdapter(true)
@@ -168,7 +169,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
 
     //notEmpty condition
     override fun initMangas(mangas: List<Manga>) {
-        DebugLog.e("---------------initMangas---------------${mangas.size}")
+        Timber.e("---------------initMangas---------------${mangas.size}")
         hideLoading()
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
@@ -182,12 +183,12 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     }
 
     override fun onLoadMore() {
-        DebugLog.e("--------------------onLoadMore----------------------")
+        Timber.e("--------------------onLoadMore----------------------")
         mMangasRvAdapter?.onAdapterLoadMore { requestMangas() }
     }
 
     override fun onClick(position: Int, event: Int) {
-        DebugLog.e("---------------------onClick--------------------$position")
+        Timber.e("---------------------onClick--------------------$position")
         if (event != TYPE_ITEM) return
         screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = mMangasRvAdapter?.mData!![position])
     }

@@ -12,8 +12,8 @@ import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.ui.chapter_images.views.ImageOverlayView
-import net.mfilm.utils.DebugLog
 import net.mfilm.utils.MDisposableObserver
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -49,20 +49,20 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
             setStartPosition(startPosition)
             setImageChangeListener { position ->
                 val text = "${chapter.name} ${position + 1} / ${list.size}"
-                DebugLog.e("--------------OnImageChangeListener-------------$text")
+                Timber.e("--------------OnImageChangeListener-------------$text")
                 if (position == list.size - 1) {
-                    DebugLog.e("---------load next chapter-----------")
+                    Timber.e("---------load next chapter-----------")
                     loadMore()
                 }
                 if (position == 0) {
-                    DebugLog.e("-----------load prev chapter-------")
+                    Timber.e("-----------load prev chapter-------")
                 }
                 overlayView.setShareText(list[position])
                 overlayView.setDescription(text)
             }
             setOverlayView(overlayView)
             setOnDismissListener {
-                DebugLog.e("---------------onDismiss------------------")
+                Timber.e("---------------onDismiss------------------")
             }
             show()
         }

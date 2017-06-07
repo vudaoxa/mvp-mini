@@ -78,7 +78,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
     }
 
     private fun findCurrentFragment(): Boolean {
-        // DebugLog.e("xyz~stackFragment~size"+(stackFragments == null?0:stackFragments.size()));
+        // Timber.e("xyz~stackFragment~size"+(stackFragments == null?0:stackFragments.size()));
         if (stackFragments == null || stackFragments!!.size == 0) {
             return false
         } else {
@@ -136,7 +136,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
     override fun popFragment() {
         val operation = Runnable {
             val stackEntries = stackFragments!!.size
-            // DebugLog.v(String.format("popFragment(): entries[%d]", stackEntries));
+            // Timber.v(String.format("popFragment(): entries[%d]", stackEntries));
             if (stackEntries >= 2) {
                 val ft = mInitializationParams!!.fragmentManager.beginTransaction()
                 if (mInitializationParams!!.isAnimationEnabled) {
@@ -149,7 +149,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
                 ft.commit()
                 findCurrentFragment()
                 notifyFragmentChange()
-                // DebugLog.v("popFragment-fragmentStack.size()=" + stackFragments.size());
+                // Timber.v("popFragment-fragmentStack.size()=" + stackFragments.size());
             } else {
                 notifyCloseRequest()
             }

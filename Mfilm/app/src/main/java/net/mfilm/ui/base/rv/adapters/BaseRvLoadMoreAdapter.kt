@@ -3,10 +3,10 @@ package net.mfilm.ui.base.rv.adapters
 import android.content.Context
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_LOADING
-import net.mfilm.utils.DebugLog
 import net.mfilm.utils.IAdapterLoadMore
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.handler
+import timber.log.Timber
 
 /**
  * Created by tusi on 5/28/17.
@@ -24,7 +24,7 @@ abstract class BaseRvLoadMoreAdapter<V : Any>(mContext: Context, mData: MutableL
 
     override fun getItemCount() = mData?.size ?: 0
     override fun onAdapterLoadMore(f: () -> Unit) {
-        DebugLog.e("-------------onAdapterLoadMore----------$isMoreLoading-------")
+        Timber.e("-------------onAdapterLoadMore----------$isMoreLoading-------")
         if (isMoreLoading) return
         mData?.apply {
             isMoreLoading = true
@@ -47,13 +47,13 @@ abstract class BaseRvLoadMoreAdapter<V : Any>(mContext: Context, mData: MutableL
                 }
             }
             isMoreLoading = false
-            DebugLog.e("------------------onAdapterLoadMoreFinished----------------$isMoreLoading-----")
+            Timber.e("------------------onAdapterLoadMoreFinished----------------$isMoreLoading-----")
             f()
         })
     }
 
     override fun reset() {
-        DebugLog.e("-----------------reset-----------------")
+        Timber.e("-----------------reset-----------------")
         mData?.clear()
 //        notifyDataSetChanged()
     }

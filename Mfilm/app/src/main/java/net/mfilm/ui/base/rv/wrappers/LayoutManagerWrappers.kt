@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.AttributeSet
-import net.mfilm.utils.DebugLog
+import timber.log.Timber
 
 
 /**
@@ -27,7 +27,7 @@ class LinearLayoutManagerWrapper : LinearLayoutManager {
         try {
             super.onLayoutChildren(recycler, state)
         } catch (e: IndexOutOfBoundsException) {
-            DebugLog.e(e.message)
+            Timber.e(e.message)
         }
 
     }
@@ -47,7 +47,7 @@ class StaggeredGridLayoutManagerWrapper : StaggeredGridLayoutManager {
         try {
             super.onLayoutChildren(recycler, state)
         } catch (e: IndexOutOfBoundsException) {
-            DebugLog.e(e.message)
+            Timber.e(e.message)
         }
 
     }

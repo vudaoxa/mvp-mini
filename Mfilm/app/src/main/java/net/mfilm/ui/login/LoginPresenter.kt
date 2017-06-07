@@ -76,10 +76,10 @@
 ////                override fun onError(e: Throwable?) {
 ////                    when(e){
 ////                        is HttpException->{
-////                            DebugLog.e("connect failed---------")
+////                            Timber.e("connect failed---------")
 ////                        }
 ////                        is IOException->{
-////                            DebugLog.e("no internet connection ----------------")
+////                            Timber.e("no internet connection ----------------")
 ////                        }
 ////                    }
 ////                }
@@ -90,7 +90,7 @@
 ////                        val tk = t?.accessToken
 ////                        dataManager.accessToken=tk
 ////                        dataManager.currentUserLoggedInMode = DataMng.LoggedInMode.LOGGED_IN_MODE_SERVER_DEFAULT.type
-////                        DebugLog.e("tk-----------------$tk")
+////                        Timber.e("tk-----------------$tk")
 ////                    }
 ////                }
 ////            }

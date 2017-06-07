@@ -9,7 +9,7 @@ import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.chapters.ChaptersMvpView
-import net.mfilm.utils.DebugLog
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -57,10 +57,10 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
                 doIt()
             } else {
                 if (last().id != chapter.id) {
-                    DebugLog.e("--------------next chapter ----- $chapter")
+                    Timber.e("--------------next chapter ----- $chapter")
                     doIt()
                 } else {
-                    DebugLog.e("--------------same--------------")
+                    Timber.e("--------------same--------------")
                     loadMoreOnDemand()
                 }
             }
@@ -82,7 +82,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         mChaptersFragment?.apply {
             currentReadingChapter.let { c ->
                 c?.apply {
-                    DebugLog.e("----------initViews---------$c---------")
+                    Timber.e("----------initViews---------$c---------")
                     addChapter(c, { requestChapterImages(c.id!!) })
                 }
             }
@@ -109,7 +109,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun onChapterImagesNull() {
-        DebugLog.e("-------------------onChapterImagesNull---------------------")
+        Timber.e("-------------------onChapterImagesNull---------------------")
     }
 
     override fun initChapterImages(images: List<ChapterImage>) {
@@ -130,7 +130,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     //it's called from ChaptersFragment
     override fun onChaptersResponse() {
-        DebugLog.e("----------------onChaptersResponse--------------")
+        Timber.e("----------------onChaptersResponse--------------")
         initViews()
     }
 }

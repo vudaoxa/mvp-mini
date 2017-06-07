@@ -9,7 +9,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_image_overlay.view.*
 
 import net.mfilm.R
-import net.mfilm.utils.DebugLog
+import timber.log.Timber
 
 /*
  * Created by Alexander Krol (troy379) on 29.08.16.
@@ -33,12 +33,12 @@ class ImageOverlayView : RelativeLayout {
     }
 
     fun setDescription(description: String) {
-        DebugLog.e("-----------------setDescription---- $description------------")
+        Timber.e("-----------------setDescription---- $description------------")
         tv_des.text = description
     }
 
     fun setShareText(text: String) {
-        DebugLog.e("------------------setShareText---- $text------------------------")
+        Timber.e("------------------setShareText---- $text------------------------")
         this.sharingText = text
     }
 

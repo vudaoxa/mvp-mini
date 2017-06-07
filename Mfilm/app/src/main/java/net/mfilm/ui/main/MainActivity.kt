@@ -27,9 +27,10 @@ import net.mfilm.ui.filmy.FullReadFragment
 import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.utils.*
+import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView{
+class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView {
     override val mToolbar: Toolbar
         get() = toolbar
     override val mToolbarBack: ImageButton
@@ -74,20 +75,21 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onSettings() {
-        DebugLog.e("---------------onSettings-----------")
+        Timber.e("---------------onSettings-----------")
     }
 
     override fun onAbout() {
-        DebugLog.e("---------------onAbout-----------")
+        Timber.e("---------------onAbout-----------")
     }
 
     override fun onShare() {
-        DebugLog.e("---------------onShare-----------")
+        Timber.e("---------------onShare-----------")
     }
 
     override fun onFollow() {
-        DebugLog.e("---------------onFollow-----------")
+        Timber.e("---------------onFollow-----------")
     }
+
     @Inject
     lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
     internal var mOrientation = Configuration.ORIENTATION_PORTRAIT
@@ -110,7 +112,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
                 MaterialDialog.SingleButtonCallback { _, _ -> finish() })
     }
 
-    override fun onNewScreenRequested(indexTag: Int, typeContent: String?, obj: Any?) {
+    override fun onNewScreenRequested(indexTag: Any?, typeContent: String?, obj: Any?) {
         when (indexTag) {
             IndexTags.FRAGMENT_HOME -> {
                 onMainScreenRequested()
@@ -139,7 +141,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onNewScreenRequested(indexTag: Int, fragment: Fragment?, obj: Any?) {
+    override fun onNewScreenRequested(indexTag: Any?, fragment: Fragment?, obj: Any?) {
         when (indexTag) {
             IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
                 fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(fragment))
@@ -161,7 +163,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         val fragment = f as BaseStackFragment
         val home = fragment.javaClass == homeClass
         var info = false
-//        DebugLog.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
+//        Timber.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
         when (fragment) {
             is MangaInfoFragment -> {
                 info = true
@@ -220,7 +222,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        DebugLog.d("xyz----onConfigurationChanged-----")
+        Timber.d("xyz----onConfigurationChanged-----")
     }
 
     @Synchronized private fun setFullScreenVideo(): Boolean {

@@ -15,7 +15,11 @@ import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.ui.chapters.rv.ChaptersRvAdapter
 import net.mfilm.ui.manga_info.MangaInfoMvpView
-import net.mfilm.utils.*
+import net.mfilm.utils.AppConstants
+import net.mfilm.utils.LIMIT
+import net.mfilm.utils.handler
+import net.mfilm.utils.show
+import timber.log.Timber
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -68,7 +72,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         get() = mCurrentReadingChapter
         set(value) {
             mCurrentReadingChapter = value
-            DebugLog.e("-----------currentReadingChapter---------$mCurrentReadingChapter")
+            Timber.e("-----------currentReadingChapter---------$mCurrentReadingChapter")
         }
 
     private var mPrevPosition = 0
@@ -99,7 +103,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         set(value) {
 
             chapters?.apply {
-                DebugLog.e("-----------currentReadingPosition--------------$value------${size - 1}")
+                Timber.e("-----------currentReadingPosition--------------$value------${size - 1}")
                 if (value!! <= size - 1) {
                     mCurrentPosition = value
                     currentReadingChapter = get(mCurrentPosition)
@@ -161,7 +165,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     }
 
     override fun onChaptersNull() {
-        DebugLog.e("----------------onChaptersNull------------------")
+        Timber.e("----------------onChaptersNull------------------")
         mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 nullByAdapter(true)
@@ -170,7 +174,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     }
 
     override fun initChapters(chapters: List<Chapter>) {
-        DebugLog.e("----------------initChapters-----------------${chapters.size}-------")
+        Timber.e("----------------initChapters-----------------${chapters.size}-------")
 //        if (!isVisOk()) return
         root_view.show(true)
         mChaptersRvAdapter?.apply {
@@ -181,7 +185,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                 chapterImagesFragment?.apply {
                     currentReadingPosition = x
                 } ?: let {
-                    DebugLog.e("--------------chapterImagesFragment null---1----------------")
+                    Timber.e("--------------chapterImagesFragment null---1----------------")
                 }
             }
         } ?: let {
@@ -193,7 +197,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             chapterImagesFragment?.apply {
                 onChaptersResponse()
             } ?: let {
-                DebugLog.e("--------------chapterImagesFragment null---2----------------")
+                Timber.e("--------------chapterImagesFragment null---2----------------")
             }
         }, 250)
 
@@ -225,19 +229,19 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         set(value) {}
 
     override fun onLoadMore() {
-        DebugLog.e("--------------------onLoadMore----------------------")
+        Timber.e("--------------------onLoadMore----------------------")
         mChaptersRvAdapter?.onAdapterLoadMore { requestChapters() }
     }
 
     override fun loadMoreOnDemand() {
-        DebugLog.e("------------loadMoreOnDemand---------------")
+        Timber.e("------------loadMoreOnDemand---------------")
         mCallBackLoadMore?.onLoadMore()
     }
 
     override fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
         chapterImagesFragment = chapterImagesMvpView
         fun loadMore() {
-            DebugLog.e("-----------------loadMore----------$chapterImagesFragment")
+            Timber.e("-----------------loadMore----------$chapterImagesFragment")
             loadMoreOnDemand()
         }
 //        nextChapter()
@@ -251,7 +255,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         }
     }
     override fun nextChapter() {
-        DebugLog.e("----------------nextChapter---------$currentReadingPosition")
+        Timber.e("----------------nextChapter---------$currentReadingPosition")
         currentReadingPosition = currentReadingPosition!! + 1
     }
 //    override fun onConfigurationChanged(newConfig: Configuration?) {

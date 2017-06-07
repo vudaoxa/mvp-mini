@@ -28,7 +28,7 @@ class NetModule(private val param: String) {
 //    @Provides
 //    @Singleton
 //    fun providesApiSetting(application: Application): ApiSetting {
-//        DebugLog.d("xyz--providesApiSetting--")
+//        Timber.d("xyz--providesApiSetting--")
 //        return ApiSetting(param)
 //    }
 
