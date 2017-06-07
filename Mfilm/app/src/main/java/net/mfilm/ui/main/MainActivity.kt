@@ -144,7 +144,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNewScreenRequested(indexTag: Any?, fragment: Fragment?, obj: Any?) {
         when (indexTag) {
             IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
-                fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(fragment))
+                fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(fragment), true)
             }
         }
     }
@@ -162,15 +162,15 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         super.onFragmentEntered(f)
         val fragment = f as BaseStackFragment
         val home = fragment.javaClass == homeClass
-        var info = false
-//        Timber.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
-        when (fragment) {
-            is MangaInfoFragment -> {
-                info = true
-            }
-        }
-        mLayoutBtnsInfo.show(info)
-        mBtnSearch.show(!info)
+//        var info = false
+////        Timber.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
+//        when (fragment) {
+//            is MangaInfoFragment -> {
+//                info = true
+//            }
+//        }
+        mBtnSearch.show(home)
+        mLayoutBtnsInfo.show(fragment.fullScreen)
         showOptionsMenu(home)
     }
     // End fragment stack

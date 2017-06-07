@@ -41,8 +41,10 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
         compositeDisposable.add(d)
     }
 
+    var imageViewer: ImageViewer? = null
     //    how to add more images to the tail of imageviewer
     override fun showFresco(context: Context, chapter: Chapter, list: MutableList<String>, startPosition: Int) {
+        imageViewer?.onDismiss()
         val builder = ImageViewer.Builder(context, list)
         val overlayView = ImageOverlayView(context)
         builder.apply {
@@ -64,9 +66,8 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
             setOnDismissListener {
                 Timber.e("---------------onDismiss------------------")
             }
-            show()
+            imageViewer = show()
         }
-
     }
 
     override fun loadMore() {

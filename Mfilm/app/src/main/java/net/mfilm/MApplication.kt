@@ -11,6 +11,8 @@ import net.mfilm.di.components.DaggerAppComponent
 import net.mfilm.di.module.NetModule
 import net.mfilm.utils.*
 import org.jetbrains.annotations.NotNull
+import timber.log.Timber
+import timber.log.Timber.DebugTree
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
 
@@ -43,18 +45,27 @@ class MApplication : Application() {
         initIcons(this)
         initNavs()
         initSpanCounts()
+        initFresco()
+        initTimber()
+        TimeUtils
+        CalligraphyConfig.initDefault(mCalligraphyConfig)
+        instance = this
+    }
+
+    fun initTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
+    }
+
+    fun initFresco() {
         val config = ImagePipelineConfig.newBuilder(this)
                 .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
                 .setResizeAndRotateEnabledForNetwork(true)
                 .setDownsampleEnabled(true)
                 .build()
         Fresco.initialize(this, config)
-        TimeUtils
-        CalligraphyConfig.initDefault(mCalligraphyConfig)
-
-        instance = this
     }
-
     fun showMessage(@AppConstants.TypeToast typeToast: Int, @NotNull message: String) {
         mAppToast.showMessageByType(typeToast, message)
 
