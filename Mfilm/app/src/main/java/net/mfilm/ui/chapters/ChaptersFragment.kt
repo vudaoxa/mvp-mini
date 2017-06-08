@@ -15,10 +15,7 @@ import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.ui.chapters.rv.ChaptersRvAdapter
 import net.mfilm.ui.manga_info.MangaInfoMvpView
-import net.mfilm.utils.AppConstants
-import net.mfilm.utils.LIMIT
-import net.mfilm.utils.handler
-import net.mfilm.utils.show
+import net.mfilm.utils.*
 import timber.log.Timber
 import java.io.Serializable
 import javax.inject.Inject
@@ -101,7 +98,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override var currentReadingPosition: Int?
         get() = mCurrentPosition
         set(value) {
-
             chapters?.apply {
                 Timber.e("-----------currentReadingPosition--------------$value------${size - 1}")
                 if (value!! <= size - 1) {
@@ -183,7 +179,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
                 chapterImagesFragment?.apply {
-                    currentReadingPosition = x
+                    seekCurrentReadingPosition(x)
                 } ?: let {
                     Timber.e("--------------chapterImagesFragment null---1----------------")
                 }
@@ -191,15 +187,8 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         } ?: let {
             mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
             rv.adapter = mChaptersRvAdapter
-            currentReadingPosition = 0
+            seekCurrentReadingPosition(0)
         }
-        handler({
-            chapterImagesFragment?.apply {
-                onChaptersResponse()
-            } ?: let {
-                Timber.e("--------------chapterImagesFragment null---2----------------")
-            }
-        }, 250)
 
     }
 
@@ -212,8 +201,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                             //                            val chapter = d[position]
                             parentFragment?.apply {
                                 if (this is MangaInfoMvpView) {
-                                    currentReadingPosition = position
-//                                    currentReadingChapter = chapter
+                                    seekCurrentReadingPosition(position)
                                     onReadBtnClicked()
                                 }
                             }
@@ -244,19 +232,53 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             Timber.e("-----------------loadMore----------$chapterImagesFragment")
             loadMoreOnDemand()
         }
-//        nextChapter()
+//        seekNextChapter()
         nextChapter.let { n ->
             n?.apply {
-                nextChapter()
-                chapterImagesFragment?.nextChapter()
+                seekNextChapter()
+                chapterImagesFragment?.seekNextChapter()
             } ?: let {
                 loadMore()
             }
         }
     }
-    override fun nextChapter() {
-        Timber.e("----------------nextChapter---------$currentReadingPosition")
+
+    fun xx() {
+        handler({
+            chapterImagesFragment?.apply {
+                seekNextChapter()
+            } ?: let {
+                Timber.e("--------------chapterImagesFragment null---2----------------")
+            }
+        }, 250)
+
+    }
+
+    override fun seekCurrentReadingPosition(newPosition: Int?) {
+        fun doIt(): Obs {
+            currentReadingPosition = newPosition
+        }
+        chapterImagesFragment.let { v ->
+            v?.apply {
+                val d = object : MDisposableObserver<Any?>({ }, { }) {
+                    override fun onNext(t: Any?) {
+                        v.seekNextChapter(t)
+                    }
+                }
+                doIt()
+            }
+        }
+
+    }
+
+    override fun seekNextChapter() {
+        Timber.e("----------------seekNextChapter---------$currentReadingPosition")
         currentReadingPosition = currentReadingPosition!! + 1
+    }
+
+    override fun seekPrevChapter() {
+        Timber.e("----------------seekNextChapter---------$currentReadingPosition")
+        currentReadingPosition = currentReadingPosition!! - 1
     }
 //    override fun onConfigurationChanged(newConfig: Configuration?) {
 //        super.onConfigurationChanged(newConfig)

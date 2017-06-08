@@ -50,11 +50,14 @@ class ValveUtil {
     }
 }
 
-abstract class MDisposableObserver<V : Any>(val fHttpExp: () -> Unit, val fIOExp: () -> Unit) : DisposableObserver<V>() {
+abstract class MDisposableObserver<V : Any?>(val fHttpExp: () -> Unit, val fIOExp: () -> Unit, val fOnNext: (() -> Unit)? = null) : DisposableObserver<V>() {
     override fun onComplete() {
 
     }
 
+    override fun onNext(t: V?) {
+        fOnNext?.invoke()
+    }
     override fun onError(e: Throwable?) {
         when (e) {
             is HttpException -> {

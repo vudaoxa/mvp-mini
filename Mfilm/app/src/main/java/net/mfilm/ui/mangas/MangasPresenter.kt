@@ -3,7 +3,6 @@ package net.mfilm.ui.mangas
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import net.mfilm.R
 import net.mfilm.data.DataMng
 import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.data.network_retrofit.RetrofitService
@@ -23,8 +22,8 @@ constructor(val retrofitService: RetrofitService,
                                , sort: String, search: String?) {
         if (!isViewAttached) return
         mvpView?.showLoading()
-        val d = object : MDisposableObserver<MangasResponse>({ mvpView?.onError(R.string.error_conection) },
-                { mvpView?.onError(R.string.internet_no_conection) }) {
+        val d = object : MDisposableObserver<MangasResponse>({ mvpView?.onFailure() },
+                { mvpView?.onNoInternetConnections() }) {
             override fun onNext(t: MangasResponse?) {
                 if (isViewAttached) {
                     mvpView?.onMangasResponse(t)

@@ -13,14 +13,13 @@ interface ChapterImagesMvpView : MvpView {
     fun onChapterImagesResponse(chapterImagesResponse: ChapterImagesResponse?)
     fun onChapterImagesNull()
     fun initChapterImages(images: List<ChapterImage>)
-    val prevChapter: Chapter?
-    val nextChapter: Chapter?
+    //    val seekPrevChapter: Chapter?
+//    val seekNextChapter: Chapter?
+    fun loadPrevOnDemand()
     fun loadMoreOnDemand()
-    fun onChaptersResponse()
+    //    fun onChaptersResponse()
     var chapters: MutableList<Chapter>
-    //    fun addChapter(chapter: Chapter)
     fun addChapter(chapter: Chapter, f: () -> Unit)
-    //    fun addChapter(chapter: Chapter, f:(Int)->Unit)
-    fun nextChapter()
+    fun seekNextChapter()
 
 }

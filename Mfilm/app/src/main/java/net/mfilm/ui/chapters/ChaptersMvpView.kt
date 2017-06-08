@@ -21,7 +21,9 @@ interface ChaptersMvpView : MvpView, ICallbackOnClick {
     var prevChapter: Chapter?
     var nextChapter: Chapter?
     val chapters: List<Chapter>?
-    fun nextChapter()
+    fun seekCurrentReadingPosition(newPosition: Int?)
+    fun seekNextChapter()
+    fun seekPrevChapter()
     fun loadMoreOnDemand()
     fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView)
     //    var chapterImagesFragment: ChapterImagesFragment?

@@ -165,7 +165,7 @@ class Chapter : Serializable {
     @SerializedName("manga_id")
     @Expose
     var mangaId: Int? = null
-
+    var data: List<ChapterImage>? = null
     override fun toString(): String {
         return "$name --- $id"
     }

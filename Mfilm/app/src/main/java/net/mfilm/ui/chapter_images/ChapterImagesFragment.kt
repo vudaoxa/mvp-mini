@@ -31,10 +31,10 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     //    private var mChaptersFragment: ChaptersFragment? = null
 
     //    var chapter: Chapter? = null
-    override val prevChapter: Chapter?
-        get() = mChaptersFragment?.prevChapter
-    override val nextChapter: Chapter?
-        get() = mChaptersFragment?.nextChapter
+//    override val seekPrevChapter: Chapter?
+//        get() = mChaptersFragment?.seekPrevChapter
+//    override val seekNextChapter: Chapter?
+//        get() = mChaptersFragment?.seekNextChapter
     private var mChapters = mutableListOf<Chapter>()
     override var chapters: MutableList<Chapter>
         get() = mChapters
@@ -47,7 +47,6 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 //    }
 
     override fun addChapter(chapter: Chapter, f: () -> Unit) {
-
         chapters.apply {
             fun doIt() {
                 add(chapter)
@@ -114,8 +113,13 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun initChapterImages(images: List<ChapterImage>) {
-        context?.apply {
-            mChapterImagesPresenter.showFresco(this, chapters.last(), images.map { it.url!! }.toMutableList(), images.size - 2)
+//        current chapter set images
+        chapters.apply {
+            val chapter = last()
+            chapter.data = images
+            context?.apply {
+                mChapterImagesPresenter.showFresco(this, chapter, images.map { it.url!! }.toMutableList(), images.size - 2)
+            }
         }
     }
 
@@ -125,14 +129,24 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
-    override fun nextChapter() {
+    override fun loadPrevOnDemand() {
+        //it's must be synchronized with mChaptersFragment, because:
+        //read btn behavior
+        //get currentReadingPosition from mChaptersFragment, to reload images in $chapters
+        mChaptersFragment?.apply {
+            seekPrevChapter()
+            xx
+        }
+    }
+
+    override fun seekNextChapter() {
         initViews()
     }
 
     //it's called from ChaptersFragment
-    override fun onChaptersResponse() {
-        Timber.e("----------------onChaptersResponse--------------")
-        initViews()
-    }
+//    override fun onChaptersResponse() {
+//        Timber.e("----------------onChaptersResponse--------------")
+//        initViews()
+//    }
 
 }

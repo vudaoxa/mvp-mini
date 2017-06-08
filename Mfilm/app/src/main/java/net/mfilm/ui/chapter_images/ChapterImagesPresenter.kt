@@ -5,7 +5,6 @@ import com.stfalcon.frescoimageviewer.ImageViewer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import net.mfilm.R
 import net.mfilm.data.DataMng
 import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
@@ -26,8 +25,8 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
     override fun requestChapterImages(chapterId: Int) {
         if (!isViewAttached) return
         mvpView?.showLoading()
-        val d = object : MDisposableObserver<ChapterImagesResponse>({ mvpView?.onError(R.string.error_conection) },
-                { mvpView?.onError(R.string.internet_no_conection) }) {
+        val d = object : MDisposableObserver<ChapterImagesResponse>({ mvpView?.onFailure() },
+                { mvpView?.onNoInternetConnections() }) {
             override fun onNext(t: ChapterImagesResponse?) {
                 if (isViewAttached) {
                     mvpView?.onChapterImagesResponse(t)
@@ -44,6 +43,7 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
     var imageViewer: ImageViewer? = null
     //    how to add more images to the tail of imageviewer
     override fun showFresco(context: Context, chapter: Chapter, list: MutableList<String>, startPosition: Int) {
+        chapter.name
         imageViewer?.onDismiss()
         val builder = ImageViewer.Builder(context, list)
         val overlayView = ImageOverlayView(context)
@@ -58,6 +58,7 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
                 }
                 if (position == 0) {
                     Timber.e("-----------load prev chapter-------")
+                    loadPrev()
                 }
                 overlayView.setShareText(list[position])
                 overlayView.setDescription(text)
@@ -72,5 +73,9 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
 
     override fun loadMore() {
         mvpView?.loadMoreOnDemand()
+    }
+
+    override fun loadPrev() {
+        mvpView?.loadPrevOnDemand()
     }
 }

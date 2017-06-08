@@ -249,6 +249,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun onBackPressed() {
+        Timber.e("----------------onBackPressed-----------------")
         if (mLayoutInputText.isVisible()) {
             onSearch(false)
         } else {

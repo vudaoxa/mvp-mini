@@ -162,15 +162,15 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         super.onFragmentEntered(f)
         val fragment = f as BaseStackFragment
         val home = fragment.javaClass == homeClass
-//        var info = false
+        var info = false
 ////        Timber.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
-//        when (fragment) {
-//            is MangaInfoFragment -> {
-//                info = true
-//            }
-//        }
+        when (fragment) {
+            is MangaInfoFragment -> {
+                info = true
+            }
+        }
         mBtnSearch.show(home)
-        mLayoutBtnsInfo.show(fragment.fullScreen)
+        mLayoutBtnsInfo.show(info)
         showOptionsMenu(home)
     }
     // End fragment stack

@@ -11,4 +11,5 @@ interface ChapterImagesMvpPresenter<V : ChapterImagesMvpView> : MvpPresenter<V> 
     fun requestChapterImages(chapterId: Int)
     fun showFresco(context: Context, chapter: Chapter, list: MutableList<String>, startPosition: Int = 0)
     fun loadMore()
+    fun loadPrev()
 }
