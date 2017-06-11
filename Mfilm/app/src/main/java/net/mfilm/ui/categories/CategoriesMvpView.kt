@@ -1,5 +1,6 @@
 package net.mfilm.ui.categories
 
+import net.mfilm.data.network_retrofit.CategoriesResponse
 import net.mfilm.ui.base.MvpView
 
 /**
@@ -7,4 +8,5 @@ import net.mfilm.ui.base.MvpView
  */
 interface CategoriesMvpView : MvpView {
     fun requestCategories()
+    fun onCategoriesResponse(categoriesResponse: CategoriesResponse?)
 }
