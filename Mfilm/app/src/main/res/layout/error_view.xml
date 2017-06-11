@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tr.xip.errorview.ErrorView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:errorview="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/error_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:focusable="true"
+    android:visibility="gone"
+    errorview:ev_retryButtonText="@string/redo"
+    errorview:ev_retryButtonTextColor="@color/colorAccent"
+    errorview:ev_subtitle="@string/failed_to_load_clip"
+    errorview:ev_subtitleColor="@color/grey_60"
+    errorview:ev_title="@string/oops"
+    errorview:ev_titleColor="@color/navy_blue_dark" />

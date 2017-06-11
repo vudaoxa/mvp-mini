@@ -14,7 +14,8 @@
         android:id="@+id/layout_btns_info"
         style="@style/LinearLayout_center_vertical"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
         <ImageButton
             android:id="@+id/btn_twitter"
             style="@style/ToolBar_Btn"

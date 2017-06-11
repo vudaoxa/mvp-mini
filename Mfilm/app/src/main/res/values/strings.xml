@@ -25,7 +25,7 @@
     <string name="confirm_exit">You want to exit app?</string>
     <string name="some_error">Some Error Occurred!</string>
     <string name="connection_error">Internet connection lost!</string>
-    <string name="text_all_click_back_exit_app">Press back 1 more time to exit</string>
+    <string name="text_all_click_back_exit_app">Press back 1 more searchTime to exit</string>
     <string name="cancel">Cancel</string>
     <string name="OK">OK</string>
     <string name="skip">Skip</string>
@@ -85,4 +85,8 @@
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->
+    <string name="oops">Ặc!</string>
+    <string name="failed_to_load_clip">Không thể tải clip</string>
+    <string name="failed_to_load">Không thể tải trang</string>
+    <string name="failed_to_load_app">Không thể khởi động ứng dụng</string>
 </resources>

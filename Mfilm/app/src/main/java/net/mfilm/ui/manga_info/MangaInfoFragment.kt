@@ -59,6 +59,7 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
     }
 
     override fun initFields() {
+        info = true
         back = true
         title = manga.name
     }

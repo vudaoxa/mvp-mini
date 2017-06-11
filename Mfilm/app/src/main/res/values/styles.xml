@@ -254,11 +254,6 @@
     <style name="default_background">
         <item name="android:background">?android:windowBackground</item>
     </style>
-    <style name="VerticalLinearLayout">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-    </style>
 
     <style name="Layout_default_margin">
         <item name="android:layout_marginLeft">@dimen/dimen5</item>
@@ -266,8 +261,40 @@
         <item name="android:layout_marginTop">@dimen/dimen0</item>
     </style>
 
-    <style name="LinearLayout_center_vertical">
+    <style name="window_background" parent="Layout_match">
+        <item name="android:background">?android:windowBackground</item>
+    </style>
+
+    <style name="navy_dark_background" parent="Layout_match">
+        <item name="android:background">@color/navy_blue_dark</item>
+    </style>
+
+    <style name="VerticalLinearLayout" parent="Layout_wrap">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout_wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Layout_match">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="Layout_match_wrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="LinearLayout_center_vertical" parent="Layout_wrap">
         <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="FrameLayout_clickable" parent="Layout_wrap">
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">@drawable/main_background</item>
     </style>
 
     <style name="LinearLayout_center_horizontal">

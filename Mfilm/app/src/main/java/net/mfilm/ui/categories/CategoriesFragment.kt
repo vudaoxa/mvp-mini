@@ -20,7 +20,7 @@ class CategoriesFragment : BaseStackFragment(), CategoriesMvpView {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(
-                R.layout.fragment_categories, container, false)
+                R.layout.frag, container, false)
     }
 
     override fun initFields() {

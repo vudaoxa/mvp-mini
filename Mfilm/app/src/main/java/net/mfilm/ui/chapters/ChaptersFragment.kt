@@ -15,7 +15,10 @@ import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.ui.chapters.rv.ChaptersRvAdapter
 import net.mfilm.ui.manga_info.MangaInfoMvpView
-import net.mfilm.utils.*
+import net.mfilm.utils.AppConstants
+import net.mfilm.utils.LIMIT
+import net.mfilm.utils.handler
+import net.mfilm.utils.show
 import timber.log.Timber
 import java.io.Serializable
 import javax.inject.Inject
@@ -100,7 +103,8 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         set(value) {
             chapters?.apply {
                 Timber.e("-----------currentReadingPosition--------------$value------${size - 1}")
-                if (value!! <= size - 1) {
+                if (value!! < 0) return
+                if (value <= size - 1) {
                     mCurrentPosition = value
                     currentReadingChapter = get(mCurrentPosition)
                     if (mCurrentPosition < size - 1) nextPosition = mCurrentPosition + 1
@@ -108,7 +112,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                     loadMoreOnDemand()
                     nextChapter = null
                 }
-
                 if (mCurrentPosition > 0) prevPosition = mCurrentPosition - 1
             }
         }
@@ -119,6 +122,10 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         return inflater!!.inflate(net.mfilm.R.layout.fragment_chapters, container, false)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mChaptersPresenter.onDetach()
+    }
     override fun initFields() {
         manga = arguments.getSerializable(AppConstants.EXTRA_DATA) as Manga
         activityComponent.inject(this)
@@ -172,24 +179,20 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override fun initChapters(chapters: List<Chapter>) {
         Timber.e("----------------initChapters-----------------${chapters.size}-------")
 //        if (!isVisOk()) return
-        root_view.show(true)
+        root_view?.show(true) ?: return
         mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 val x = mData?.size
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
-                chapterImagesFragment?.apply {
-                    seekCurrentReadingPosition(x)
-                } ?: let {
-                    Timber.e("--------------chapterImagesFragment null---1----------------")
-                }
+                seekCurrentReadingPosition(x)
             }
         } ?: let {
             mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
             rv.adapter = mChaptersRvAdapter
             seekCurrentReadingPosition(0)
         }
-
+        notifyViewer()
     }
 
     override fun onClick(position: Int, event: Int) {
@@ -232,7 +235,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             Timber.e("-----------------loadMore----------$chapterImagesFragment")
             loadMoreOnDemand()
         }
-//        seekNextChapter()
         nextChapter.let { n ->
             n?.apply {
                 seekNextChapter()
@@ -243,42 +245,53 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         }
     }
 
-    fun xx() {
+    override fun loadPrevOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
+        chapterImagesFragment = chapterImagesMvpView
+        seekPrevChapter()
+    }
+
+    fun notifyViewer() {
         handler({
             chapterImagesFragment?.apply {
                 seekNextChapter()
             } ?: let {
-                Timber.e("--------------chapterImagesFragment null---2----------------")
+                Timber.e("--------------chapterImagesFragment null-------------------")
             }
         }, 250)
-
     }
 
     override fun seekCurrentReadingPosition(newPosition: Int?) {
-        fun doIt(): Obs {
-            currentReadingPosition = newPosition
-        }
-        chapterImagesFragment.let { v ->
-            v?.apply {
-                val d = object : MDisposableObserver<Any?>({ }, { }) {
-                    override fun onNext(t: Any?) {
-                        v.seekNextChapter(t)
-                    }
-                }
-                doIt()
-            }
-        }
-
+        currentReadingPosition = newPosition
+//        fun doIt() {
+//            currentReadingPosition = newPosition
+//        }
+//        chapterImagesFragment.let { v ->
+//            v?.apply {
+//                val d = object : MDisposableObserver<Any?>({ }, { }) {
+//                    override fun onNext(t: Any?) {
+//                        v.seekNextChapter()
+//                    }
+//                }
+//                doIt()
+//            } ?: let {
+//                Timber.e("--------------chapterImagesFragment null-------------------")
+//            }
+//        }
     }
 
     override fun seekNextChapter() {
         Timber.e("----------------seekNextChapter---------$currentReadingPosition")
-        currentReadingPosition = currentReadingPosition!! + 1
+        currentReadingPosition = (currentReadingPosition!! + 1)
     }
 
     override fun seekPrevChapter() {
-        Timber.e("----------------seekNextChapter---------$currentReadingPosition")
-        currentReadingPosition = currentReadingPosition!! - 1
+        Timber.e("----------------seekPrevChapter---------$currentReadingPosition")
+        currentReadingPosition?.apply {
+            if (this > 0) {
+                currentReadingPosition = (currentReadingPosition!! - 1)
+                notifyViewer()
+            }
+        }
     }
 //    override fun onConfigurationChanged(newConfig: Configuration?) {
 //        super.onConfigurationChanged(newConfig)

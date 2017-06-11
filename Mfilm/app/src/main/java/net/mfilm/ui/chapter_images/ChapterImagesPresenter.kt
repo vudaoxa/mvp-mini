@@ -42,15 +42,14 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
 
     var imageViewer: ImageViewer? = null
     //    how to add more images to the tail of imageviewer
-    override fun showFresco(context: Context, chapter: Chapter, list: MutableList<String>, startPosition: Int) {
-        chapter.name
+    override fun showFresco(context: Context, chapter: Chapter?, list: MutableList<String>, startPosition: Int) {
         imageViewer?.onDismiss()
         val builder = ImageViewer.Builder(context, list)
         val overlayView = ImageOverlayView(context)
         builder.apply {
             setStartPosition(startPosition)
             setImageChangeListener { position ->
-                val text = "${chapter.name} ${position + 1} / ${list.size}"
+                val text = "${chapter?.name} ${position + 1} / ${list.size}"
                 Timber.e("--------------OnImageChangeListener-------------$text")
                 if (position == list.size - 1) {
                     Timber.e("---------load next chapter-----------")
@@ -67,6 +66,7 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
             setOnDismissListener {
                 Timber.e("---------------onDismiss------------------")
             }
+
             imageViewer = show()
         }
     }

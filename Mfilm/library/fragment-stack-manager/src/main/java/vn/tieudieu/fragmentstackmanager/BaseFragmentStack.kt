@@ -10,6 +10,9 @@ abstract class BaseFragmentStack : BaseFragment() {
     var title: String? = null
     var back = false
     var fullScreen = false
+    var home = false
+    var search = false
+    var info = false
     protected var screenManager: ScreenManager? = null
         private set
 

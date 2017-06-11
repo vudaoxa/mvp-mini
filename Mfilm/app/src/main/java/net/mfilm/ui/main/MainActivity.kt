@@ -11,26 +11,34 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.joanzapata.iconify.widget.IconTextView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.item_main_action_btns.*
 import kotlinx.android.synthetic.main.layout_input_text.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
-import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.chapter_images.ChapterImagesFragment
 import net.mfilm.ui.filmy.FullReadFragment
 import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.ui.manga_info.MangaInfoFragment
+import net.mfilm.ui.mangas.MangasFragment
 import net.mfilm.utils.*
 import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView {
+    override val mCallbackSearchView: ICallbackSearchView?
+        get() = MangasFragment.getSearchInstance()
+    override val edtSearch: EditText
+        get() = edt_search
+    override val imgClear: IconTextView
+        get() = img_clear
     override val mToolbar: Toolbar
         get() = toolbar
     override val mToolbarBack: ImageButton
@@ -118,8 +126,8 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
                 onMainScreenRequested()
             }
         //search, category
-            IndexTags.FRAGMENT_MANGA -> {
-
+            IndexTags.FRAGMENT_SEARCH -> {
+                fragmentStackManager.swapFragment(MangasFragment.newInstance(true))
             }
             IndexTags.FRAGMENT_MANGA_INFO -> {
                 fragmentStackManager.swapFragment(MangaInfoFragment.newInstance(obj))
@@ -149,30 +157,16 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    /**
-     * OVERRIDE FRAGMENT STACK
-     */
+    override fun onSearchScreenRequested() {
+        onNewScreenRequested(IndexTags.FRAGMENT_SEARCH, typeContent = null, obj = null)
+    }
 
     override fun onMainScreenRequested() = fragmentStackManager.run {
         clearStack()
         swapFragment(HomePagerFragment.newInstance())
     }
 
-    override fun onFragmentEntered(f: Fragment?) {
-        super.onFragmentEntered(f)
-        val fragment = f as BaseStackFragment
-        val home = fragment.javaClass == homeClass
-        var info = false
-////        Timber.e("-----------onFragmentEntered-------${fragment.javaClass}------ $homeClass------$home")
-        when (fragment) {
-            is MangaInfoFragment -> {
-                info = true
-            }
-        }
-        mBtnSearch.show(home)
-        mLayoutBtnsInfo.show(info)
-        showOptionsMenu(home)
-    }
+
     // End fragment stack
 
 

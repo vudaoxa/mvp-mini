@@ -24,17 +24,32 @@ import javax.inject.Inject
 /**
  * Created by tusi on 4/2/17.
  */
-class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
-
+class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchView, IBackListener {
     companion object {
-        fun newInstance(): MangasFragment {
-            val args = Bundle()
+        //to assign it to BaseStackActivity
+        private var mSearchInstance: MangasFragment? = null
+
+        fun getSearchInstance(): MangasFragment {
+            mSearchInstance?.apply { return this }
+            return newInstance(true)
+        }
+
+        fun newInstance(search: Boolean = false): MangasFragment {
             val fragment = MangasFragment()
-            fragment.arguments = args
+            val bundle = Bundle()
+            bundle.putBoolean(AppConstants.EXTRA_DATA, search)
+            fragment.arguments = bundle
+            if (search) mSearchInstance = fragment
             return fragment
         }
     }
 
+    private var mQuery: String? = null
+    override var query: String?
+        get() = mQuery
+        set(value) {
+            mQuery = value
+        }
     override var isDataEnd: Boolean
         get() = false
         set(value) {}
@@ -51,12 +66,18 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         initSpnFilters()
         initRv()
         initSwipe()
-        requestMangas()
+        if (!search) {
+            requestMangas()
+        } else {
+            //show search history
+        }
     }
 
     override fun initFields() {
         activityComponent.inject(this)
         mPresenter.onAttach(this)
+        search = arguments.getBoolean(AppConstants.EXTRA_DATA)
+        back = search
     }
 
     inner class AdapterTracker : AdapterView.OnItemSelectedListener {
@@ -135,7 +156,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     }
 
     override fun requestMangas() {
-        mPresenter.requestMangas(null, LIMIT, page++, filters[spnFilterTracker.mPosition].content, null)
+        mPresenter.requestMangas(null, LIMIT, page++, filters[spnFilterTracker.mPosition].content, query)
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
@@ -171,6 +192,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     override fun initMangas(mangas: List<Manga>) {
         Timber.e("---------------initMangas---------------${mangas.size}")
         hideLoading()
+        spn_filter.show(true)
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 mData?.addAll(mangas)
@@ -191,5 +213,16 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         Timber.e("---------------------onClick--------------------$position")
         if (event != TYPE_ITEM) return
         screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = mMangasRvAdapter?.mData!![position])
+    }
+
+    override fun onSearch(query: String) {
+        this.query = query
+        reset()
+        requestMangas()
+    }
+
+    override fun onBackPressed() {
+        if (!search) return
+
     }
 }

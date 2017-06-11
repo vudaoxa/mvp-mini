@@ -169,8 +169,9 @@ fun initIcons(context: Context) {
 
 fun View.show(show: Boolean) {
     if (show) {
-        visibility = visible
+        if (isVisible()) return
         startAnimation(anim)
+        postOnAnimationDelayed({ visibility = visible }, 250)
     } else {
         visibility = gone
     }

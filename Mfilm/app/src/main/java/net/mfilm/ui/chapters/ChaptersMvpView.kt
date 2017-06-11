@@ -26,6 +26,7 @@ interface ChaptersMvpView : MvpView, ICallbackOnClick {
     fun seekPrevChapter()
     fun loadMoreOnDemand()
     fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView)
+    fun loadPrevOnDemand(chapterImagesMvpView: ChapterImagesMvpView)
     //    var chapterImagesFragment: ChapterImagesFragment?
     var chapterImagesFragment: ChapterImagesMvpView?
 //    fun onResumeReading()

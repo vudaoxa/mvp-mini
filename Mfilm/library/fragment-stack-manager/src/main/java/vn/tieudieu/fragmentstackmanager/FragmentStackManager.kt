@@ -13,13 +13,9 @@ import java.util.*
 class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
 
     private var mInitializationParams: InitializationParams? = null
-    private val mUiHandler: Handler
+    private val mUiHandler: Handler = Handler(Looper.getMainLooper())
     private var mContentFragment: F? = null
     private var stackFragments: Stack<F>? = null
-
-    init {
-        mUiHandler = Handler(Looper.getMainLooper())
-    }
 
     fun initialize(initializationParams: InitializationParams?) {
         if (initializationParams == null) {
@@ -46,7 +42,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
         Log.e(TAG, String.format("onRestoreInstanceState(): savedInstanceState[%b]", savedInstanceState != null))
 
         if (savedInstanceState == null) {
-            mInitializationParams!!.screenManager.onMainScreenRequested()
+            mInitializationParams?.screenManager?.onMainScreenRequested()
         } else {
             notifyFragmentChange()
         }
@@ -55,9 +51,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
     private fun notifyFragmentChange() {
         if (findCurrentFragment()) {
             mUiHandler.post {
-                if (mInitializationParams != null) {
-                    mInitializationParams!!.screenManager.onFragmentEntered(mContentFragment)
-                }
+                mInitializationParams?.screenManager?.onFragmentEntered(mContentFragment)
             }
         }
     }

@@ -9,7 +9,7 @@ interface ScreenManager {
     fun onMainScreenRequested()
     fun onSwapFragmentRequested(fragment: Fragment)
     fun onBackFragmentRequested()
-    fun onFragmentEntered(fragment: Fragment?)
+    fun onFragmentEntered(f: Fragment?)
     fun onCloseRequested()
     fun onNewScreenRequested(indexTag: Any?, typeContent: String?, obj: Any?)
     //    fun onNewScreenRequested(indexTag: Int, typeContent: String?, obj: Any?)

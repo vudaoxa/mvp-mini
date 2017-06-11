@@ -35,37 +35,57 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 //        get() = mChaptersFragment?.seekPrevChapter
 //    override val seekNextChapter: Chapter?
 //        get() = mChaptersFragment?.seekNextChapter
-    private var mChapters = mutableListOf<Chapter>()
-    override var chapters: MutableList<Chapter>
-        get() = mChapters
-        set(value) {
-            mChapters = value
-        }
+
+//    private var mChapters = mutableListOf<Chapter>()
+//    override var chapters: MutableList<Chapter>
+//        get() = mChapters
+//        set(value) {
+//            mChapters = value
+//        }
 
 //    override fun addChapter(chapter: Chapter) {
 //        chapters.add(chapter)
 //    }
 
+    //    override fun addChapter(chapter: Chapter, f: () -> Unit) {
+//        chapters.apply {
+//            fun doIt() {
+//                add(chapter)
+//                f()
+//            }
+//            if (isEmpty()) {
+//                doIt()
+//            } else {
+//                if (last().id != chapter.id) {
+//                    Timber.e("--------------next chapter ----- $chapter")
+//                    doIt()
+//                } else {
+//                    Timber.e("--------------same--------------")
+//                    loadMoreOnDemand()
+//                }
+//            }
+//
+//        }
+//    }
     override fun addChapter(chapter: Chapter, f: () -> Unit) {
-        chapters.apply {
-            fun doIt() {
-                add(chapter)
-                f()
-            }
-            if (isEmpty()) {
-                doIt()
-            } else {
-                if (last().id != chapter.id) {
-                    Timber.e("--------------next chapter ----- $chapter")
-                    doIt()
-                } else {
-                    Timber.e("--------------same--------------")
-                    loadMoreOnDemand()
-                }
-            }
 
-        }
+//        fun doIt() {
+//            add(chapter)
+//            f()
+//        }
+//        if (isEmpty()) {
+//            doIt()
+//        } else {
+//            if (last().id != chapter.id) {
+//                Timber.e("--------------next chapter ----- $chapter")
+//                doIt()
+//            } else {
+//                Timber.e("--------------same--------------")
+//                loadMoreOnDemand()
+//            }
+//        }
     }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(net.mfilm.R.layout.fragment_chapter_images, container, false)
     }
@@ -83,7 +103,8 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             currentReadingChapter.let { c ->
                 c?.apply {
                     Timber.e("----------initViews---------$c---------")
-                    addChapter(c, { requestChapterImages(c.id!!) })
+//                    addChapter(c, { requestChapterImages(c.id!!) })
+                    requestChapterImages(c.id!!)
                 }
             }
         }
@@ -114,12 +135,15 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     override fun initChapterImages(images: List<ChapterImage>) {
 //        current chapter set images
-        chapters.apply {
-            val chapter = last()
-            chapter.data = images
-            context?.apply {
-                mChapterImagesPresenter.showFresco(this, chapter, images.map { it.url!! }.toMutableList(), images.size - 2)
-            }
+//        chapters.apply {
+//            val chapter = last()
+//            chapter.data = images
+//            context?.apply {
+//                mChapterImagesPresenter.showFresco(this, chapter, images.map { it.url!! }.toMutableList(), images.size - 2)
+//            }
+//        }
+        context?.apply {
+            mChapterImagesPresenter.showFresco(this, mChaptersFragment?.currentReadingChapter, images.map { it.url!! }.toMutableList(), images.size - 2)
         }
     }
 
@@ -134,8 +158,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         //read btn behavior
         //get currentReadingPosition from mChaptersFragment, to reload images in $chapters
         mChaptersFragment?.apply {
-            seekPrevChapter()
-            xx
+            loadPrevOnDemand(this@ChapterImagesFragment)
         }
     }
 
@@ -143,6 +166,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         initViews()
     }
 
+    override fun seekPrevChapter() {
+        initViews()
+    }
     //it's called from ChaptersFragment
 //    override fun onChaptersResponse() {
 //        Timber.e("----------------onChaptersResponse--------------")

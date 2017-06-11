@@ -28,7 +28,10 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.di.components.ActComponent
@@ -40,7 +43,7 @@ import net.mfilm.utils.*
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 import vn.tieudieu.fragmentstackmanager.BaseActivityFragmentStack
-import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by janisharali on 27/01/17.
@@ -52,6 +55,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         private set
     var mMenu: Menu? = null
     var mToggle: ActionBarDrawerToggle? = null
+    private var searchTime = -1L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -124,21 +128,52 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     }
 
-    override fun onFragmentEntered(fragment: Fragment?) {
-        setToolbarTitle((fragment as BaseFragmentStack).title)
-        fragment.apply {
+    override fun onSearch(search: Boolean) {
+        Timber.e("-------------------onSearch-------------$search")
+        /*
+        * hide toggle menu --  1
+        * hide toolbar title-- 1
+        * hide btns----1
+        * hide options menu----1
+        * hide rootview-----1
+        * show btn back--1
+        * */
+
+        mToolbarTitle.show(!search)
+//        mBtnSearch.show(!search)
+        mLayoutInputText.show(search)
+//        containerView.show(!search)
+//        showOptionsMenu(!search)
+        if (search) {
+//            showBtnBack()
+        } else {
+//            showDrawer()
+            hideKeyboard()
+        }
+    }
+
+    override fun onFragmentEntered(f: Fragment?) {
+        f as BaseStackFragment
+        f.apply {
             if (fullScreen) {
                 supportActionBar?.hide()
             } else {
-                supportActionBar?.show()
+                setToolbarTitle(f.title)
+                Timber.e("---------mLayoutBtnsInfo.show($info)-------------")
+                mLayoutBtnsInfo.show(info)
+                mBtnSearch.show(home)
+                showOptionsMenu(home)
                 if (back) {
                     showBtnBack()
                 } else {
                     showDrawer()
                 }
+                onSearch(search)
+                supportActionBar?.show()
             }
         }
     }
+
     override fun hideKeyboard() {
         val view = this.currentFocus
         if (view != null) {
@@ -167,35 +202,36 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         return true
     }
 
-    fun setToolbarTitle(title: String?) {
+    override fun setToolbarTitle(title: String?) {
         mToolbarTitle.text = if (!TextUtils.isEmpty(title)) title else getString(R.string.app_name)
     }
 
-    fun showBtnBack(visi: Boolean) {
+    override fun showBtnBack(visi: Boolean) {
         mToolbarBack.show(visi)
     }
 
-    fun showBtnBack() {
+    override fun showBtnBack() {
         mToolbarBack.show(true)
         hideDrawerToggle()
     }
 
-    fun hideDrawerToggle() {
+    override fun hideDrawerToggle() {
         mToolbar.navigationIcon = null
     }
 
-    fun showOptionsMenu(show: Boolean) {
+    override fun showOptionsMenu(show: Boolean) {
         mMenu?.apply {
             findItem(actionSettingsId).isVisible = show
             findItem(actionAboutId).isVisible = show
         }
     }
-    protected fun showDrawer() {
+
+    override fun showDrawer() {
         mToolbarBack.visibility = gone
         syncStateDrawer()
     }
 
-    protected fun syncStateDrawer() {
+    override fun syncStateDrawer() {
         mDrawerLayout.post({ mToggle?.syncState() })
     }
 
@@ -216,42 +252,132 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
             syncState()
         }
         mToolbarBack.setOnClickListener { onBackPressed() }
-        mBtnSearch.setImageDrawable(icon_search)
+        initSearch()
         mBtnFollow.setImageDrawable(icon_star)
         mBtnShare.setImageDrawable(icon_share)
-        mBtnSearch.setOnClickListener { onSearch(true) }
+        mBtnSearch.setOnClickListener { onSearchScreenRequested() }
         mBtnFollow.setOnClickListener { onFollow() }
         mBtnShare.setOnClickListener { onShare() }
     }
 
-    override fun onSearch(search: Boolean) {
-        Timber.e("-------------------onSearch-------------$search")
-        /*
-        * hide toggle menu --  1
-        * hide toolbar title-- 1
-        * hide btns----1
-        * hide options menu----1
-        * hide rootview-----1
-        * show btn back--1
-        * */
+//    override fun initSearch() {
+//        mBtnSearch.setImageDrawable(icon_search)
+//        edtSearch.setOnEditorActionListener { _, i, _ ->
+//            if (i == EditorInfo.IME_ACTION_SEARCH) {
+//                submitSearch()
+//            }
+//            false
+//        }
+//        RxTextView.afterTextChangeEvents(edtSearch)
+//                .debounce(2, TimeUnit.SECONDS)
+//                .map { it.view().toString().trim() }
+////                .filter { !TextUtils.isEmpty(it) }
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe { text ->
+//                    var clearShowed = true
+//                    if (text.isNotEmpty()) {
+//                        submitSearchSuggestion(text)
+//                    } else {
+//                        clearShowed = false
+//                    }
+//                    imgClear.show(clearShowed)
+//                }
+//        imgClear.setOnClickListener {
+//            edtSearch.text = null
+//        }
+//    }
 
-        mToolbarTitle.show(!search)
-        mBtnSearch.show(!search)
-        mLayoutInputText.show(search)
-        containerView.show(!search)
-        showOptionsMenu(!search)
-        if (search) {
-            showBtnBack()
-        } else {
-            showDrawer()
-            hideKeyboard()
+    override fun initSearch() {
+        mBtnSearch.setImageDrawable(icon_search)
+        edtSearch.setOnEditorActionListener { _, i, _ ->
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+                submitSearch()
+                //searchTime to avoid conflict between search and search suggestion
+                searchTime = System.currentTimeMillis()
+                Timber.e("time -------------- " + searchTime)
+            }
+            false
+        }
+        RxTextView.afterTextChangeEvents(edtSearch)
+                .debounce(1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { tvChangeEvent ->
+                    var ok = true
+                    if (searchTime != -1L) {
+                        val currentTime = System.currentTimeMillis()
+                        val l = currentTime - searchTime
+                        Timber.e(currentTime.toString() + " -------------  " + searchTime + " === " + l)
+                        if (l <= AUTO_LOAD_DURATION) {
+                            ok = false
+                        }
+                    }
+                    Timber.e("ok----------------- " + ok)
+                    if (ok) {
+                        val s = tvChangeEvent.view().text.toString()
+                        val text = s.trim { it <= ' ' }
+                        var clearShowed = true
+                        if (text.isNotEmpty()) {
+                            submitSearchSuggestion(text)
+                        } else {
+                            clearShowed = false
+                        }
+                        imgClear.show(clearShowed)
+                    }
+                }
+        imgClear.setOnClickListener {
+            edtSearch.text = null
         }
     }
+
+    override fun submitSearchSuggestion(query: String) {
+        Timber.e("submitSearchSuggestion--------------------------------" + query)
+        //send to MainSearchFragment
+        mCallbackSearchView?.onSearch(query)
+//        sendHit(CATEGORY_ACTION, ACTION_SEARCH_SUGGESTION)
+    }
+
+    override fun submitSearch() {
+//        sendHit(CATEGORY_ACTION, ACTION_SEARCH_SUBMIT)
+        val query = edtSearch.text.toString().trim()
+        if (query.isEmpty()) return
+        mCallbackSearchView?.onSearch(query)
+        hideKeyboard()
+    }
+
+//    override fun onSearch(search: Boolean, back: Boolean) {
+//        Timber.e("-------------------onSearch-------------$search")
+//        /*
+//        * hide toggle menu --  1
+//        * hide toolbar title-- 1
+//        * hide btns----1
+//        * hide options menu----1
+//        * hide rootview-----1
+//        * show btn back--1
+//        * */
+//
+//        mToolbarTitle.show(!search)
+//        mBtnSearch.show(!search)
+//        mLayoutInputText.show(search)
+////        containerView.show(!search)
+//        showOptionsMenu(!search)
+//        if (search) {
+//            showBtnBack()
+//            if (!back)
+//                onSearchScreenRequested()
+//        } else {
+//            showDrawer()
+//            hideKeyboard()
+//        }
+//    }
+
+
 
     override fun onBackPressed() {
         Timber.e("----------------onBackPressed-----------------")
         if (mLayoutInputText.isVisible()) {
             onSearch(false)
+            //pop fragment search
+            super.onBackPressed()
         } else {
             if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mDrawerLayout.closeDrawer(GravityCompat.START)

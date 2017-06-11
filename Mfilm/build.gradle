@@ -48,7 +48,7 @@ ext {
     rxjava2Version = '2.0.5'
     rxandroidVersion = '2.0.1'
     rxKotlinVersion = '0.60.0'
-    rxBindingVersion = '0.4.0'
+    rxBindingVersion = '2.0.0'
     frescoVersion = '0.11.0'
     butterKnifeVersion = '8.5.1'
     greenDaoVersion = '3.2.0'
