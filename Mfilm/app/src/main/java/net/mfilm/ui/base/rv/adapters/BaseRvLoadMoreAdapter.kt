@@ -11,7 +11,7 @@ import timber.log.Timber
 /**
  * Created by tusi on 5/28/17.
  */
-abstract class BaseRvLoadMoreAdapter<V : Any>(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick)
+abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick)
     : BaseRvAdapter<V>(mContext, mData, mCallbackOnClick), IAdapterLoadMore {
     override fun getItemViewType(position: Int): Int {
         mData?.apply {
@@ -22,7 +22,6 @@ abstract class BaseRvLoadMoreAdapter<V : Any>(mContext: Context, mData: MutableL
         return -10
     }
 
-    override fun getItemCount() = mData?.size ?: 0
     override fun onAdapterLoadMore(f: () -> Unit) {
         Timber.e("-------------onAdapterLoadMore----------$isMoreLoading-------")
         if (isMoreLoading) return

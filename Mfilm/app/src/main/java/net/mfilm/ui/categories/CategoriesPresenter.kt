@@ -19,7 +19,7 @@ constructor(val retrofitService: RetrofitService,
         BasePresenter<V>(dataManager, compositeDisposable), CategoriesMvpPresenter<V> {
     override fun requestCategories() {
         if (!isViewAttached) return
-        mvpView?.showLoading()
+//        mvpView?.showLoading()
         val d = object : MDisposableObserver<CategoriesResponse>({ mvpView?.onFailure() },
                 { mvpView?.onNoInternetConnections() }) {
             override fun onNext(t: CategoriesResponse?) {

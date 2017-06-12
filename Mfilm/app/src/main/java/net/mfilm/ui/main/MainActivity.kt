@@ -127,7 +127,10 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
             }
         //search, category
             IndexTags.FRAGMENT_SEARCH -> {
-                fragmentStackManager.swapFragment(MangasFragment.newInstance(true))
+                fragmentStackManager.swapFragment(MangasFragment.newInstance(null, true))
+            }
+            IndexTags.FRAGMENT_CATEGORY -> {
+                fragmentStackManager.swapFragment(MangasFragment.newInstance(obj, false))
             }
             IndexTags.FRAGMENT_MANGA_INFO -> {
                 fragmentStackManager.swapFragment(MangaInfoFragment.newInstance(obj))

@@ -3,4 +3,12 @@
     <integer name="max_line_item_property">1</integer>
     <integer name="max_line_item_des">3</integer>
     <integer name="max_line_item_header">2</integer>
+
+    <!--span_counts-->
+    <integer name="mangas_span_count">3</integer>
+    <integer name="categories_span_count">3</integer>
+    <integer name="select_number_span_count">6</integer>
+    <integer name="seri_span_count">3</integer>
+    <integer name="try_play_span_count">6</integer>
+    <integer name="map_area_span_count">3</integer>
 </resources>

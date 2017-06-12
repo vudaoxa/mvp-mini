@@ -80,12 +80,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
     }
 
     override val isNetworkConnected: Boolean
-        get() {
-            if (baseActivity != null) {
-                return baseActivity!!.isNetworkConnected
-            }
-            return false
-        }
+        get() = baseActivity!!.isNetworkConnected
 
     override fun onDetach() {
         baseActivity = null
@@ -93,9 +88,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
     }
 
     override fun hideKeyboard() {
-        if (baseActivity != null) {
-            baseActivity!!.hideKeyboard()
-        }
+        baseActivity?.hideKeyboard()
     }
 
     override fun openActivityOnTokenExpire() {
@@ -141,9 +134,5 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
         fun onFragmentAttached()
 
         fun onFragmentDetached(tag: String)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

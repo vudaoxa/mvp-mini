@@ -3,7 +3,6 @@ package net.mfilm.utils
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -28,7 +27,6 @@ import com.joanzapata.iconify.fonts.IoniconsModule
 import net.mfilm.R
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.NavItem
-import net.mfilm.ui.manga.SpanCount
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,14 +42,14 @@ fun obtainTabletSize(mContext: Context) {
     tabletSize = mContext.resources.getBoolean(R.bool.isTablet)
 }
 
-var spanCounts = listOf<SpanCount>()
-fun initSpanCounts() {
-    val spanTabletPortrait = SpanCount(true, Configuration.ORIENTATION_PORTRAIT, 6)
-    val spanTabletLandscape = SpanCount(true, Configuration.ORIENTATION_LANDSCAPE, 8)
-    val spanPhonePortrait = SpanCount(false, Configuration.ORIENTATION_PORTRAIT, 3)
-    val spanPhoneLandscape = SpanCount(false, Configuration.ORIENTATION_LANDSCAPE, 5)
-    spanCounts = listOf(spanTabletPortrait, spanTabletLandscape, spanPhonePortrait, spanPhoneLandscape)
-}
+//var spanCounts = listOf<SpanCount>()
+//fun initSpanCounts() {
+//    val spanTabletPortrait = SpanCount(true, Configuration.ORIENTATION_PORTRAIT, 6)
+//    val spanTabletLandscape = SpanCount(true, Configuration.ORIENTATION_LANDSCAPE, 8)
+//    val spanPhonePortrait = SpanCount(false, Configuration.ORIENTATION_PORTRAIT, 3)
+//    val spanPhoneLandscape = SpanCount(false, Configuration.ORIENTATION_LANDSCAPE, 5)
+//    spanCounts = listOf(spanTabletPortrait, spanTabletLandscape, spanPhonePortrait, spanPhoneLandscape)
+//}
 
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
     text?.apply {

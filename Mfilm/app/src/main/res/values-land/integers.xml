@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--for phone land-->
+    <integer name="mangas_span_count">5</integer>
+    <integer name="categories_span_count">5</integer>
+    <integer name="select_number_span_count">10</integer>
+    <integer name="seri_span_count">5</integer>
+    <integer name="try_play_span_count">9</integer>
+    <integer name="map_area_span_count">6</integer>
+</resources>

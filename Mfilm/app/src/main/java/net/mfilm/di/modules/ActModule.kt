@@ -25,6 +25,9 @@ import net.mfilm.di.PerActivity
 import net.mfilm.ui.about.AboutMvpPresenter
 import net.mfilm.ui.about.AboutMvpView
 import net.mfilm.ui.about.AboutPresenter
+import net.mfilm.ui.categories.CategoriesMvpPresenter
+import net.mfilm.ui.categories.CategoriesMvpView
+import net.mfilm.ui.categories.CategoriesPresenter
 import net.mfilm.ui.chapter_images.ChapterImagesMvpPresenter
 import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.ui.chapter_images.ChapterImagesPresenter
@@ -99,6 +102,11 @@ class ActModule(val mActivity: Activity) {
 
     @Provides
     fun provideChapterImagesPresenter(presenter: ChapterImagesPresenter<ChapterImagesMvpView>): ChapterImagesMvpPresenter<ChapterImagesMvpView> {
+        return presenter
+    }
+
+    @Provides
+    fun provideCategoriesPresenter(presenter: CategoriesPresenter<CategoriesMvpView>): CategoriesMvpPresenter<CategoriesMvpView> {
         return presenter
     }
 }

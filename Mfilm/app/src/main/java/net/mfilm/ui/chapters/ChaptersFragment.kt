@@ -157,7 +157,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                         cs.data.let { dt ->
                             dt?.apply {
                                 if (dt.isNotEmpty()) {
-                                    initChapters(dt)
+                                    buildChapters(dt)
                                 } else onChaptersNull()
                             } ?: let { onChaptersNull() }
                         }
@@ -176,13 +176,13 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         } ?: let { nullByAdapter(false) }
     }
 
-    override fun initChapters(chapters: List<Chapter>) {
-        Timber.e("----------------initChapters-----------------${chapters.size}-------")
+    override fun buildChapters(chapters: List<Chapter>) {
+        Timber.e("----------------buildChapters-----------------${chapters.size}-------")
 //        if (!isVisOk()) return
         root_view?.show(true) ?: return
         mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
-                val x = mData?.size
+                val x = mData?.size //xxx readBtnClicked
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
                 seekCurrentReadingPosition(x)

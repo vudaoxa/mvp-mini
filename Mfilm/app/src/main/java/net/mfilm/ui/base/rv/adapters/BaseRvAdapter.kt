@@ -7,7 +7,7 @@ import net.mfilm.utils.ICallbackOnClick
 /**
  * Created by MRVU on 5/16/2017.
  */
-abstract class BaseRvAdapter<V : Any>(val mContext: Context, var mData: MutableList<V>?)
+abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: MutableList<V>?)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var isMoreLoading = false
     var mCallbackOnClick: ICallbackOnClick? = null
@@ -15,4 +15,6 @@ abstract class BaseRvAdapter<V : Any>(val mContext: Context, var mData: MutableL
     constructor(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick? = null) : this(mContext, mData) {
         this.mCallbackOnClick = mCallbackOnClick
     }
+
+    override fun getItemCount() = mData?.size ?: 0
 }

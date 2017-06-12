@@ -30,14 +30,5 @@
 
     </LinearLayout>
 
-    <tr.xip.errorview.ErrorView
-        android:id="@+id/error_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:visibility="gone"
-        app:ev_retryButtonText="TRY AGAIN"
-        app:ev_retryButtonTextColor="@color/colorAccent"
-        app:ev_subtitle="Something went wrong!" />
+    <include layout="@layout/error_view" />
 </FrameLayout>

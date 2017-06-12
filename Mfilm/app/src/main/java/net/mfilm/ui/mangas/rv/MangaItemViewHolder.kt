@@ -13,7 +13,7 @@ import net.mfilm.utils.ICallbackOnClick
  */
 class MangaItemViewHolder(mContext: Context, type: Int, itemView: View, mCallbackOnclick: ICallbackOnClick?)
     : BaseViewHolder(mContext, type, itemView, mCallbackOnclick) {
-    override fun bindView(obj: Any, position: Int) {
+    override fun bindView(obj: Any?, position: Int) {
         if (obj is Manga) {
             obj.apply {
                 itemView.apply {

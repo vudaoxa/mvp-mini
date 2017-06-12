@@ -17,7 +17,7 @@ abstract class BaseViewHolder(protected val mContext: Context, val type: Int = -
         this.mCallbackOnClick = mCallbackOnClick
     }
 
-    abstract fun bindView(obj: Any, position: Int)
+    abstract fun bindView(obj: Any?, position: Int)
 
     var mPosition: Int = 0
 }

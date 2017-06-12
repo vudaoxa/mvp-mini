@@ -25,10 +25,10 @@
 
     <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/img_clear"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/dimen48"
+        android:layout_height="@dimen/dimen48"
         android:gravity="center"
-        android:padding="12dp"
+        android:padding="@dimen/dimen5"
         android:shadowColor="@color/shadow"
         android:shadowDx="3"
         android:shadowDy="3"

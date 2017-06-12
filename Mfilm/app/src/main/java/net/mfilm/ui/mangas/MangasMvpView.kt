@@ -15,5 +15,5 @@ interface MangasMvpView : MvpView, ICallbackOnClick, ICallbackRefresh {
     fun requestMangas()
     fun onMangasResponse(mangasResponse: MangasResponse?)
     fun onMangasNull()
-    fun initMangas(mangas: List<Manga>)
+    fun buildMangas(mangas: List<Manga>)
 }

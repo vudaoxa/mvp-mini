@@ -44,7 +44,6 @@ class MApplication : Application() {
         initAnimations(this)
         initIcons(this)
         initNavs()
-        initSpanCounts()
         initFresco()
         initTimber()
         TimeUtils

@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.joanzapata.iconify.widget.IconTextView
+import net.mfilm.data.network_retrofit.Category
 
 /**
  * Created by tusi on 5/16/17.
@@ -54,6 +55,7 @@ interface ICallbackRefresh {
 interface ICallbackSearchView {
     fun onSearch(query: String)
     var query: String?
+    var category: Category?
 }
 
 interface ICallbackSearch {

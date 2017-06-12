@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout_match_wrap"
+    android:background="@drawable/main_background"
+    android:orientation="vertical">
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:shadowColor="@color/shadow"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:text="@string/ion_musical_note"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/TextStyle.Sans.Regular.14"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/selector_blue" />
+</LinearLayout>

@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_mangas.*
 import net.mfilm.R
+import net.mfilm.data.network_retrofit.Category
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.rv.BaseLoadMoreFragment
@@ -19,6 +20,7 @@ import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.utils.*
 import timber.log.Timber
+import java.io.Serializable
 import javax.inject.Inject
 
 /**
@@ -28,16 +30,18 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     companion object {
         //to assign it to BaseStackActivity
         private var mSearchInstance: MangasFragment? = null
-
+        const val KEY_SEARCH = "KEY_SEARCH"
+        const val KEY_CATEGORY = "KEY_CATEGORY"
         fun getSearchInstance(): MangasFragment {
             mSearchInstance?.apply { return this }
-            return newInstance(true)
+            return newInstance(null, true)
         }
 
-        fun newInstance(search: Boolean = false): MangasFragment {
+        fun newInstance(category: Any? = null, search: Boolean = false): MangasFragment {
             val fragment = MangasFragment()
             val bundle = Bundle()
-            bundle.putBoolean(AppConstants.EXTRA_DATA, search)
+            bundle.putBoolean(KEY_SEARCH, search)
+            bundle.putSerializable(KEY_CATEGORY, category as? Serializable?)
             fragment.arguments = bundle
             if (search) mSearchInstance = fragment
             return fragment
@@ -50,12 +54,18 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         set(value) {
             mQuery = value
         }
+    private var mCategory: Category? = null
+    override var category: Category?
+        get() = mCategory
+        set(value) {
+            mCategory = value
+        }
     override var isDataEnd: Boolean
         get() = false
         set(value) {}
 
     @Inject
-    lateinit var mPresenter: MangasMvpPresenter<MangasMvpView>
+    lateinit var mMangasPresenter: MangasMvpPresenter<MangasMvpView>
     var mMangasRvAdapter: MangasRvAdapter<Manga>? = null
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -75,9 +85,11 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     override fun initFields() {
         activityComponent.inject(this)
-        mPresenter.onAttach(this)
-        search = arguments.getBoolean(AppConstants.EXTRA_DATA)
-        back = search
+        mMangasPresenter.onAttach(this)
+        search = arguments.getBoolean(KEY_SEARCH)
+        category = arguments.getSerializable(KEY_CATEGORY) as? Category?
+        back = search || category != null
+        title = category?.name
     }
 
     inner class AdapterTracker : AdapterView.OnItemSelectedListener {
@@ -94,8 +106,8 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     fun initRv() {
-        val spanCount = spanCounts.filter { it.tablet == tabletSize && it.orientation == resources.configuration.orientation }[0].spanCount
         rv.apply {
+            val spanCount = resources.getInteger(R.integer.mangas_span_count)
             mMangasRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
             layoutManager = mMangasRvLayoutManagerWrapper
@@ -118,14 +130,15 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        val spanCount = spanCounts.filter { it.tablet == tabletSize && it.orientation == newConfig?.orientation }[0].spanCount
         handler({
             rv.apply {
+                val spanCount = resources.getInteger(R.integer.mangas_span_count)
                 mMangasRvLayoutManagerWrapper.spanCount = spanCount
                 requestLayout()
             }
         })
     }
+
     override fun initSwipe() {
         swipeContainer.apply {
             if (pullToRefreshEnabled()) {
@@ -156,7 +169,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     override fun requestMangas() {
-        mPresenter.requestMangas(null, LIMIT, page++, filters[spnFilterTracker.mPosition].content, query)
+        mMangasPresenter.requestMangas(category?.id, LIMIT, page++, filters[spnFilterTracker.mPosition].content, query)
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
@@ -169,7 +182,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
                         mp.mangas.let { mgs ->
                             mgs?.apply {
                                 if (mgs.isNotEmpty()) {
-                                    initMangas(mgs)
+                                    buildMangas(mgs)
                                 } else onMangasNull()
                             } ?: let { onMangasNull() }
                         }
@@ -189,9 +202,8 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     //notEmpty condition
-    override fun initMangas(mangas: List<Manga>) {
-        Timber.e("---------------initMangas---------------${mangas.size}")
-        hideLoading()
+    override fun buildMangas(mangas: List<Manga>) {
+        Timber.e("---------------buildMangas---------------${mangas.size}")
         spn_filter.show(true)
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
@@ -212,7 +224,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         if (event != TYPE_ITEM) return
-        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = mMangasRvAdapter?.mData!![position])
+        mMangasRvAdapter?.mData?.apply {
+            screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position])
+        }
     }
 
     override fun onSearch(query: String) {
