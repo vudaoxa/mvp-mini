@@ -12,7 +12,7 @@ abstract class BaseRvAdapter<V : Any>(val mContext: Context, var mData: MutableL
     var isMoreLoading = false
     var mCallbackOnClick: ICallbackOnClick? = null
 
-    constructor(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick) : this(mContext, mData) {
+    constructor(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick? = null) : this(mContext, mData) {
         this.mCallbackOnClick = mCallbackOnClick
     }
 }

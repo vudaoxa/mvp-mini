@@ -37,6 +37,7 @@ import java.util.*
  */
 
 fun Fragment.isVisOk() = isVisible && isAdded && isInLayout
+
 var tabletSize = false
 
 fun obtainTabletSize(mContext: Context) {
@@ -180,14 +181,14 @@ fun View.show(show: Boolean) {
 fun View.isVisible() = visibility == visible
 fun showLoadingDialog(context: Context): ProgressDialog {
     val progressDialog = ProgressDialog(context)
-    progressDialog.show()
-    if (progressDialog.window != null) {
-        progressDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    progressDialog.apply {
+        show()
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        setContentView(R.layout.progress_dialog)
+        isIndeterminate = true
+        setCancelable(true)
+        setCanceledOnTouchOutside(false)
     }
-    progressDialog.setContentView(R.layout.progress_dialog)
-    progressDialog.isIndeterminate = true
-    progressDialog.setCancelable(true)
-    progressDialog.setCanceledOnTouchOutside(false)
     return progressDialog
 }
 

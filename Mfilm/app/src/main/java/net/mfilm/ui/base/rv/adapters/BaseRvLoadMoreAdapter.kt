@@ -37,7 +37,6 @@ abstract class BaseRvLoadMoreAdapter<V : Any>(mContext: Context, mData: MutableL
     }
 
     override fun onAdapterLoadMoreFinished(f: () -> Unit) {
-
         handler({
             mData?.apply {
                 val l = itemCount
