@@ -6,7 +6,8 @@ import android.view.View
  * Created by tusi on 3/29/17.
  */
 const val AUTO_LOAD_DURATION = 2000L
-const val LIMIT = 3
+//const val LIMIT = 3
+const val LIMIT = 10
 const val PAGE_START = 1
 const val DURATION = 5L
 const val PREF_NAME = "mindorks_pref"
