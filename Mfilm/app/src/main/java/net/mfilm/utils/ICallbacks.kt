@@ -2,6 +2,7 @@ package net.mfilm.utils
 
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
 import android.widget.EditText
 import android.widget.ImageButton
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.joanzapata.iconify.widget.IconTextView
 import net.mfilm.data.network_retrofit.Category
+import tr.xip.errorview.ErrorView
 
 /**
  * Created by tusi on 5/16/17.
@@ -46,10 +48,11 @@ interface IAdapterLoadMore {
 interface ICallbackRefresh {
     fun setRefreshing(refreshing: Boolean)
     fun pullToRefreshEnabled(): Boolean
+    fun setRefreshed(refreshed: Boolean, f: (() -> Unit)?)
     val pullToRefreshColorResources: IntArray
     fun onRefresh()
     fun initSwipe()
-    fun reset()
+    val swipeContainer: SwipeRefreshLayout?
 }
 
 interface ICallbackSearchView {
@@ -104,4 +107,21 @@ interface ICallbackToolbar : ICallbackSearch {
 
 interface IBackListener {
     fun onBackPressed()
+}
+
+interface ICallbackErrorView {
+    val errorView: ErrorView?
+    val subTitle: Int?
+    fun initErrorView()
+    fun showErrorView(show: Boolean): Boolean
+    //    fun showErrorView(show: Boolean, status_code: Int)
+    fun onErrorViewDemand()
+
+    fun onErrorViewRetry(f: () -> Unit)
+    fun isDataEmpty(): Boolean = false
+    fun loadFinished()
+}
+
+interface ICallbackSpanCount {
+    val spanCount: Int
 }

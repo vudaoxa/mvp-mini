@@ -17,7 +17,7 @@
             android:visibility="gone" />
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeContainer"
+            android:id="@+id/swipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">

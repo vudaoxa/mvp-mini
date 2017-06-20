@@ -4,7 +4,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
-import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.base.error_view.BasePullRefreshFragment
 import net.mfilm.utils.ALoadMore
 import net.mfilm.utils.ICallbackLoadMore
 import net.mfilm.utils.PAGE_START
@@ -13,7 +13,7 @@ import timber.log.Timber
 /**
  * Created by MRVU on 5/16/2017.
  */
-abstract class BaseLoadMoreFragment : BaseStackFragment(), ICallbackLoadMore {
+abstract class BaseLoadMoreFragment : BasePullRefreshFragment(), ICallbackLoadMore {
     var _pape = PAGE_START
     override var page: Int
         get() = _pape
