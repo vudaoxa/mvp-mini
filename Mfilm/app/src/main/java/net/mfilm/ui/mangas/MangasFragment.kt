@@ -26,7 +26,7 @@ import javax.inject.Inject
 /**
  * Created by tusi on 4/2/17.
  */
-class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchView, IBackListener {
+class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchView {
     companion object {
         //to assign it to BaseStackActivity
         private var mSearchInstance: MangasFragment? = null
@@ -66,7 +66,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     @Inject
     lateinit var mMangasPresenter: MangasMvpPresenter<MangasMvpView>
-    var mMangasRvAdapter: MangasRvAdapter<Manga>? = null
+    //    var mMangasRvAdapter: MangasRvAdapter<Manga>? = null
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_mangas, container, false)
@@ -235,8 +235,4 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         requestMangas()
     }
 
-    override fun onBackPressed() {
-        if (!search) return
-
-    }
 }

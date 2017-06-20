@@ -34,6 +34,9 @@ import net.mfilm.ui.chapter_images.ChapterImagesPresenter
 import net.mfilm.ui.chapters.ChaptersMvpPresenter
 import net.mfilm.ui.chapters.ChaptersMvpView
 import net.mfilm.ui.chapters.ChaptersPresenter
+import net.mfilm.ui.favorites.FavoritesMvpPresenter
+import net.mfilm.ui.favorites.FavoritesMvpView
+import net.mfilm.ui.favorites.FavoritesPresenter
 import net.mfilm.ui.main.MainMvpPresenter
 import net.mfilm.ui.main.MainMvpView
 import net.mfilm.ui.main.MainPresenter
@@ -107,6 +110,11 @@ class ActModule(val mActivity: Activity) {
 
     @Provides
     fun provideCategoriesPresenter(presenter: CategoriesPresenter<CategoriesMvpView>): CategoriesMvpPresenter<CategoriesMvpView> {
+        return presenter
+    }
+
+    @Provides
+    fun provideFavoritesPresenter(presenter: FavoritesPresenter<FavoritesMvpView>): FavoritesMvpPresenter<FavoritesMvpView> {
         return presenter
     }
 }

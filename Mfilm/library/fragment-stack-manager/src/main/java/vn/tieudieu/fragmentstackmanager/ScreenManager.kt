@@ -12,7 +12,5 @@ interface ScreenManager {
     fun onFragmentEntered(f: Fragment?)
     fun onCloseRequested()
     fun onNewScreenRequested(indexTag: Any?, typeContent: String?, obj: Any?)
-    //    fun onNewScreenRequested(indexTag: Int, typeContent: String?, obj: Any?)
-//    fun onNewScreenRequested(indexTag: Int, fragment: Fragment?, obj: Any?)
     fun onNewScreenRequested(indexTag: Any?, fragment: Fragment?, obj: Any?)
 }

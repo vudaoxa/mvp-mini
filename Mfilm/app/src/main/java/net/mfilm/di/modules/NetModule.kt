@@ -16,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 /**
@@ -24,15 +25,6 @@ import javax.inject.Singleton
 
 @Module
 class NetModule(private val param: String) {
-
-//    @Provides
-//    @Singleton
-//    fun providesApiSetting(application: Application): ApiSetting {
-//        Timber.d("xyz--providesApiSetting--")
-//        return ApiSetting(param)
-//    }
-
-
     @Provides
     @Singleton
     fun provideOkHttpCache(application: Application): Cache {
@@ -56,6 +48,9 @@ class NetModule(private val param: String) {
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder()
                 .cache(cache)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
                 .build()
         return client
@@ -84,10 +79,4 @@ class NetModule(private val param: String) {
     fun providesRetrofitService(apiService: ApisService): RetrofitService {
         return RetrofitService(apiService)
     }
-
-    companion object {
-
-        private val TAG = NetModule::class.java.simpleName
-    }
-
 }

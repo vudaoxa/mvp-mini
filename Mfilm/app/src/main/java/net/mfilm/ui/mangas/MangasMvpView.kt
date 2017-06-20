@@ -11,7 +11,6 @@ import net.mfilm.utils.ICallbackRefresh
  */
 
 interface MangasMvpView : MvpView, ICallbackOnClick, ICallbackRefresh {
-    //    fun requestMangas(query: String?=null)
     fun requestMangas()
     fun onMangasResponse(mangasResponse: MangasResponse?)
     fun onMangasNull()
