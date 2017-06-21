@@ -13,10 +13,20 @@
  * limitations under the License
  */
 
-package com.icom.xsvietlott.data.db
+package net.mfilm.data.db
 
 
-import net.mfilm.data.db.DbHelper
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.FlowableOnSubscribe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
+import io.reactivex.observers.DisposableObserver
+import io.realm.*
+import net.mfilm.data.db.models.MangaRealm
+import net.mfilm.data.db.models.SearchQueryRealm
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,4 +38,72 @@ import javax.inject.Singleton
 @Singleton
 class AppDbHelper @Inject
 constructor() : DbHelper {
+    override fun <V : RealmObject> find(results: RealmResults<V>): Flowable<RealmResults<V>> {
+        return Flowable.create(FlowableOnSubscribe<RealmResults<V>> { emitter ->
+            val realm = Realm.getDefaultInstance()
+
+            val listener = RealmChangeListener<RealmResults<V>> {
+                //                if (!emitter.isCancelled) {
+//                    emitter.onNext(results)
+//                }
+            }
+            emitter.setDisposable(Disposables.fromRunnable {
+                results.removeChangeListener(listener)
+                realm.close()
+            })
+            results.addChangeListener(listener)
+            emitter.onNext(results)
+        }, BackpressureStrategy.LATEST)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun loadSearchHistory(observer: DisposableObserver<RealmResults<SearchQueryRealm>>?): Disposable {
+        val realm = Realm.getDefaultInstance()
+        //it will be added to presenter, and will be cleared on onDetach
+        return find<SearchQueryRealm>(realm.where(SearchQueryRealm::class.java)
+                .findAllSortedAsync("time", Sort.DESCENDING))
+                .subscribe({
+                    Timber.e("loadSearchHistory------------isLoaded")
+                    observer?.onNext(it)
+                }, {
+                    it.printStackTrace()
+                    realm.close()
+                }, {
+                    realm.close()
+                })
+    }
+
+    override fun loadFavorites(observer: DisposableObserver<RealmResults<MangaRealm>>?): Disposable {
+        val realm = Realm.getDefaultInstance()
+        return find<MangaRealm>(realm.where(MangaRealm::class.java).equalTo("fav", 1)
+                .findAll())
+                .subscribe({
+                    Timber.e("loadFavorites----------isLoaded")
+                    observer?.onNext(it)
+                }, {
+                    it.printStackTrace()
+                    realm.close()
+                }, {
+                    //                    realm.close()
+                })
+    }
+
+    override fun saveObject(obj: RealmObject) {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        realm.copyToRealmOrUpdate(obj)
+        realm.commitTransaction()
+    }
+
+    override fun saveObjects(objs: List<RealmObject>) {
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        realm.copyToRealmOrUpdate(objs)
+        realm.commitTransaction()
+    }
+
+    override fun realmClose() {
+        Realm.getDefaultInstance().close()
+    }
 }

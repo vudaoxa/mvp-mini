@@ -5,9 +5,10 @@ import android.support.annotation.StringRes
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import net.mfilm.di.AppModule
 import net.mfilm.di.components.AppComponent
-import net.mfilm.di.components.DaggerAppComponent
 import net.mfilm.di.module.NetModule
 import net.mfilm.utils.*
 import org.jetbrains.annotations.NotNull
@@ -46,6 +47,7 @@ class MApplication : Application() {
         initNavs()
         initFresco()
         initTimber()
+        initRealm()
         TimeUtils
         CalligraphyConfig.initDefault(mCalligraphyConfig)
         instance = this
@@ -78,7 +80,14 @@ class MApplication : Application() {
         return BuildConfig.FLAVOR == WITH_EXT
     }
 
-
+    fun initRealm() {
+        Realm.init(this)
+        val realmConfig = RealmConfiguration.Builder()
+                .name("komik.realm")
+                .deleteRealmIfMigrationNeeded()
+                .build()
+        Realm.setDefaultConfiguration(realmConfig)
+    }
     companion object {
         lateinit var instance: MApplication
     }

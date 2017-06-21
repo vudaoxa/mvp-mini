@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import dagger.Component
 import net.mfilm.MApplication
-import net.mfilm.data.DataMng
+import net.mfilm.data.DataManager
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.di.AppContext
 import net.mfilm.di.AppModule
@@ -41,7 +41,7 @@ interface AppComponent {
     fun context(): Context
 
     fun application(): Application
-    val dataManager: DataMng
+    val dataManager: DataManager
     val retrofitService: RetrofitService
 }
 

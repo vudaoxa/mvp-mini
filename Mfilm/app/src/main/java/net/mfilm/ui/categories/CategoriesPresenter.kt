@@ -3,7 +3,7 @@ package net.mfilm.ui.categories
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import net.mfilm.data.DataMng
+import net.mfilm.data.DataManager
 import net.mfilm.data.network_retrofit.CategoriesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 class CategoriesPresenter<V : CategoriesMvpView> @Inject
 constructor(val retrofitService: RetrofitService,
-            dataManager: DataMng, compositeDisposable: CompositeDisposable) :
+            dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BasePresenter<V>(dataManager, compositeDisposable), CategoriesMvpPresenter<V> {
     override fun requestCategories() {
         if (!isViewAttached) return

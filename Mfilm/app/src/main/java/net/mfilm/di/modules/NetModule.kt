@@ -28,8 +28,8 @@ class NetModule(private val param: String) {
     @Provides
     @Singleton
     fun provideOkHttpCache(application: Application): Cache {
-        val cacheSize = 10 * 1024 * 1024 // 10 MiB
-        val cache = Cache(application.cacheDir, cacheSize.toLong())
+        val cacheSize = 10 * 1024 * 1024L // 10 MiB
+        val cache = Cache(application.cacheDir, cacheSize)
         return cache
     }
 

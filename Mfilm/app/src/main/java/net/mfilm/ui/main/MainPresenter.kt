@@ -17,7 +17,7 @@ package net.mfilm.ui.main
 
 
 import io.reactivex.disposables.CompositeDisposable
-import net.mfilm.data.DataMng
+import net.mfilm.data.DataManager
 import net.mfilm.ui.base.BasePresenter
 import javax.inject.Inject
 
@@ -27,7 +27,7 @@ import javax.inject.Inject
  */
 
 class MainPresenter<V : MainMvpView> @Inject
-constructor(dataManager: DataMng, compositeDisposable: CompositeDisposable) : BasePresenter<V>(dataManager, compositeDisposable), MainMvpPresenter<V> {
+constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) : BasePresenter<V>(dataManager, compositeDisposable), MainMvpPresenter<V> {
 
     override fun onDrawerOptionAboutClick() {
         mvpView!!.showAboutFragment()

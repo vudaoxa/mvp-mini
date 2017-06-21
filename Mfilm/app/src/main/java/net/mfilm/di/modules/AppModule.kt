@@ -17,13 +17,13 @@ package net.mfilm.di
 
 import android.app.Application
 import android.content.Context
-import com.icom.xsvietlott.data.db.AppDbHelper
 import dagger.Module
 import dagger.Provides
 import net.mfilm.BuildConfig
 import net.mfilm.R
-import net.mfilm.data.AppDataMng
-import net.mfilm.data.DataMng
+import net.mfilm.data.AppDataManager
+import net.mfilm.data.DataManager
+import net.mfilm.data.db.AppDbHelper
 import net.mfilm.data.db.DbHelper
 import net.mfilm.data.prefs.AppPrefsHelper
 import net.mfilm.data.prefs.PrefsHelper
@@ -35,7 +35,6 @@ import javax.inject.Singleton
 /**
  * Created by janisharali on 27/01/17.
  */
-
 
 @Module
 class AppModule(val mApplication: Application) {
@@ -63,7 +62,7 @@ class AppModule(val mApplication: Application) {
 
     @Provides
     @Singleton
-    fun provideDataManager(appDataManager: AppDataMng): DataMng {
+    fun provideDataManager(appDataManager: AppDataManager): DataManager {
         return appDataManager
     }
 

@@ -17,7 +17,7 @@
 //
 //
 //import net.mfilm.R
-//import net.mfilm.mangasPaging.DataMng
+//import net.mfilm.mangasPaging.DataManager
 //import net.mfilm.mangasPaging.networkretrofit.models.AccessToken
 //import net.mfilm.mangasPaging.networkretrofit.models.OnResponse
 //import net.mfilm.mangasPaging.networkretrofit.support.NetConstants
@@ -39,7 +39,7 @@
 // */
 //
 //class LoginPresenter<V : LoginMvpView> @Inject
-//constructor(dataManager: DataMng, compositeDisposable: CompositeDisposable) : BasePresenter<V>(dataManager, compositeDisposable), LoginMvpPresenter<V> {
+//constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) : BasePresenter<V>(dataManager, compositeDisposable), LoginMvpPresenter<V> {
 //
 //    override fun onServerLoginClick(email: String?, password: String?) {
 //        //validate email and password
@@ -89,7 +89,7 @@
 ////                        openMainActivity()
 ////                        val tk = t?.accessToken
 ////                        dataManager.accessToken=tk
-////                        dataManager.currentUserLoggedInMode = DataMng.LoggedInMode.LOGGED_IN_MODE_SERVER_DEFAULT.type
+////                        dataManager.currentUserLoggedInMode = DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER_DEFAULT.type
 ////                        Timber.e("tk-----------------$tk")
 ////                    }
 ////                }

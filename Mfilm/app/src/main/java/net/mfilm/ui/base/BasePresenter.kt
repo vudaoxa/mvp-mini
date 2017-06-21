@@ -21,7 +21,7 @@ package net.mfilm.ui.base
 
 
 import io.reactivex.disposables.CompositeDisposable
-import net.mfilm.data.DataMng
+import net.mfilm.data.DataManager
 import javax.inject.Inject
 
 /**
@@ -30,7 +30,7 @@ import javax.inject.Inject
  * can be accessed from the children classes by calling getMvpView().
  */
 open class BasePresenter<V : MvpView> @Inject
-constructor(val dataManager: DataMng, val compositeDisposable: CompositeDisposable) : MvpPresenter<V> {
+constructor(val dataManager: DataManager, val compositeDisposable: CompositeDisposable) : MvpPresenter<V> {
 
     var mvpView: V? = null
         private set

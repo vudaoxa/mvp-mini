@@ -17,7 +17,7 @@ package net.mfilm.ui.about
 
 
 import io.reactivex.disposables.CompositeDisposable
-import net.mfilm.data.DataMng
+import net.mfilm.data.DataManager
 import net.mfilm.ui.base.BasePresenter
 import javax.inject.Inject
 
@@ -26,4 +26,4 @@ import javax.inject.Inject
  */
 
 class AboutPresenter<V : AboutMvpView> @Inject
-constructor(dataManager: DataMng, compositeDisposable: CompositeDisposable) : BasePresenter<V>(dataManager, compositeDisposable), AboutMvpPresenter<V>
+constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) : BasePresenter<V>(dataManager, compositeDisposable), AboutMvpPresenter<V>

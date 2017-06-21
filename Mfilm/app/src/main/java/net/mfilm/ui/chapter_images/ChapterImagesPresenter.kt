@@ -5,7 +5,7 @@ import com.stfalcon.frescoimageviewer.ImageViewer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import net.mfilm.data.DataMng
+import net.mfilm.data.DataManager
 import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
@@ -20,7 +20,7 @@ import javax.inject.Inject
  */
 class ChapterImagesPresenter<V : ChapterImagesMvpView>
 @Inject constructor(val retrofitService: RetrofitService,
-                    dataManager: DataMng, compositeDisposable: CompositeDisposable) :
+                    dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BasePresenter<V>(dataManager, compositeDisposable), ChapterImagesMvpPresenter<V> {
     override fun requestChapterImages(chapterId: Int) {
         if (!isViewAttached) return

@@ -12,8 +12,8 @@ import net.mfilm.R
 import net.mfilm.data.db.models.MangaRealm
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.favorites.rv.MangasRealmRvAdapter
 import net.mfilm.ui.manga.AdapterTracker
-import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.utils.filtersFavorites
 import net.mfilm.utils.handler
 import net.mfilm.utils.show
@@ -40,10 +40,11 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     @Inject
     lateinit var mFavoritesPresenter: FavoritesMvpPresenter<FavoritesMvpView>
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
-    //    var mMangasRvAdapter: MangasRvAdapter<MangaRealm>? = null
+    var mMangasRvAdapter: MangasRealmRvAdapter<MangaRealm>? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_favorites, container, false)
     }
+
     override fun initFields() {
         activityComponent.inject(this)
         mFavoritesPresenter.onAttach(this)
@@ -101,21 +102,19 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     }
 
     override fun buildFavorites(mangaRealms: List<MangaRealm>) {
-        Timber.e("---------------buildMangas---------------${mangaRealms.size}")
+        Timber.e("---------------buildFavorites---------------${mangaRealms.size}")
         spn_filter.show(true)
         mMangasRvAdapter?.apply {
-            onAdapterLoadMoreFinished {
-                mData?.addAll(mangaRealms)
-                notifyDataSetChanged()
-            }
+            mData?.addAll(mangaRealms)
+            notifyDataSetChanged()
         } ?: let {
-            mMangasRvAdapter = MangasRvAdapter(context, mangaRealms.toMutableList(), this)
+            mMangasRvAdapter = MangasRealmRvAdapter(context, mangaRealms.toMutableList(), this)
             rv.adapter = mMangasRvAdapter
         }
     }
 
     override fun onClick(position: Int, event: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Timber.e("---------------------onClick--------------------$position")
     }
 
 }

@@ -20,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import net.mfilm.R
-import net.mfilm.data.DataMng
+import net.mfilm.data.DataManager
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.utils.handler
 import timber.log.Timber
@@ -31,7 +31,7 @@ import javax.inject.Inject
  */
 
 class SplashPresenter<V : SplashMvpView> @Inject
-constructor(dataManager: DataMng, compositeDisposable: CompositeDisposable)
+constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable)
     : BasePresenter<V>(dataManager, compositeDisposable), SplashMvpPresenter<V> {
 
     override fun onAttach(mvpView: V) {
