@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaRealm
 import net.mfilm.ui.base.rv.adapters.BaseRvAdapter
-import net.mfilm.ui.mangas.rv.MangaItemViewHolder
+import net.mfilm.ui.mangas.rv.FavoriteItemViewHolder
 import net.mfilm.utils.ICallbackOnClick
 
 /**
@@ -17,11 +17,11 @@ class MangasRealmRvAdapter<V : MangaRealm>(mContext: Context, mData: MutableList
     : BaseRvAdapter<V>(mContext, mData, mCallbackOnClick) {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.item_manga, parent, false)
-        return MangaItemViewHolder(mContext, viewType, view, mCallbackOnClick)
+        return FavoriteItemViewHolder(mContext, viewType, view, mCallbackOnClick)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        if (holder is MangaItemViewHolder) {
+        if (holder is FavoriteItemViewHolder) {
             mData?.get(position)?.apply {
                 holder.bindView(this, position)
             }

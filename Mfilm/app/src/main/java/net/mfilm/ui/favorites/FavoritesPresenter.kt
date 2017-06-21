@@ -1,8 +1,11 @@
 package net.mfilm.ui.favorites
 
 import io.reactivex.disposables.CompositeDisposable
+import io.realm.RealmResults
 import net.mfilm.data.DataManager
+import net.mfilm.data.db.models.MangaRealm
 import net.mfilm.ui.base.BasePresenter
+import net.mfilm.utils.MRealmDisposableObserver
 import javax.inject.Inject
 
 /**
@@ -12,6 +15,17 @@ class FavoritesPresenter<V : FavoritesMvpView> @Inject
 constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BasePresenter<V>(dataManager, compositeDisposable), FavoritesMvpPresenter<V> {
     override fun requestFavorites() {
-        dataManager.loadFavorites()
+        if (!isViewAttached) return
+        mvpView?.showLoading()
+        val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<MangaRealm>>({ mvpView?.onFailure() }) {
+            override fun onNext(t: RealmResults<MangaRealm>?) {
+                if (isViewAttached) {
+                    mvpView?.onFavoritesResponse(t)
+                }
+            }
+        }
+        val disposable = dataManager.loadFavorites(mRealmDisposableObserver)
+        compositeDisposable.add(disposable)
+        compositeDisposable.add(mRealmDisposableObserver)
     }
 }

@@ -72,16 +72,17 @@ abstract class MDisposableObserver<V : Any?>(val fHttpExp: () -> Unit, val fIOEx
     }
 }
 
-//abstract class MRealmDisposableObserver<V : Any?>(val observer:DisposableObserver<V>?=null): DisposableObserver<V>(){
-//    override fun onComplete() {
-//        Timber.e("--------------onComplete------------")
-//    }
-//    override fun onNext(t: V?) {
-//        Timber.e("--------------onNext------------")
-//        observer?.onNext(t)
-//    }
-//    override fun onError(e: Throwable?) {
-//        Timber.e("--------------onError------------")
-//        observer?.onError(e)
-//    }
-//}
+abstract class MRealmDisposableObserver<V : Any?>(val fOnNext: (() -> Unit)? = null) : DisposableObserver<V>() {
+    override fun onComplete() {
+        Timber.e("--------------onComplete------------")
+    }
+
+    override fun onNext(t: V?) {
+        Timber.e("--------------onNext------------")
+    }
+
+    override fun onError(e: Throwable?) {
+        Timber.e("--------------onError------------")
+        fOnNext?.invoke()
+    }
+}
