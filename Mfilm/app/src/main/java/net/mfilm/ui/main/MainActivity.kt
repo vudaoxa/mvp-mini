@@ -97,6 +97,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onFollow() {
         Timber.e("---------------onFollow-----------")
+
     }
 
     @Inject
@@ -119,7 +120,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         DialogUtil.showMessageConfirm(this, R.string.notifications, R.string.confirm_exit,
                 MaterialDialog.SingleButtonCallback { _, _ -> finish() })
     }
-
     override fun onNewScreenRequested(indexTag: Any?, typeContent: String?, obj: Any?) {
         when (indexTag) {
             IndexTags.FRAGMENT_HOME -> {
@@ -144,10 +144,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
             IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
             }
             IndexTags.FRAGMENT_FAV -> {
-                fragmentStackManager.run {
-                    clearStack()
-                    swapFragment(FavoritesFragment.newInstance())
-                }
+                fragmentStackManager.swapFragment(FavoritesFragment.newInstance())
             }
             IndexTags.FRAGMENT_HISTORY -> {
 

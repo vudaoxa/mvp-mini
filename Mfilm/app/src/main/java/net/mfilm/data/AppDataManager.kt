@@ -23,7 +23,7 @@ class AppDataManager @Inject constructor(@AppContext val mContext: Context, val 
     }
 
     override fun loadFavorites(observer: DisposableObserver<RealmResults<MangaRealm>>?): Disposable {
-        return mDbHelper.loadFavorites()
+        return mDbHelper.loadFavorites(observer)
     }
 
     override fun saveObject(obj: RealmObject) {

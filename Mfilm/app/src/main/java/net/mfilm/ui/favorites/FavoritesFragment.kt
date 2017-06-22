@@ -54,6 +54,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override fun initViews() {
         initSpnFilters()
         initRv()
+        requestFavorites()
     }
 
     override fun initSpnFilters() {
