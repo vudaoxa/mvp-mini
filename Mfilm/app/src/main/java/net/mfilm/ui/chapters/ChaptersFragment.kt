@@ -1,11 +1,14 @@
 package net.mfilm.ui.chapters
 
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_chapters.*
+import net.mfilm.R
 import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChaptersResponse
 import net.mfilm.data.network_retrofit.Manga
@@ -20,6 +23,7 @@ import net.mfilm.utils.LIMIT
 import net.mfilm.utils.handler
 import net.mfilm.utils.show
 import timber.log.Timber
+import tr.xip.errorview.ErrorView
 import java.io.Serializable
 import javax.inject.Inject
 
@@ -28,6 +32,20 @@ import javax.inject.Inject
  * Created by tusi on 5/27/17.
  */
 class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
+
+    override fun onErrorViewDemand() {
+        reset()
+        requestChapters()
+    }
+
+    override val errorView: ErrorView?
+        get() = error_view
+    override val subTitle: Int?
+        get() = R.string.failed_to_load
+
+    override val swipeContainer: SwipeRefreshLayout?
+        get() = null
+
     companion object {
         fun newInstance(obj: Any?): ChaptersFragment {
             val fragment = ChaptersFragment()
@@ -48,7 +66,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     private var mCurrentReadingChapter: Chapter? = null
     private var mPrevChapter: Chapter? = null
     private var mNextChapter: Chapter? = null
-    //    override var chapterImagesFragment: ChapterImagesFragment?
     override var chapterImagesFragment: ChapterImagesMvpView?
         get() = mChapterImagesFragment
         set(value) {

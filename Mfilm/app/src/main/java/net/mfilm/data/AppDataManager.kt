@@ -27,15 +27,15 @@ class AppDataManager @Inject constructor(@AppContext val mContext: Context, val 
     }
 
     override fun saveObject(obj: RealmObject) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mDbHelper.saveObject(obj)
     }
 
     override fun saveObjects(objs: List<RealmObject>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mDbHelper.saveObjects(objs)
     }
 
     override fun realmClose() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mDbHelper.realmClose()
     }
 
 }

@@ -9,6 +9,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import net.mfilm.di.AppModule
 import net.mfilm.di.components.AppComponent
+import net.mfilm.di.components.DaggerAppComponent
 import net.mfilm.di.module.NetModule
 import net.mfilm.utils.*
 import org.jetbrains.annotations.NotNull

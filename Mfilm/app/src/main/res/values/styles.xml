@@ -251,7 +251,7 @@
         <item name="android:padding">@dimen/dimen15</item>
     </style>
 
-    <style name="default_background">
+    <style name="default_background" parent="Layout_match">
         <item name="android:background">?android:windowBackground</item>
     </style>
 

@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/default_background"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    style="@style/default_background">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        style="@style/Layout_match"
         android:orientation="vertical">
 
         <org.angmarch.views.NiceSpinner
             android:id="@+id/spn_filter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Layout_match_wrap"
             android:visibility="gone" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Layout_match_wrap"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                style="@style/Layout_match_wrap" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>

@@ -27,6 +27,7 @@ import io.realm.*
 import net.mfilm.data.db.models.MangaRealm
 import net.mfilm.data.db.models.SearchQueryRealm
 import timber.log.Timber
+import javax.inject.Inject
 import javax.inject.Singleton
 
 
@@ -35,7 +36,7 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class AppDbHelper : DbHelper {
+class AppDbHelper @Inject constructor() : DbHelper {
     private fun <V : RealmObject> find(results: RealmResults<V>): Flowable<RealmResults<V>> {
         return Flowable.create(FlowableOnSubscribe<RealmResults<V>> { emitter ->
             val realm = Realm.getDefaultInstance()

@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.layout_input_text.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.chapter_images.ChapterImagesFragment
+import net.mfilm.ui.favorites.FavoritesFragment
 import net.mfilm.ui.filmy.FullReadFragment
 import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.ui.manga_info.MangaInfoFragment
@@ -107,7 +108,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         activityComponent.inject(this)
         mMainPresenter.onAttach(this)
         initFilters()
-        obtainTabletSize(this)
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
@@ -144,7 +144,10 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
             IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
             }
             IndexTags.FRAGMENT_FAV -> {
-
+                fragmentStackManager.run {
+                    clearStack()
+                    swapFragment(FavoritesFragment.newInstance())
+                }
             }
             IndexTags.FRAGMENT_HISTORY -> {
 

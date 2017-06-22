@@ -2,19 +2,15 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/default_background"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <org.angmarch.views.NiceSpinner
         android:id="@+id/spn_filter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/Layout_match_wrap"
         android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        style="@style/Layout_match_wrap" />
 
 </LinearLayout>

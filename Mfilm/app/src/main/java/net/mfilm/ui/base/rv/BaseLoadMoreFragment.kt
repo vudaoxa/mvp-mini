@@ -39,6 +39,7 @@ abstract class BaseLoadMoreFragment : BasePullRefreshFragment(), ICallbackLoadMo
     }
 
     override fun reset() {
+        Timber.e("-------------------reset-----------------------")
         page = PAGE_START
         mCallBackLoadMore?.reset()
         mEndlessRvScrollListener?.reset()

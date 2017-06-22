@@ -15,15 +15,10 @@
 
 package net.mfilm.ui.splash
 
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
-import net.mfilm.R
 import net.mfilm.data.DataManager
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.utils.handler
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -36,32 +31,31 @@ constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable)
 
     override fun onAttach(mvpView: V) {
         super.onAttach(mvpView)
-
 //        mvpView.startSyncService()
-        handler({ process() })
+        handler({ decideNextActivity() })
     }
 
-    fun process() {
-        compositeDisposable.add(
-                dataManager.seedDatabaseQuestions()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(Consumer<Boolean> { aBoolean ->
-                            Timber.d("xyz--subscribe-accept--" + aBoolean!!)
-
-                            if (!isViewAttached) {
-                                return@Consumer
-                            }
-                            decideNextActivity()
-                        }, Consumer<Throwable> { throwable ->
-                            Timber.d("xyz--Consumer-accept--" + throwable.message)
-                            if (!isViewAttached) {
-                                return@Consumer
-                            }
-                            mvpView?.onError(R.string.some_error)
-                            decideNextActivity()
-                        }))
-    }
+//    fun process() {
+//        compositeDisposable.add(
+//                dataManager.seedDatabaseQuestions()
+//                        .subscribeOn(Schedulers.io())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe(Consumer<Boolean> { aBoolean ->
+//                            Timber.d("xyz--subscribe-accept--" + aBoolean!!)
+//
+//                            if (!isViewAttached) {
+//                                return@Consumer
+//                            }
+//                            decideNextActivity()
+//                        }, Consumer<Throwable> { throwable ->
+//                            Timber.d("xyz--Consumer-accept--" + throwable.message)
+//                            if (!isViewAttached) {
+//                                return@Consumer
+//                            }
+//                            mvpView?.onError(R.string.some_error)
+//                            decideNextActivity()
+//                        }))
+//    }
 
     private fun decideNextActivity() {
         mvpView!!.openMainActivity()

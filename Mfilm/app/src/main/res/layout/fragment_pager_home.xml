@@ -3,14 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/Layout_match"
     tools:context=".ui.main.MainActivity">
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/Layout_match_wrap"
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
         android:visibility="visible"
@@ -18,8 +16,7 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        style="@style/Layout_match"
         android:layout_above="@+id/navigation"
         android:layout_alignParentTop="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

@@ -36,21 +36,6 @@ import java.util.*
 
 fun Fragment.isVisOk() = isVisible && isAdded && isInLayout
 
-var tabletSize = false
-
-fun obtainTabletSize(mContext: Context) {
-    tabletSize = mContext.resources.getBoolean(R.bool.isTablet)
-}
-
-//var spanCounts = listOf<SpanCount>()
-//fun initSpanCounts() {
-//    val spanTabletPortrait = SpanCount(true, Configuration.ORIENTATION_PORTRAIT, 6)
-//    val spanTabletLandscape = SpanCount(true, Configuration.ORIENTATION_LANDSCAPE, 8)
-//    val spanPhonePortrait = SpanCount(false, Configuration.ORIENTATION_PORTRAIT, 3)
-//    val spanPhoneLandscape = SpanCount(false, Configuration.ORIENTATION_LANDSCAPE, 5)
-//    spanCounts = listOf(spanTabletPortrait, spanTabletLandscape, spanPhonePortrait, spanPhoneLandscape)
-//}
-
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
     text?.apply {
         if (!TextUtils.isEmpty(this)) {
