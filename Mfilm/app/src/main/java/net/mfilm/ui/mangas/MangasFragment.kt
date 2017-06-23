@@ -95,6 +95,10 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         return inflater!!.inflate(R.layout.fragment_mangas, container, false)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mMangasPresenter.onDetach()
+    }
     override fun initFields() {
         activityComponent.inject(this)
         mMangasPresenter.onAttach(this)

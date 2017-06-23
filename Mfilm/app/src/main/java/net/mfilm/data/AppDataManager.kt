@@ -22,6 +22,9 @@ class AppDataManager @Inject constructor(@AppContext val mContext: Context, val 
         return mDbHelper.loadSearchHistory(observer)
     }
 
+    override fun isFavorite(id: Int): MangaRealm? {
+        return mDbHelper.isFavorite(id)
+    }
     override fun loadFavorites(observer: DisposableObserver<RealmResults<MangaRealm>>?): Disposable {
         return mDbHelper.loadFavorites(observer)
     }

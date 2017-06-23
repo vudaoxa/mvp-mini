@@ -13,7 +13,7 @@
  * limitations under the License
  */
 
-package net.mfilm.di
+package net.mfilm.di.modules
 
 import android.app.Application
 import android.content.Context
@@ -27,6 +27,9 @@ import net.mfilm.data.db.AppDbHelper
 import net.mfilm.data.db.DbHelper
 import net.mfilm.data.prefs.AppPrefsHelper
 import net.mfilm.data.prefs.PrefsHelper
+import net.mfilm.di.ApiInfo
+import net.mfilm.di.AppContext
+import net.mfilm.di.PrefsInfo
 import net.mfilm.utils.AppToast
 import net.mfilm.utils.IBus
 import net.mfilm.utils.PREF_NAME

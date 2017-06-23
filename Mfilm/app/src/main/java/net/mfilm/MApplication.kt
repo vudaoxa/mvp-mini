@@ -7,10 +7,10 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import net.mfilm.di.AppModule
 import net.mfilm.di.components.AppComponent
 import net.mfilm.di.components.DaggerAppComponent
-import net.mfilm.di.module.NetModule
+import net.mfilm.di.modules.AppModule
+import net.mfilm.di.modules.NetModule
 import net.mfilm.utils.*
 import org.jetbrains.annotations.NotNull
 import timber.log.Timber

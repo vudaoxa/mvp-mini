@@ -4,9 +4,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import net.mfilm.data.DataManager
 import net.mfilm.data.network_retrofit.Manga
-import net.mfilm.ui.base.BasePresenter
+import net.mfilm.ui.base.realm.BaseRealmPresenter
 import net.mfilm.utils.IBus
 import net.mfilm.utils.isEven
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class MangaInfoPresenter<V : MangaInfoMvpView> @Inject
 constructor(val iBus: IBus,
             dataManager: DataManager, compositeDisposable: CompositeDisposable) :
-        BasePresenter<V>(dataManager, compositeDisposable), MangaInfoMvpPresenter<V> {
+        BaseRealmPresenter<V>(dataManager, compositeDisposable), MangaInfoMvpPresenter<V> {
     override fun initIBus() {
         if (!isViewAttached) return
         val tapEventEmitter = iBus.asFlowable().publish()
@@ -32,13 +33,24 @@ constructor(val iBus: IBus,
     }
 
     override fun onTaps(tapCount: Int) {
+        Timber.e("-----onTaps---------------------tapCount---- ${tapCount} --------------------")
         if (tapCount.isEven()) return
         mvpView?.toggleFav()
     }
 
     override fun toggleFav(manga: Manga): Boolean {
         manga.apply {
-            if ()
+            val x = dataManager.isFavorite(manga.id!!)?.fav
+            Timber.e("----------toggleFav----------$x---------------")
+            x?.apply {
+
+            } ?: let {
+
+            }
+            if (x == true) {
+
+            }
         }
+        return false
     }
 }

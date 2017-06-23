@@ -6,7 +6,6 @@ import net.mfilm.data.DataManager
 import net.mfilm.data.db.models.MangaRealm
 import net.mfilm.ui.base.realm.BaseRealmPresenter
 import net.mfilm.utils.MRealmDisposableObserver
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -22,12 +21,8 @@ constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) 
             override fun onNext(t: RealmResults<MangaRealm>?) {
                 if (isViewAttached) {
                     mvpView?.onFavoritesResponse(t)
-                    t?.addChangeListener { t, changeSet ->
-                        changeSet.apply {
-                            Timber.e("--changeSet--------------${changeRanges}----------${xx}--------------")
-                        }
+                    t?.addChangeListener { t, _ ->
                         mvpView?.onFavoritesResponse(t)
-
                     }
                 }
             }

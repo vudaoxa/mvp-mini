@@ -1,4 +1,4 @@
-package net.mfilm.di.module
+package net.mfilm.di.modules
 
 
 import android.app.Application

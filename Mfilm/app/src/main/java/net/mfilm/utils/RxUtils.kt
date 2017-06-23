@@ -10,6 +10,8 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by tusi on 4/11/17.
@@ -90,12 +92,13 @@ abstract class MRealmDisposableObserver<V : Any?>(
     }
 
     override fun onError(e: Throwable?) {
-        Timber.e("--------------onError------------")
+        Timber.e("--------------onError--------${e?.message}----")
         fOnError?.invoke()
     }
 }
 
-class RxBus : IBus {
+@Singleton
+class RxBus @Inject constructor() : IBus {
     val mBus = PublishRelay.create<Any?>().toSerialized()
     override fun send(obj: Any?) {
         mBus.accept(obj)

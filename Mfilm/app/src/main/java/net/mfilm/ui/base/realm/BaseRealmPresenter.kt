@@ -10,7 +10,7 @@ import javax.inject.Inject
 /**
  * Created by MRVU on 6/23/2017.
  */
-abstract class BaseRealmPresenter<V : MvpView> @Inject
+open class BaseRealmPresenter<V : MvpView> @Inject
 constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable)
     : BasePresenter<V>(dataManager, compositeDisposable) {
     override fun onDetach() {
