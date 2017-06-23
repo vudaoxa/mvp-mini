@@ -28,7 +28,9 @@ import net.mfilm.data.db.DbHelper
 import net.mfilm.data.prefs.AppPrefsHelper
 import net.mfilm.data.prefs.PrefsHelper
 import net.mfilm.utils.AppToast
+import net.mfilm.utils.IBus
 import net.mfilm.utils.PREF_NAME
+import net.mfilm.utils.RxBus
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Singleton
 
@@ -70,6 +72,12 @@ class AppModule(val mApplication: Application) {
     @Singleton
     fun provideDbHelper(appDbHelper: AppDbHelper): DbHelper {
         return appDbHelper
+    }
+
+    @Provides
+    @Singleton
+    fun provideIBus(rxBus: RxBus): IBus {
+        return rxBus
     }
 
     @Provides

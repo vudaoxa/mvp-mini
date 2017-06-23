@@ -88,18 +88,20 @@ class AppDbHelper @Inject constructor() : DbHelper {
                 })
     }
 
+    override fun isFavorite(id: Int): MangaRealm? {
+        val realm = Realm.getDefaultInstance()
+        val item = realm.where(MangaRealm::class.java).equalTo("id", id).findFirst()
+        realm.close()
+        return item
+    }
     override fun saveObject(obj: RealmObject) {
         val realm = Realm.getDefaultInstance()
-        realm.beginTransaction()
-        realm.copyToRealmOrUpdate(obj)
-        realm.commitTransaction()
+        realm.executeTransaction { it.insertOrUpdate(obj) }
     }
 
     override fun saveObjects(objs: List<RealmObject>) {
         val realm = Realm.getDefaultInstance()
-        realm.beginTransaction()
-        realm.copyToRealmOrUpdate(objs)
-        realm.commitTransaction()
+        realm.executeTransaction { it.insertOrUpdate(objs) }
     }
 
     override fun realmClose() {

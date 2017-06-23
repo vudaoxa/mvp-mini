@@ -18,6 +18,7 @@ import net.mfilm.ui.chapter_images.ChapterImagesFragment
 import net.mfilm.ui.chapters.ChaptersFragment
 import net.mfilm.ui.favorites.FavoritesFragment
 import net.mfilm.ui.main.MainActivity
+import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.ui.mangas.MangasFragment
 import net.mfilm.ui.splash.SplashActivity
 import javax.inject.Singleton
@@ -53,6 +54,7 @@ interface ActComponent {
 
     fun inject(fragment: AboutFragment)
     fun inject(fragment: MangasFragment)
+    fun inject(fragment: MangaInfoFragment)
     fun inject(fragment: CategoriesFragment)
     fun inject(fragment: ChaptersFragment)
     fun inject(fragment: ChapterImagesFragment)

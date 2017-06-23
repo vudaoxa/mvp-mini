@@ -45,6 +45,10 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         return inflater!!.inflate(R.layout.fragment_favorites, container, false)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mFavoritesPresenter.onDetach()
+    }
     override fun initFields() {
         activityComponent.inject(this)
         mFavoritesPresenter.onAttach(this)
@@ -58,7 +62,8 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     }
 
     override fun initSpnFilters() {
-        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, filtersFavorites.map { getString(it.resId) })
+        val banksAdapter = ArrayAdapter(activity,
+                R.layout.item_spn_filter, filtersFavorites.map { getString(it.resId) })
         spn_filter.apply {
             setAdapter(banksAdapter)
             setOnItemSelectedListener(spnFilterTracker)

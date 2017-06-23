@@ -9,6 +9,9 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.joanzapata.iconify.widget.IconTextView
+import io.reactivex.Flowable
+import io.realm.RealmObject
+import io.realm.RealmResults
 import net.mfilm.data.network_retrofit.Category
 import tr.xip.errorview.ErrorView
 
@@ -124,4 +127,14 @@ interface ICallbackErrorView {
 
 interface ICallbackSpanCount {
     val spanCount: Int
+}
+
+interface IBus {
+    fun send(obj: Any?)
+    fun asFlowable(): Flowable<Any?>
+    fun hasObservers(): Boolean
+}
+
+interface ICallbackRealmResultChange {
+    fun <T : RealmObject> onChange(realmResult: RealmResults<T>)
 }

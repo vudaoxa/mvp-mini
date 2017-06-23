@@ -6,7 +6,7 @@ import io.reactivex.schedulers.Schedulers
 import net.mfilm.data.DataManager
 import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.data.network_retrofit.RetrofitService
-import net.mfilm.ui.base.BasePresenter
+import net.mfilm.ui.base.realm.BaseRealmPresenter
 import net.mfilm.utils.MDisposableObserver
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class MangasPresenter<V : MangasMvpView> @Inject
 constructor(val retrofitService: RetrofitService,
             dataManager: DataManager, compositeDisposable: CompositeDisposable) :
-        BasePresenter<V>(dataManager, compositeDisposable), MangasMvpPresenter<V> {
+        BaseRealmPresenter<V>(dataManager, compositeDisposable), MangasMvpPresenter<V> {
     override fun requestMangas(category: Int?, limit: Int, page: Int
                                , sort: String, search: String?) {
         if (!isViewAttached) return

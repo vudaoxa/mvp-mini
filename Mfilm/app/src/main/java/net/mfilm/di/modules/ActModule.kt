@@ -40,6 +40,9 @@ import net.mfilm.ui.favorites.FavoritesPresenter
 import net.mfilm.ui.main.MainMvpPresenter
 import net.mfilm.ui.main.MainMvpView
 import net.mfilm.ui.main.MainPresenter
+import net.mfilm.ui.manga_info.MangaInfoMvpPresenter
+import net.mfilm.ui.manga_info.MangaInfoMvpView
+import net.mfilm.ui.manga_info.MangaInfoPresenter
 import net.mfilm.ui.mangas.MangasMvpPresenter
 import net.mfilm.ui.mangas.MangasMvpView
 import net.mfilm.ui.mangas.MangasPresenter
@@ -115,6 +118,11 @@ class ActModule(val mActivity: Activity) {
 
     @Provides
     fun provideFavoritesPresenter(presenter: FavoritesPresenter<FavoritesMvpView>): FavoritesMvpPresenter<FavoritesMvpView> {
+        return presenter
+    }
+
+    @Provides
+    fun provideMangaInfoPresenter(presenter: MangaInfoPresenter<MangaInfoMvpView>): MangaInfoMvpPresenter<MangaInfoMvpView> {
         return presenter
     }
 }

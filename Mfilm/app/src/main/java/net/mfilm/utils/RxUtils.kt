@@ -1,5 +1,7 @@
 package net.mfilm.utils
 
+import com.jakewharton.rxrelay2.PublishRelay
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
@@ -50,7 +52,9 @@ class ValveUtil {
     }
 }
 
-abstract class MDisposableObserver<V : Any?>(val fHttpExp: () -> Unit, val fIOExp: () -> Unit, val fOnNext: (() -> Unit)? = null) : DisposableObserver<V>() {
+abstract class MDisposableObserver<V : Any?>(
+        val fHttpExp: () -> Unit, val fIOExp: () -> Unit,
+        val fOnNext: (() -> Unit)? = null) : DisposableObserver<V>() {
     override fun onComplete() {
         Timber.e("--------------onComplete------------")
     }
@@ -58,6 +62,7 @@ abstract class MDisposableObserver<V : Any?>(val fHttpExp: () -> Unit, val fIOEx
     override fun onNext(t: V?) {
         fOnNext?.invoke()
     }
+
     override fun onError(e: Throwable?) {
         when (e) {
             is HttpException -> {
@@ -72,9 +77,12 @@ abstract class MDisposableObserver<V : Any?>(val fHttpExp: () -> Unit, val fIOEx
     }
 }
 
-abstract class MRealmDisposableObserver<V : Any?>(val fOnNext: (() -> Unit)? = null) : DisposableObserver<V>() {
+abstract class MRealmDisposableObserver<V : Any?>(
+        val fOnError: (() -> Unit)? = null,
+        val fOnComplete: (() -> Unit)? = null) : DisposableObserver<V>() {
     override fun onComplete() {
         Timber.e("--------------onComplete------------")
+        fOnComplete?.invoke()
     }
 
     override fun onNext(t: V?) {
@@ -83,6 +91,18 @@ abstract class MRealmDisposableObserver<V : Any?>(val fOnNext: (() -> Unit)? = n
 
     override fun onError(e: Throwable?) {
         Timber.e("--------------onError------------")
-        fOnNext?.invoke()
+        fOnError?.invoke()
     }
 }
+
+class RxBus : IBus {
+    val mBus = PublishRelay.create<Any?>().toSerialized()
+    override fun send(obj: Any?) {
+        mBus.accept(obj)
+    }
+
+    override fun asFlowable() = mBus.toFlowable(BackpressureStrategy.LATEST)
+    override fun hasObservers() = mBus.hasObservers()
+}
+
+object TapEvent

@@ -12,8 +12,8 @@ open class MangaRealm(
         var name: String? = null,
         var coverUrl: String? = null,
         var time: Long? = 0,
-        var fav: Int? = 0,
-        var history: Int? = 0
+        var fav: Boolean = false,
+        var history: Boolean = false
 ) : RealmObject()
 
 open class SearchQueryRealm(@PrimaryKey var query: String? = null,

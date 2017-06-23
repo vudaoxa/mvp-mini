@@ -9,6 +9,11 @@ import net.mfilm.ui.base.MvpView
  */
 interface MangaInfoMvpView : MvpView {
     //    var manga: Manga
+    fun initMangaInfoHeader()
+
+    fun initIBus()
+    fun toggleFav(): Boolean
+    fun viewFullRead()
     fun attachChaptersFragment()
 
     fun attachThumbsFragment()

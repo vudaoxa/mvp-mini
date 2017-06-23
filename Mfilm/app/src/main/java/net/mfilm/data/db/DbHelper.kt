@@ -14,6 +14,7 @@ interface DbHelper {
     //    fun <V : RealmObject> find(results: RealmResults<V>): Flowable<RealmResults<V>>
     fun loadSearchHistory(observer: DisposableObserver<RealmResults<SearchQueryRealm>>? = null): Disposable
     fun loadFavorites(observer: DisposableObserver<RealmResults<MangaRealm>>? = null): Disposable
+    fun isFavorite(id: Int): MangaRealm?
 //    fun loadViewHistory()
 //    fun updateSearchHistoryRemoval()
 //    fun updateSearchesHistoryRemoval()

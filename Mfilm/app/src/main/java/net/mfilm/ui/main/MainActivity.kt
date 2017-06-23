@@ -97,11 +97,16 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onFollow() {
         Timber.e("---------------onFollow-----------")
-
+        iBus.apply {
+            if (hasObservers())
+                send(TapEvent)
+        }
     }
 
     @Inject
     lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
+    @Inject
+    lateinit var iBus: IBus
     internal var mOrientation = Configuration.ORIENTATION_PORTRAIT
 
     override fun onCreate(savedInstanceState: Bundle?) {
