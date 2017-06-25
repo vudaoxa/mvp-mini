@@ -32,4 +32,5 @@ const val ACTION_CLICK_MULTI_CHOICE_SUBMIT = 6
 const val ACTION_CLICK_LIVE_ITEM = 7
 
 const val TYPE_ITEM = 0
+const val TYPE_ITEM_SEARCH_HISTORY = 1
 const val TYPE_ITEM_LOADING = -1

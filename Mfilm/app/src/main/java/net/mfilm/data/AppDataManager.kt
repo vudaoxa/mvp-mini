@@ -6,7 +6,8 @@ import io.reactivex.observers.DisposableObserver
 import io.realm.RealmObject
 import io.realm.RealmResults
 import net.mfilm.data.db.DbHelper
-import net.mfilm.data.db.models.MangaRealm
+import net.mfilm.data.db.models.MangaFavoriteRealm
+import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.data.prefs.PrefsHelper
@@ -22,13 +23,17 @@ class AppDataManager @Inject constructor(@AppContext val mContext: Context, val 
         return mDbHelper.loadSearchHistory(observer)
     }
 
-    override fun isFavorite(id: Int): MangaRealm? {
+    override fun isFavorite(id: Int): MangaFavoriteRealm? {
         return mDbHelper.isFavorite(id)
     }
-    override fun loadFavorites(observer: DisposableObserver<RealmResults<MangaRealm>>?): Disposable {
+
+    override fun loadFavorites(observer: DisposableObserver<RealmResults<MangaFavoriteRealm>>?): Disposable {
         return mDbHelper.loadFavorites(observer)
     }
 
+    override fun loadHistory(observer: DisposableObserver<RealmResults<MangaHistoryRealm>>?): Disposable {
+        return mDbHelper.loadHistory(observer)
+    }
     override fun saveObject(obj: RealmObject) {
         mDbHelper.saveObject(obj)
     }

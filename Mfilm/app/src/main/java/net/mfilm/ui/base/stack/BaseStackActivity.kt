@@ -34,6 +34,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import net.mfilm.MApplication
 import net.mfilm.R
+import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.di.components.ActComponent
 import net.mfilm.di.components.DaggerActComponent
 import net.mfilm.di.modules.ActModule
@@ -260,33 +261,6 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         mBtnShare.setOnClickListener { onShare() }
     }
 
-//    override fun initSearch() {
-//        mBtnSearch.setImageDrawable(icon_search)
-//        edtSearch.setOnEditorActionListener { _, i, _ ->
-//            if (i == EditorInfo.IME_ACTION_SEARCH) {
-//                submitSearch()
-//            }
-//            false
-//        }
-//        RxTextView.afterTextChangeEvents(edtSearch)
-//                .debounce(2, TimeUnit.SECONDS)
-//                .map { it.view().toString().trim() }
-////                .filter { !TextUtils.isEmpty(it) }
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe { text ->
-//                    var clearShowed = true
-//                    if (text.isNotEmpty()) {
-//                        submitSearchSuggestion(text)
-//                    } else {
-//                        clearShowed = false
-//                    }
-//                    imgClear.show(clearShowed)
-//                }
-//        imgClear.setOnClickListener {
-//            edtSearch.text = null
-//        }
-//    }
-
     override fun initSearch() {
         mBtnSearch.setImageDrawable(icon_search)
         edtSearch.setOnEditorActionListener { _, i, _ ->
@@ -329,6 +303,10 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         }
     }
 
+    override fun onSearchHistoryClicked(searchQueryRealm: SearchQueryRealm) {
+        edtSearch.setText(searchQueryRealm.query)
+//        sendHit(CATEGORY_ACTION, ACTION_CLICK_SEARCH_HISTORY_ITEM)
+    }
     override fun submitSearchSuggestion(query: String) {
         Timber.e("submitSearchSuggestion--------------------------------" + query)
         //send to MainSearchFragment
@@ -344,40 +322,14 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         hideKeyboard()
     }
 
-//    override fun onSearch(search: Boolean, back: Boolean) {
-//        Timber.e("-------------------onSearch-------------$search")
-//        /*
-//        * hide toggle menu --  1
-//        * hide toolbar title-- 1
-//        * hide btns----1
-//        * hide options menu----1
-//        * hide rootview-----1
-//        * show btn back--1
-//        * */
-//
-//        mToolbarTitle.show(!search)
-//        mBtnSearch.show(!search)
-//        mLayoutInputText.show(search)
-////        containerView.show(!search)
-//        showOptionsMenu(!search)
-//        if (search) {
-//            showBtnBack()
-//            if (!back)
-//                onSearchScreenRequested()
-//        } else {
-//            showDrawer()
-//            hideKeyboard()
-//        }
-//    }
-
-
-
     override fun onBackPressed() {
         Timber.e("----------------onBackPressed-----------------")
         if (mLayoutInputText.isVisible()) {
-            onSearch(false)
-            //pop fragment search
-            super.onBackPressed()
+            mCallbackSearchView?.onBackPressed {
+                onSearch(false)
+                //pop fragment search
+                super.onBackPressed()
+            }
         } else {
             if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mDrawerLayout.closeDrawer(GravityCompat.START)

@@ -19,6 +19,9 @@ package net.mfilm.ui.main
 import io.reactivex.disposables.CompositeDisposable
 import net.mfilm.data.DataManager
 import net.mfilm.ui.base.BasePresenter
+import net.mfilm.utils.Favorite
+import net.mfilm.utils.IBus
+import net.mfilm.utils.TapEvent
 import javax.inject.Inject
 
 
@@ -27,45 +30,32 @@ import javax.inject.Inject
  */
 
 class MainPresenter<V : MainMvpView> @Inject
-constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) : BasePresenter<V>(dataManager, compositeDisposable), MainMvpPresenter<V> {
+constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: CompositeDisposable)
+    : BasePresenter<V>(dataManager, compositeDisposable), MainMvpPresenter<V> {
 
+    override fun onAttach(mvpView: V) {
+        super.onAttach(mvpView)
+        initIBus()
+    }
+
+    override fun initIBus() {
+        val flowable = iBus.asFlowable().filter { it is Favorite }
+        val favEventEmitter = flowable.publish()
+        compositeDisposable.apply {
+            add(favEventEmitter.subscribe { mvpView?.isFavorite((it as? Favorite?)?.fav) })
+            add(favEventEmitter.connect())
+        }
+    }
+
+    override fun onFollow() {
+        iBus.send(TapEvent)
+    }
     override fun onDrawerOptionAboutClick() {
         mvpView!!.showAboutFragment()
     }
 
     override fun onDrawerOptionLogoutClick() {
         mvpView!!.showLoading()
-        //
-        //        getCompositeDisposable().add(getDataManager().doLogoutApiCall()
-        //                .subscribeOn(Schedulers.io())
-        //                .observeOn(AndroidSchedulers.mainThread())
-        //                .subscribe(new Consumer<LogoutResponse>() {
-        //                    @Override
-        //                    public void accept(LogoutResponse response) throws Exception {
-        //                        if(!isViewAttached()) {
-        //                            return;
-        //                        }
-        //
-        //                        getDataManager().setUserAsLoggedOut();
-        //                        getMvpView().hideLoading();
-        //                        getMvpView().openLoginActivity();
-        //                    }
-        //                }, new Consumer<Throwable>() {
-        //                    @Override
-        //                    public void accept(Throwable throwable) throws Exception {
-        //                        if(!isViewAttached()) {
-        //                            return;
-        //                        }
-        //
-        //                        getMvpView().hideLoading();
-        //
-        //                        // handle the login error here
-        //                        if (throwable instanceof ANError) {
-        //                            ANError anError = (ANError) throwable;
-        //                            handleApiError(anError);
-        //                        }
-        //                    }
-        //                }));
 
     }
 
@@ -82,25 +72,5 @@ constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) 
             return
         }
         mvpView!!.updateAppVersion()
-
-//        val currentUserName = dataManager.currentUserName
-//        if (currentUserName != null && !currentUserName.isEmpty()) {
-//            mvpView!!.updateUserName(currentUserName)
-//        }
-//
-//        val currentUserEmail = dataManager.currentUserEmail
-//        if (currentUserEmail != null && !currentUserEmail.isEmpty()) {
-//            mvpView!!.updateUserEmail(currentUserEmail)
-//        }
-//
-//        val profilePicUrl = dataManager.currentUserProfilePicUrl
-//        if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
-//            mvpView!!.updateUserProfilePic(profilePicUrl)
-//        }
-    }
-
-    companion object {
-
-//        private val TAG = MainPresenter<*>::class.java.simpleName
     }
 }

@@ -10,8 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.joanzapata.iconify.widget.IconTextView
 import io.reactivex.Flowable
-import io.realm.RealmObject
-import io.realm.RealmResults
+import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
 import tr.xip.errorview.ErrorView
 
@@ -58,18 +57,18 @@ interface ICallbackRefresh {
     val swipeContainer: SwipeRefreshLayout?
 }
 
-interface ICallbackSearchView {
+interface ICallbackSearchView : IBackListener {
     fun onSearch(query: String)
     var query: String?
     var category: Category?
 }
 
 interface ICallbackSearch {
+    fun onSearchHistoryClicked(searchQueryRealm: SearchQueryRealm)
     fun submitSearchSuggestion(query: String)
     fun submitSearch()
     val mCallbackSearchView: ICallbackSearchView?
 }
-
 interface ICallbackToolbar : ICallbackSearch {
     val optionsMenuId: Int
     val actionSettingsId: Int
@@ -109,7 +108,7 @@ interface ICallbackToolbar : ICallbackSearch {
 }
 
 interface IBackListener {
-    fun onBackPressed()
+    fun onBackPressed(f: (() -> Unit)?)
 }
 
 interface ICallbackErrorView {
@@ -132,9 +131,9 @@ interface ICallbackSpanCount {
 interface IBus {
     fun send(obj: Any?)
     fun asFlowable(): Flowable<Any?>
-    fun hasObservers(): Boolean
+//    fun hasObservers(): Boolean
 }
 
-interface ICallbackRealmResultChange {
-    fun <T : RealmObject> onChange(realmResult: RealmResults<T>)
+interface ICallbackBus {
+    fun initIBus()
 }

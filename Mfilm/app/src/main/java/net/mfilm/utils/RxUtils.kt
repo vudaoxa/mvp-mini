@@ -101,11 +101,18 @@ abstract class MRealmDisposableObserver<V : Any?>(
 class RxBus @Inject constructor() : IBus {
     val mBus = PublishRelay.create<Any?>().toSerialized()
     override fun send(obj: Any?) {
-        mBus.accept(obj)
+        Timber.e("-------------send---- $obj --------------------------")
+        mBus.apply {
+            if (hasObservers())
+                accept(obj)
+        }
     }
-
     override fun asFlowable() = mBus.toFlowable(BackpressureStrategy.LATEST)
-    override fun hasObservers() = mBus.hasObservers()
 }
 
 object TapEvent
+class Favorite(val fav: Boolean?) {
+    override fun toString(): String {
+        return fav?.toString() ?: "null"
+    }
+}

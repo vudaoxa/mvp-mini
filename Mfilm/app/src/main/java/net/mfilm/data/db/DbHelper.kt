@@ -4,7 +4,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
 import io.realm.RealmObject
 import io.realm.RealmResults
-import net.mfilm.data.db.models.MangaRealm
+import net.mfilm.data.db.models.MangaFavoriteRealm
+import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.db.models.SearchQueryRealm
 
 /**
@@ -13,8 +14,11 @@ import net.mfilm.data.db.models.SearchQueryRealm
 interface DbHelper {
     //    fun <V : RealmObject> find(results: RealmResults<V>): Flowable<RealmResults<V>>
     fun loadSearchHistory(observer: DisposableObserver<RealmResults<SearchQueryRealm>>? = null): Disposable
-    fun loadFavorites(observer: DisposableObserver<RealmResults<MangaRealm>>? = null): Disposable
-    fun isFavorite(id: Int): MangaRealm?
+
+    fun loadFavorites(observer: DisposableObserver<RealmResults<MangaFavoriteRealm>>? = null): Disposable
+    fun loadHistory(observer: DisposableObserver<RealmResults<MangaHistoryRealm>>? = null): Disposable
+    fun isFavorite(id: Int): MangaFavoriteRealm?
+//    fun isHistory(id: Int): MangaHistoryRealm?
 //    fun loadViewHistory()
 //    fun updateSearchHistoryRemoval()
 //    fun updateSearchesHistoryRemoval()

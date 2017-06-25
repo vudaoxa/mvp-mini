@@ -2,6 +2,7 @@ package net.mfilm.ui.manga
 
 import android.view.View
 import android.widget.AdapterView
+import timber.log.Timber
 
 /**
  * Created by tusi on 5/15/17.
@@ -18,6 +19,7 @@ class AdapterTracker(val f: (() -> Unit)? = null) : AdapterView.OnItemSelectedLi
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         mPosition = position
+        Timber.e("-------------onItemSelected--- $mPosition ------------------------")
         f?.invoke()
     }
 }

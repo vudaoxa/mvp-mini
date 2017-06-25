@@ -1,6 +1,6 @@
 package net.mfilm.ui.favorites
 
-import net.mfilm.data.db.models.MangaRealm
+import net.mfilm.data.db.models.MangaFavoriteRealm
 import net.mfilm.ui.base.MvpView
 import net.mfilm.ui.manga.AdapterTracker
 import net.mfilm.utils.ICallbackOnClick
@@ -14,7 +14,7 @@ interface FavoritesMvpView : MvpView, ICallbackOnClick, ICallbackSpanCount {
     fun initRv()
     fun initSpnFilters()
     fun requestFavorites()
-    fun onFavoritesResponse(mangaRealms: List<MangaRealm>?)
+    fun onFavoritesResponse(mangaFavoriteRealms: List<MangaFavoriteRealm>?)
     fun onFavoritesNull()
-    fun buildFavorites(mangaRealms: List<MangaRealm>)
+    fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>)
 }

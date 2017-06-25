@@ -2,7 +2,6 @@ package net.mfilm.ui.main
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -26,6 +25,7 @@ import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.chapter_images.ChapterImagesFragment
 import net.mfilm.ui.favorites.FavoritesFragment
 import net.mfilm.ui.filmy.FullReadFragment
+import net.mfilm.ui.history.HistoryFragment
 import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.ui.mangas.MangasFragment
@@ -34,6 +34,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelectedListener, MainMvpView {
+    @Inject
+    lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
+
     override val mCallbackSearchView: ICallbackSearchView?
         get() = MangasFragment.getSearchInstance()
     override val edtSearch: EditText
@@ -97,18 +100,17 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onFollow() {
         Timber.e("---------------onFollow-----------")
-        iBus.apply {
-            if (hasObservers())
-                send(TapEvent)
-        }
+        mMainPresenter.onFollow()
     }
 
-    @Inject
-    lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
-    @Inject
-    lateinit var iBus: IBus
-    internal var mOrientation = Configuration.ORIENTATION_PORTRAIT
-
+    override fun isFavorite(fav: Boolean?) {
+        Timber.e("------------isFavorite-------$fav-----------------")
+        var icon = icon_star
+        fav?.apply {
+            if (this) icon = icon_star_blue
+        }
+        mBtnFollow.setImageDrawable(icon)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
@@ -152,7 +154,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
                 fragmentStackManager.swapFragment(FavoritesFragment.newInstance())
             }
             IndexTags.FRAGMENT_HISTORY -> {
-
+                fragmentStackManager.swapFragment(HistoryFragment.newInstance())
             }
         }
     }
@@ -208,27 +210,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun onDestroy() {
         super.onDestroy()
         mMainPresenter.onDetach()
-    }
-
-    private fun isFullScreen(): Boolean {
-        return mOrientation == Configuration.ORIENTATION_LANDSCAPE
-    }
-
-    @Synchronized private fun setOrientationOfMain(requestedOrientation: Int) {
-        setRequestedOrientation(requestedOrientation)
-    }
-
-    @Synchronized private fun exitFullScreenVideo(): Boolean {
-        return true
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        Timber.d("xyz----onConfigurationChanged-----")
-    }
-
-    @Synchronized private fun setFullScreenVideo(): Boolean {
-        return true
     }
 
     companion object {

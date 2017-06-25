@@ -24,7 +24,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 import io.reactivex.observers.DisposableObserver
 import io.realm.*
-import net.mfilm.data.db.models.MangaRealm
+import net.mfilm.data.db.models.MangaFavoriteRealm
+import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.db.models.SearchQueryRealm
 import timber.log.Timber
 import javax.inject.Inject
@@ -73,9 +74,9 @@ class AppDbHelper @Inject constructor() : DbHelper {
                 })
     }
 
-    override fun loadFavorites(observer: DisposableObserver<RealmResults<MangaRealm>>?): Disposable {
+    override fun loadFavorites(observer: DisposableObserver<RealmResults<MangaFavoriteRealm>>?): Disposable {
         val realm = Realm.getDefaultInstance()
-        return find<MangaRealm>(realm.where(MangaRealm::class.java).equalTo("fav", 1)
+        return find<MangaFavoriteRealm>(realm.where(MangaFavoriteRealm::class.java).equalTo("fav", true)
                 .findAll())
                 .subscribe({
                     Timber.e("loadFavorites----------isLoaded")
@@ -83,18 +84,35 @@ class AppDbHelper @Inject constructor() : DbHelper {
                 }, {
                     it.printStackTrace()
                     realm.close()
-                }, {
-                    //                    realm.close()
                 })
     }
 
-    override fun isFavorite(id: Int): MangaRealm? {
+    override fun loadHistory(observer: DisposableObserver<RealmResults<MangaHistoryRealm>>?): Disposable {
         val realm = Realm.getDefaultInstance()
-        val item = realm.where(MangaRealm::class.java).equalTo("id", id).findFirst()
-        realm.close()
+        return find<MangaHistoryRealm>(realm.where(MangaHistoryRealm::class.java).equalTo("history", true)
+                .findAll())
+                .subscribe({
+                    Timber.e("loadFavorites----------isLoaded")
+                    observer?.onNext(it)
+                }, {
+                    it.printStackTrace()
+                    realm.close()
+                })
+    }
+
+    override fun isFavorite(id: Int): MangaFavoriteRealm? {
+        val realm = Realm.getDefaultInstance()
+        val item = realm.where(MangaFavoriteRealm::class.java).equalTo("id", id).findFirst()
         return item
     }
+
+    //    override fun isHistory(id: Int): MangaHistoryRealm? {
+//        val realm = Realm.getDefaultInstance()
+//        val item = realm.where(MangaHistoryRealm::class.java).equalTo("id", id).findFirst()
+//        return item
+//    }
     override fun saveObject(obj: RealmObject) {
+        Timber.e("--------saveObject------ $obj------")
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction { it.insertOrUpdate(obj) }
     }

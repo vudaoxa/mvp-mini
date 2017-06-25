@@ -11,15 +11,21 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_mangas.*
+import kotlinx.android.synthetic.main.item_history_clear.*
 import net.mfilm.R
+import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.rv.BaseLoadMoreFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
+import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.manga.AdapterTracker
+import net.mfilm.ui.manga.rv.MangasRealmRvAdapter
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
+import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
 import net.mfilm.utils.*
 import timber.log.Timber
 import tr.xip.errorview.ErrorView
@@ -51,10 +57,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         }
     }
 
-    override val spnFilterTracker: AdapterTracker
-        get() = AdapterTracker({
-            onErrorViewDemand()
-        })
+    override val spnFilterTracker = AdapterTracker({
+        onErrorViewDemand()
+    })
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
 
@@ -84,12 +89,15 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
             mCategory = value
         }
     override var isDataEnd: Boolean
-        get() = false
+        get() = !rv.isVisible()
         set(value) {}
 
     @Inject
     lateinit var mMangasPresenter: MangasMvpPresenter<MangasMvpView>
+    @Inject
+    lateinit var mSearchHistoryPresenter: SearchHistoryMvpPresenter<MangasMvpView>
     var mMangasRvAdapter: MangasRvAdapter<Manga>? = null
+    var mSearchQueryRvAdapter: MangasRealmRvAdapter<SearchQueryRealm>? = null
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_mangas, container, false)
@@ -98,41 +106,85 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun onDestroy() {
         super.onDestroy()
         mMangasPresenter.onDetach()
+        mSearchHistoryPresenter.onDetach()
     }
+
     override fun initFields() {
         activityComponent.inject(this)
         mMangasPresenter.onAttach(this)
+        mSearchHistoryPresenter.onAttach(this)
         search = arguments.getBoolean(KEY_SEARCH)
         category = arguments.getSerializable(KEY_CATEGORY) as? Category?
         back = search || category != null
         title = category?.name
     }
+
     override fun initViews() {
+        super.initViews()
         initSpnFilters()
         initRv()
         initSwipe()
-        if (!search) {
-            requestMangas()
+        if (search) {
+            requestSearchHistory()
         } else {
-            //show search history
+            requestMangas()
         }
     }
 
+    override fun isDataEmpty(): Boolean {
+        mMangasRvAdapter?.apply {
+            if (itemCount == 0) return true
+            return false
+        }
+        return true
+    }
     override fun initRv() {
         rv.apply {
-
             mMangasRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
             layoutManager = mMangasRvLayoutManagerWrapper
             setupOnLoadMore(this, mCallBackLoadMore)
         }
+        rv_search_history.apply {
+            layoutManager = LinearLayoutManagerWrapper(context)
+        }
     }
-
 
     override fun initSpnFilters() {
         val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, filters.map { getString(it.resId) })
         spn_filter.setAdapter(banksAdapter)
         spn_filter.setOnItemSelectedListener(spnFilterTracker)
+    }
+
+    override fun requestSearchHistory() {
+        mSearchHistoryPresenter.requestSearchHistory()
+    }
+
+    override fun onSearchHistoryResponse(searchHistoryRealms: List<SearchQueryRealm>?) {
+        hideLoading()
+        searchHistoryRealms.let { shr ->
+            shr?.apply {
+                if (shr.isNotEmpty()) {
+                    buildSearchHistory(shr)
+                } else onSearchHistoryNull()
+            } ?: let { onSearchHistoryNull() }
+        }
+    }
+
+    override fun onSearchHistoryNull() {
+        Timber.e("----------------onSearchHistoryNull------------------")
+    }
+
+    override fun buildSearchHistory(searchHistoryRealms: List<SearchQueryRealm>) {
+        Timber.e("---------------buildSearchHistory---------------${searchHistoryRealms.size}")
+        mSearchQueryRvAdapter?.apply {
+            mData?.clear()
+            mData?.addAll(searchHistoryRealms)
+            notifyDataSetChanged()
+        } ?: let {
+            mSearchQueryRvAdapter = MangasRealmRvAdapter(context, searchHistoryRealms.toMutableList(), this)
+            rv_search_history.adapter = mSearchQueryRvAdapter
+        }
     }
 
     //use when refresh(by filter, or reload)
@@ -151,8 +203,20 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         })
     }
 
+    override fun onBackPressed(f: (() -> Unit)?) {
+        if (rv_search_history.isVisible()) {
+            f?.invoke()
+        } else {
+            rv.show(false)
+            spn_filter.show(false)
+            rv_search_history.show(true)
+        }
+    }
+
     override fun requestMangas() {
-        mMangasPresenter.requestMangas(category?.id, LIMIT, page++, filters[spnFilterTracker.mPosition].content, query)
+        val position = spnFilterTracker.mPosition
+        Timber.e("---------------requestMangas------ $position--------------------")
+        mMangasPresenter.requestMangas(category?.id, LIMIT, page++, filters[position].content, query)
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
@@ -206,16 +270,29 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
-        if (event != TYPE_ITEM) return
-        mMangasRvAdapter?.mData?.apply {
-            screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position])
+        when (event) {
+            TYPE_ITEM -> {
+                query?.apply {
+                    mSearchHistoryPresenter.saveQuery(this)
+                }
+                mMangasRvAdapter?.mData?.apply {
+                    screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position])
+                }
+            }
+            TYPE_ITEM_SEARCH_HISTORY -> {
+                mSearchQueryRvAdapter?.mData?.apply {
+                    //                    onSearch(get(position).query!!)
+                    baseActivity?.onSearchHistoryClicked(get(position))
+                }
+            }
         }
     }
 
     override fun onSearch(query: String) {
         this.query = query
+        rv.show(true)
+        rv_search_history.show(false)
         reset()
         requestMangas()
     }
-
 }

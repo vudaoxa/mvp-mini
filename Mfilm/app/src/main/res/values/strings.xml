@@ -8,6 +8,7 @@
     <string name="ion_ios_close_empty">{ion-ios-close-empty}</string>
     <string name="ion_close_round">{ion-close-round}</string>
     <string name="ion_musical_note">{ion-ios-musical-note}</string>
+    <string name="fa_history">{fa-history}</string>
     <string name="home">Home</string>
     <string name="categories">Categories</string>
     <string name="favorites">Favorites</string>

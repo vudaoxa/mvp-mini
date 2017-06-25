@@ -1,5 +1,6 @@
 package net.mfilm.ui.mangas
 
+import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.MvpView
@@ -16,6 +17,10 @@ interface MangasMvpView : MvpView, ICallbackOnClick, ICallbackRefresh, ICallback
     val spnFilterTracker: AdapterTracker
     fun initRv()
     fun initSpnFilters()
+    fun requestSearchHistory()
+    fun onSearchHistoryResponse(searchHistoryRealms: List<SearchQueryRealm>?)
+    fun onSearchHistoryNull()
+    fun buildSearchHistory(searchHistoryRealms: List<SearchQueryRealm>)
     fun requestMangas()
     fun onMangasResponse(mangasResponse: MangasResponse?)
     fun onMangasNull()

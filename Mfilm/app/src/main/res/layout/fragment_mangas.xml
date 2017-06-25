@@ -17,12 +17,18 @@
             style="@style/Layout_match_wrap"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv"
-                style="@style/Layout_match_wrap" />
+            <LinearLayout
+                android:id="@+id/layout_lc"
+                style="@style/Layout_match_wrap">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv"
+                    style="@style/Layout_match_wrap" />
+            </LinearLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
+    <include layout="@layout/item_history_clear" />
     <include layout="@layout/error_view" />
 </FrameLayout>

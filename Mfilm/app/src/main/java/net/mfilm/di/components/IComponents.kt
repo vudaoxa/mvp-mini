@@ -17,6 +17,7 @@ import net.mfilm.ui.categories.CategoriesFragment
 import net.mfilm.ui.chapter_images.ChapterImagesFragment
 import net.mfilm.ui.chapters.ChaptersFragment
 import net.mfilm.ui.favorites.FavoritesFragment
+import net.mfilm.ui.history.HistoryFragment
 import net.mfilm.ui.main.MainActivity
 import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.ui.mangas.MangasFragment
@@ -61,4 +62,5 @@ interface ActComponent {
     fun inject(fragment: ChaptersFragment)
     fun inject(fragment: ChapterImagesFragment)
     fun inject(fragment: FavoritesFragment)
+    fun inject(fragment: HistoryFragment)
 }

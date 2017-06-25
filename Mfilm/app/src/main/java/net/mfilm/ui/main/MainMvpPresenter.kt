@@ -18,16 +18,18 @@ package net.mfilm.ui.main
 
 import net.mfilm.di.PerActivity
 import net.mfilm.ui.base.MvpPresenter
+import net.mfilm.utils.ICallbackBus
 
 /**
  * Created by janisharali on 27/01/17.
  */
 
 @PerActivity
-interface MainMvpPresenter<V : MainMvpView> : MvpPresenter<V> {
+interface MainMvpPresenter<V : MainMvpView> : MvpPresenter<V>, ICallbackBus {
     fun onDrawerOptionAboutClick()
     fun onDrawerOptionLogoutClick()
     fun onViewInitialized()
     fun onCardExhausted()
     fun onNavMenuCreated()
+    fun onFollow()
 }

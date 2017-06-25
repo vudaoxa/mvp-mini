@@ -143,6 +143,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         super.onDestroy()
         mChaptersPresenter.onDetach()
     }
+
     override fun initFields() {
         manga = arguments.getSerializable(AppConstants.EXTRA_DATA) as Manga
         activityComponent.inject(this)
@@ -216,14 +217,11 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         when (event) {
             TYPE_ITEM -> {
                 mChaptersRvAdapter?.apply {
-                    mData.let { d ->
-                        d?.apply {
-                            //                            val chapter = d[position]
-                            parentFragment?.apply {
-                                if (this is MangaInfoMvpView) {
-                                    seekCurrentReadingPosition(position)
-                                    onReadBtnClicked()
-                                }
+                    mData?.apply {
+                        parentFragment?.apply {
+                            if (this is MangaInfoMvpView) {
+                                seekCurrentReadingPosition(position)
+                                onReadBtnClicked()
                             }
                         }
                     }
@@ -279,21 +277,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun seekCurrentReadingPosition(newPosition: Int?) {
         currentReadingPosition = newPosition
-//        fun doIt() {
-//            currentReadingPosition = newPosition
-//        }
-//        chapterImagesFragment.let { v ->
-//            v?.apply {
-//                val d = object : MDisposableObserver<Any?>({ }, { }) {
-//                    override fun onNext(t: Any?) {
-//                        v.seekNextChapter()
-//                    }
-//                }
-//                doIt()
-//            } ?: let {
-//                Timber.e("--------------chapterImagesFragment null-------------------")
-//            }
-//        }
     }
 
     override fun seekNextChapter() {
@@ -310,10 +293,4 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             }
         }
     }
-//    override fun onConfigurationChanged(newConfig: Configuration?) {
-//        super.onConfigurationChanged(newConfig)
-//        view?.requestLayout()
-//    }
-
-
 }

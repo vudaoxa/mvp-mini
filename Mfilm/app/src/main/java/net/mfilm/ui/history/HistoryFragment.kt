@@ -1,4 +1,4 @@
-package net.mfilm.ui.favorites
+package net.mfilm.ui.history
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import kotlinx.android.synthetic.main.fragment_favorites.*
+import kotlinx.android.synthetic.main.fragment_history.*
 import net.mfilm.R
-import net.mfilm.data.db.models.MangaFavoriteRealm
+import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
@@ -23,12 +23,12 @@ import timber.log.Timber
 import javax.inject.Inject
 
 /**
- * Created by MRVU on 6/20/2017.
+ * Created by tusi on 6/25/17.
  */
-class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
+class HistoryFragment : BaseStackFragment(), HistoryMvpView {
     companion object {
-        fun newInstance(): FavoritesFragment {
-            val fragment = FavoritesFragment()
+        fun newInstance(): HistoryFragment {
+            val fragment = HistoryFragment()
             return fragment
         }
     }
@@ -38,29 +38,29 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override val spnFilterTracker = AdapterTracker({
         Timber.e("--------------spnFilterTracker---------")
     })
-
     @Inject
-    lateinit var mFavoritesPresenter: FavoritesMvpPresenter<FavoritesMvpView>
+    lateinit var mHistoryPresenter: HistoryMvpPresenter<HistoryMvpView>
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
-    var mMangasRvAdapter: MangasRealmRvAdapter<MangaFavoriteRealm>? = null
+    var mMangasRvAdapter: MangasRealmRvAdapter<MangaHistoryRealm>? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_favorites, container, false)
+        return inflater!!.inflate(R.layout.fragment_history, container, false)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mFavoritesPresenter.onDetach()
+        mHistoryPresenter.onDetach()
     }
+
     override fun initFields() {
         activityComponent.inject(this)
-        mFavoritesPresenter.onAttach(this)
-        title = getString(R.string.favorites)
+        mHistoryPresenter.onAttach(this)
+        title = getString(R.string.history)
     }
 
     override fun initViews() {
         initSpnFilters()
         initRv()
-        requestFavorites()
+        requestHistory()
     }
 
     override fun initSpnFilters() {
@@ -90,34 +90,34 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         })
     }
 
-    override fun requestFavorites() {
-        mFavoritesPresenter.requestFavorites()
+    override fun requestHistory() {
+        mHistoryPresenter.requestHistory()
     }
 
-    override fun onFavoritesResponse(mangaFavoriteRealms: List<MangaFavoriteRealm>?) {
+    override fun onHistoryResponse(mangaHistoryRealms: List<MangaHistoryRealm>?) {
         hideLoading()
-        mangaFavoriteRealms.let { mr ->
-            mr?.apply {
-                if (mr.isNotEmpty()) {
-                    buildFavorites(mr)
-                } else onFavoritesNull()
-            } ?: let { onFavoritesNull() }
+        mangaHistoryRealms.let { mhr ->
+            mhr?.apply {
+                if (mhr.isNotEmpty()) {
+                    buildHistory(mhr)
+                } else onHistoryNull()
+            } ?: let { onHistoryNull() }
         }
     }
 
-    override fun onFavoritesNull() {
-        Timber.e("----------------onFavoritesNull------------------")
+    override fun onHistoryNull() {
+        Timber.e("----------------onHistoryNull------------------")
     }
 
-    override fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
-        Timber.e("---------------buildFavorites---------------${mangaFavoriteRealms.size}")
+    override fun buildHistory(mangaHistoryRealms: List<MangaHistoryRealm>) {
+        Timber.e("---------------buildHistory---------------${mangaHistoryRealms.size}")
         spn_filter.show(true)
         mMangasRvAdapter?.apply {
             mData?.clear()
-            mData?.addAll(mangaFavoriteRealms)
+            mData?.addAll(mangaHistoryRealms)
             notifyDataSetChanged()
         } ?: let {
-            mMangasRvAdapter = MangasRealmRvAdapter(context, mangaFavoriteRealms.toMutableList(), this)
+            mMangasRvAdapter = MangasRealmRvAdapter(context, mangaHistoryRealms.toMutableList(), this)
             rv.adapter = mMangasRvAdapter
         }
     }
@@ -129,5 +129,4 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
         }
     }
-
 }
