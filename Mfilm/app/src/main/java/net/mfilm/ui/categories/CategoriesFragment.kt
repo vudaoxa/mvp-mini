@@ -52,6 +52,7 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
         super.onDestroy()
         mCategoriesPresenter.onDetach()
     }
+
     override fun initFields() {
         activityComponent.inject(this)
         mCategoriesPresenter.onAttach(this)
@@ -78,8 +79,10 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
             requestLayout()
         }
     }
+
     override fun requestCategories() {
-        mCategoriesPresenter.requestCategories()
+        if (isDataEmpty())
+            mCategoriesPresenter.requestCategories()
     }
 
     override fun onCategoriesResponse(categoriesResponse: CategoriesResponse?) {
@@ -121,6 +124,7 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
         }
         return true
     }
+
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         mCategoriesRvAdapter?.mData?.apply {

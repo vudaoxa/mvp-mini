@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
+import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_mangas.*
 import kotlinx.android.synthetic.main.item_history_clear.*
@@ -64,6 +66,16 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
 
+    override val layoutEmptyData: View?
+        get() = layout_empty_data
+    override val tvDesEmptyData: TextView?
+        get() = tv_des
+    override val emptyDesResId: Int
+        get() {
+            category?.apply { return R.string.empty_data_category }
+            if (search) return R.string.empty_data_search
+            return R.string.empty_data_
+        }
     override val swipeContainer: SwipeRefreshLayout?
         get() = swipe
 
@@ -149,6 +161,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         }
         return true
     }
+
     override fun initRv() {
         rv.apply {
             mMangasRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
@@ -217,14 +230,17 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun onBackPressed(f: (() -> Unit)?) {
         if (rv_search_history.isVisible()) {
             f?.invoke()
-        } else {
-            layout_mangas.show(false)
-            errorView?.show(false)
-            errorViewLoadMore?.show(false)
-            rv_search_history.show(true)
-        }
+        } else showSearchHistory()
     }
 
+    override fun showSearchHistory() {
+        layout_mangas.show(false)
+        errorView?.show(false)
+        errorViewLoadMore?.show(false)
+        showEmptyDataView(false)
+        rv_search_history.show(true)
+
+    }
     override fun requestMangas() {
         val position = spnFilterTracker.mPosition
         Timber.e("---------------requestMangas------ $position--------------------")
@@ -254,10 +270,14 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun onMangasNull() {
         Timber.e("----------------onMangasNull-----------------")
         mMangasRvAdapter?.apply {
-            onAdapterLoadMoreFinished {
-                emptyByAdapter(true)
+            if (itemCount == 0) {
+                adapterEmpty(true)
+            } else {
+                onAdapterLoadMoreFinished {
+                    adapterEmpty(false)
+                }
             }
-        } ?: let { emptyByAdapter(false) }
+        } ?: let { adapterEmpty(true) }
     }
 
     //notEmpty condition
@@ -265,6 +285,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         Timber.e("---------------buildMangas---------------${mangas.size}")
         page++
         spn_filter.show(true)
+        showEmptyDataView(false)
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 setRefreshed(false, { mMangasRvAdapter?.reset() })
@@ -282,10 +303,12 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         mMangasRvAdapter?.onAdapterLoadMore { requestMangas() }
     }
 
-    override fun emptyByAdapter(adapterExisted: Boolean) {
-        super.emptyByAdapter(adapterExisted)
-        hideSomething()
-
+    override fun adapterEmpty(empty: Boolean) {
+        super.adapterEmpty(empty)
+        if (empty) {
+            hideSomething()
+            showEmptyDataView(true)
+        }
     }
 
     override fun loadInterrupted() {
@@ -293,6 +316,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         mMangasRvAdapter?.onAdapterLoadMoreFinished()
         hideSomething()
     }
+
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         when (event) {
@@ -320,7 +344,14 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         requestMangas()
     }
 
-    fun hideSomething() {
+    override fun hideSomething() {
         spn_filter.show(false)
+//        showEmptyDataView(true)
+    }
+
+    override fun showEmptyDataView(show: Boolean) {
+        layoutEmptyData?.show(show)
+        if (show)
+            tvDesEmptyData?.text = getText(emptyDesResId)
     }
 }

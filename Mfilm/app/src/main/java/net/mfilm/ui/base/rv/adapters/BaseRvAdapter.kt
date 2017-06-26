@@ -17,4 +17,7 @@ abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: Mutable
     }
 
     override fun getItemCount() = mData?.size ?: 0
+    fun clear() {
+        mData?.clear()
+    }
 }

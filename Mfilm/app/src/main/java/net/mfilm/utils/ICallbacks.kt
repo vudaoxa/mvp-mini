@@ -4,6 +4,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -40,7 +41,7 @@ interface ICallbackLoadMore {
     fun onLoadMore()
 
     fun reset(f: (() -> Unit)? = null)
-    fun emptyByAdapter(adapterExisted: Boolean)
+    fun adapterEmpty(empty: Boolean)
 }
 
 interface IAdapterLoadMore {
@@ -62,12 +63,22 @@ interface ICallbackRefresh {
     val swipeContainer: SwipeRefreshLayout?
 }
 
-interface ICallbackSearchView : IBackListener {
+interface ICallbackSearchView : IBackListener, ICallbackEmptyDataView {
     fun onSearch(query: String)
+    fun showSearchHistory()
     var query: String?
     var category: Category?
+
 }
 
+interface ICallbackEmptyDataView {
+    val layoutEmptyData: View?
+    val tvDesEmptyData: TextView?
+    val emptyDesResId: Int
+    fun hideSomething()
+    fun showEmptyDataView(show: Boolean)
+//    fun initEmptyDataView()
+}
 interface ICallbackSearch {
     fun onSearchHistoryClicked(searchQueryRealm: SearchQueryRealm)
     fun submitSearchSuggestion(query: String)

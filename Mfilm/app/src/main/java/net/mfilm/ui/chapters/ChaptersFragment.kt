@@ -200,10 +200,14 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override fun onChaptersNull() {
         Timber.e("----------------onChaptersNull------------------")
         mChaptersRvAdapter?.apply {
-            onAdapterLoadMoreFinished {
-                emptyByAdapter(true)
+            if (itemCount == 0) {
+                adapterEmpty(true)
+            } else {
+                onAdapterLoadMoreFinished {
+                    adapterEmpty(false)
+                }
             }
-        } ?: let { emptyByAdapter(false) }
+        } ?: let { adapterEmpty(true) }
     }
 
     override fun buildChapters(chapters: List<Chapter>) {

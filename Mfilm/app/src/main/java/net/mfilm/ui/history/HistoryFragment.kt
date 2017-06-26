@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
+import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_history.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaHistoryRealm
@@ -33,6 +35,14 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
         }
     }
 
+    override val layoutEmptyData: View?
+        get() = layout_empty_data
+    override val tvDesEmptyData: TextView?
+        get() = tv_des
+    override val emptyDesResId: Int
+        get() {
+            return R.string.empty_data_history
+        }
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
     override val spnFilterTracker = AdapterTracker({
@@ -107,10 +117,14 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
 
     override fun onHistoryNull() {
         Timber.e("----------------onHistoryNull------------------")
+        mMangasRvAdapter?.clear()
+        hideSomething()
+        showEmptyDataView(true)
     }
 
     override fun buildHistory(mangaHistoryRealms: List<MangaHistoryRealm>) {
         Timber.e("---------------buildHistory---------------${mangaHistoryRealms.size}")
+        context ?: return
         spn_filter.show(true)
         mMangasRvAdapter?.apply {
             mData?.clear()
@@ -128,5 +142,15 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
         mMangasRvAdapter?.mData?.apply {
             screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
         }
+    }
+
+    override fun hideSomething() {
+        spn_filter.show(false)
+    }
+
+    override fun showEmptyDataView(show: Boolean) {
+        layoutEmptyData?.show(show)
+        if (show)
+            tvDesEmptyData?.text = getText(emptyDesResId)
     }
 }

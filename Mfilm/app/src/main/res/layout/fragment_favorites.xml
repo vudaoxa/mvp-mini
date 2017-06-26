@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/default_background">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/default_background"
-    android:orientation="vertical">
+    <LinearLayout
+        style="@style/Layout_match"
+        android:orientation="vertical">
 
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/spn_filter"
-        style="@style/Layout_match_wrap"
-        android:visibility="gone" />
+        <org.angmarch.views.NiceSpinner
+            android:id="@+id/spn_filter"
+            style="@style/Layout_match_wrap"
+            android:visibility="gone" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv"
-        style="@style/Layout_match_wrap" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
+            style="@style/Layout_match_wrap" />
 
-</LinearLayout>
+    </LinearLayout>
+
+    <include layout="@layout/empty_data_view" />
+</FrameLayout>

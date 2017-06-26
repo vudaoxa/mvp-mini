@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_empty_data"
     style="@style/LinearLayout_center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="gone">
 
     <com.joanzapata.iconify.widget.IconTextView
         style="@style/Layout_wrap"
@@ -14,7 +16,7 @@
         android:shadowDy="3"
         android:shadowRadius="1"
         android:text="@string/ion_happy"
-        android:textColor="@color/grey_60"
+        android:textColor="@color/white"
         android:textSize="80sp" />
 
     <TextView
@@ -24,5 +26,5 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="fdkfjdfd"
-        android:textColor="@color/grey_60" />
+        android:textColor="@color/grey_40" />
 </LinearLayout>

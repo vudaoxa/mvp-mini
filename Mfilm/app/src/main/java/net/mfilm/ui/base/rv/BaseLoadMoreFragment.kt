@@ -128,8 +128,8 @@ abstract class BaseLoadMoreFragment : BasePullRefreshFragment(), ICallbackLoadMo
 
     }
 
-    override fun emptyByAdapter(adapterExisted: Boolean) {
-        Timber.e("------------------------emptyByAdapter----------$adapterExisted---------")
+    override fun adapterEmpty(empty: Boolean) {
+        Timber.e("------------------------adapterEmpty----------$empty---------")
     }
 
 }

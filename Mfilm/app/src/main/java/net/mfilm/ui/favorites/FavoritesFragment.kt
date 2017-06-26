@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
+import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaFavoriteRealm
@@ -33,6 +35,14 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
+    override val layoutEmptyData: View?
+        get() = layout_empty_data
+    override val tvDesEmptyData: TextView?
+        get() = tv_des
+    override val emptyDesResId: Int
+        get() {
+            return R.string.empty_data_favorite
+        }
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
     override val spnFilterTracker = AdapterTracker({
@@ -107,13 +117,18 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
+        mMangasRvAdapter?.clear()
+        hideSomething()
+        showEmptyDataView(true)
     }
 
     override fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
         Timber.e("---------------buildFavorites---------------${mangaFavoriteRealms.size}")
+        context ?: return
         spn_filter.show(true)
+        showEmptyDataView(false)
         mMangasRvAdapter?.apply {
-            mData?.clear()
+            clear()
             mData?.addAll(mangaFavoriteRealms)
             notifyDataSetChanged()
         } ?: let {
@@ -128,6 +143,16 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         mMangasRvAdapter?.mData?.apply {
             screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
         }
+    }
+
+    override fun hideSomething() {
+        spn_filter.show(false)
+    }
+
+    override fun showEmptyDataView(show: Boolean) {
+        layoutEmptyData?.show(show)
+        if (show)
+            tvDesEmptyData?.text = getText(emptyDesResId)
     }
 
 }
