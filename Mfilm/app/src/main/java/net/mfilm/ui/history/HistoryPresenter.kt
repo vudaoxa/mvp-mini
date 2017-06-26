@@ -15,14 +15,13 @@ class HistoryPresenter<V : HistoryMvpView> @Inject
 constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BaseRealmPresenter<V>(dataManager, compositeDisposable), HistoryMvpPresenter<V> {
     override fun requestHistory() {
-        if (!isViewAttached) return
-        mvpView?.showLoading()
+        mvpView?.showLoading() ?: return
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<MangaHistoryRealm>>({ mvpView?.onFailure() }) {
             override fun onNext(t: RealmResults<MangaHistoryRealm>?) {
-                if (isViewAttached) {
-                    mvpView?.onHistoryResponse(t)
+                mvpView?.apply {
+                    onHistoryResponse(t)
                     t?.addChangeListener { t, _ ->
-                        mvpView?.onHistoryResponse(t)
+                        onHistoryResponse(t)
                     }
                 }
             }

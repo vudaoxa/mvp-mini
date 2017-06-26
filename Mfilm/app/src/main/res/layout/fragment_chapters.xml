@@ -2,25 +2,22 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_view"
     style="@style/default_background"
-    android:visibility="gone">
+    android:visibility="visible">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/rv_height"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/TextStyle.Sans.Regular.16"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="@string/chapters"
-            android:visibility="gone" />
+    <RelativeLayout
+        android:id="@+id/layout_lc"
+        style="@style/Layout_match_wrap"
+        android:layout_height="@dimen/rv_height">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv"
-            style="@style/Layout_match_wrap" />
-    </LinearLayout>
+            style="@style/Layout_match_wrap"
+            android:layout_above="@+id/error_view_load_more" />
+
+        <include
+            android:id="@+id/error_view_load_more"
+            layout="@layout/error_view_bottom" />
+    </RelativeLayout>
 
     <include layout="@layout/error_view" />
 </FrameLayout>

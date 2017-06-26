@@ -9,6 +9,7 @@
     <string name="ion_close_round">{ion-close-round}</string>
     <string name="ion_musical_note">{ion-ios-musical-note}</string>
     <string name="fa_history">{fa-history}</string>
+    <string name="ion_happy">{ion-happy-outline}</string>
     <string name="home">Home</string>
     <string name="categories">Categories</string>
     <string name="favorites">Favorites</string>
@@ -40,7 +41,11 @@
     <string name="error_conection">Có lỗi xảy ra vui lòng thử lại</string>
     <string name="redo">Try again</string>
     <string name="internet_no_conection">Không có kết nối mạng</string>
-    <string name="empty_data">Data empty</string>
+    <string name="empty_data_">Data empty</string>
+    <string name="empty_data_search">Result not found!</string>
+    <string name="empty_data_favorite">You have no Favorites here! Add your Favorite from Home or Search and get fun now! </string>
+    <string name="empty_data_history">You have no History here! Add your History from Home or Search and get fun now! </string>
+    <string name="empty_data">You have no %1$s here! Add your %2$s from Home or Search and get fun now! </string>
 
     <string name="title_other_name">Other names: </string>
     <string name="title_author">Authors: </string>
@@ -90,5 +95,6 @@
     <string name="oops">Ặc!</string>
     <string name="failed_to_load_clip">Không thể tải clip</string>
     <string name="failed_to_load">Không thể tải trang</string>
+    <string name="failed_to_load_more">Không thể tải thêm</string>
     <string name="failed_to_load_app">Không thể khởi động ứng dụng</string>
 </resources>

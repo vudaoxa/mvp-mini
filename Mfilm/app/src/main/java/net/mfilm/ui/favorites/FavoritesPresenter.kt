@@ -15,14 +15,13 @@ class FavoritesPresenter<V : FavoritesMvpView> @Inject
 constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BaseRealmPresenter<V>(dataManager, compositeDisposable), FavoritesMvpPresenter<V> {
     override fun requestFavorites() {
-        if (!isViewAttached) return
-        mvpView?.showLoading()
+        mvpView?.showLoading() ?: return
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<MangaFavoriteRealm>>({ mvpView?.onFailure() }) {
             override fun onNext(t: RealmResults<MangaFavoriteRealm>?) {
-                if (isViewAttached) {
-                    mvpView?.onFavoritesResponse(t)
+                mvpView?.apply {
+                    onFavoritesResponse(t)
                     t?.addChangeListener { t, _ ->
-                        mvpView?.onFavoritesResponse(t)
+                        onFavoritesResponse(t)
                     }
                 }
             }

@@ -31,9 +31,11 @@ abstract class BasePullRefreshFragment : BaseErrorViewFragment(), ICallbackRefre
 
     override fun onRefresh() {
         handler({
-            onErrorViewDemand()
             setRefreshing(false)
-            isRefreshed = true
+            if (!isRefreshed) {
+                onErrorViewDemand(errorView)
+                isRefreshed = true
+            }
         }, 2000)
     }
 
@@ -49,5 +51,5 @@ abstract class BasePullRefreshFragment : BaseErrorViewFragment(), ICallbackRefre
         f?.invoke()
     }
 
-    protected var isRefreshed = false
+    private var isRefreshed = false
 }

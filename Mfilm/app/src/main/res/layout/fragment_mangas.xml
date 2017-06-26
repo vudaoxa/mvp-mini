@@ -4,6 +4,7 @@
     style="@style/default_background">
 
     <LinearLayout
+        android:id="@+id/layout_mangas"
         style="@style/Layout_match"
         android:orientation="vertical">
 
@@ -17,14 +18,20 @@
             style="@style/Layout_match_wrap"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/layout_lc"
                 style="@style/Layout_match_wrap">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv"
-                    style="@style/Layout_match_wrap" />
-            </LinearLayout>
+                    style="@style/Layout_match_wrap"
+                    android:layout_above="@+id/error_view_load_more" />
+
+                <include
+                    android:id="@+id/error_view_load_more"
+                    layout="@layout/error_view_bottom" />
+
+            </RelativeLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>

@@ -20,19 +20,17 @@ constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) 
     }
 
     override fun requestSearchHistory() {
-        if (!isViewAttached) return
-        mvpView?.showLoading()
+        mvpView?.showLoading() ?: return
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<SearchQueryRealm>>({ mvpView?.onFailure() }) {
             override fun onNext(t: RealmResults<SearchQueryRealm>?) {
-                if (isViewAttached) {
-                    mvpView?.onSearchHistoryResponse(t)
+                mvpView?.apply {
+                    onSearchHistoryResponse(t)
                     t?.addChangeListener { t, _ ->
-                        mvpView?.onSearchHistoryResponse(t)
+                        onSearchHistoryResponse(t)
                     }
                 }
             }
         }
-
         val disposable = dataManager.loadSearchHistory(mRealmDisposableObserver)
         compositeDisposable.add(disposable)
         compositeDisposable.add(mRealmDisposableObserver)

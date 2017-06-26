@@ -22,7 +22,7 @@ abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: Mutable
         return -10
     }
 
-    override fun onAdapterLoadMore(f: () -> Unit) {
+    override fun onAdapterLoadMore(f: (() -> Unit)?) {
         Timber.e("-------------onAdapterLoadMore----------$isMoreLoading-------")
         if (isMoreLoading) return
         mData?.apply {
@@ -30,30 +30,33 @@ abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: Mutable
             add(loadingItem)
             handler({
                 notifyItemInserted(itemCount - 1)
-                f()
+                f?.invoke()
             }, 0)
         }
     }
 
-    override fun onAdapterLoadMoreFinished(f: () -> Unit) {
+    override fun onAdapterLoadMoreFinished(f: (() -> Unit)?) {
         handler({
             mData?.apply {
                 val l = itemCount
                 if (l > 0) {
-                    removeAt(l - 1)
+                    if (isMainItem(last())) return@apply
+                    remove(last())
                     notifyItemRemoved(l - 1)
                 }
             }
             isMoreLoading = false
             Timber.e("------------------onAdapterLoadMoreFinished----------------$isMoreLoading-----")
-            f()
+            f?.invoke()
         })
     }
 
-    override fun reset() {
+    override fun reset(notify: Boolean?) {
         Timber.e("-----------------reset-----------------")
         mData?.clear()
-//        notifyDataSetChanged()
+        notify?.apply {
+            if (this) notifyDataSetChanged()
+        }
     }
 
     abstract fun isMainItem(item: V): Boolean

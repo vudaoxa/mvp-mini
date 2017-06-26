@@ -33,16 +33,26 @@ import javax.inject.Inject
  */
 class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
-    override fun onErrorViewDemand() {
-        reset()
-        requestChapters()
+    override fun onErrorViewDemand(errorView: ErrorView?) {
+        when (errorView) {
+            this.errorView -> {
+                reset()
+                requestChapters()
+            }
+            errorViewLoadMore -> {
+                onLoadMore()
+            }
+        }
     }
 
     override val errorView: ErrorView?
         get() = error_view
     override val subTitle: Int?
         get() = R.string.failed_to_load
-
+    override val errorViewLoadMore: ErrorView?
+        get() = error_view_load_more as? ErrorView?
+    override val subTitleLoadMore: Int?
+        get() = R.string.failed_to_load_more
     override val swipeContainer: SwipeRefreshLayout?
         get() = null
 
@@ -151,6 +161,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     }
 
     override fun initViews() {
+        super.initViews()
         initRv()
         requestChapters()
     }
@@ -163,10 +174,11 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     }
 
     override fun requestChapters() {
-        mChaptersPresenter.requestChapters(manga.id!!, LIMIT, page++)
+        mChaptersPresenter.requestChapters(manga.id!!, LIMIT, page)
     }
 
     override fun onChaptersResponse(chaptersResponse: ChaptersResponse?) {
+        hideLoading()
         chaptersResponse.let { cr ->
             cr?.apply {
                 cr.chapters.let { cs ->
@@ -189,15 +201,16 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         Timber.e("----------------onChaptersNull------------------")
         mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
-                nullByAdapter(true)
+                emptyByAdapter(true)
             }
-        } ?: let { nullByAdapter(false) }
+        } ?: let { emptyByAdapter(false) }
     }
 
     override fun buildChapters(chapters: List<Chapter>) {
         Timber.e("----------------buildChapters-----------------${chapters.size}-------")
 //        if (!isVisOk()) return
         root_view?.show(true) ?: return
+        page++
         mChaptersRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 val x = mData?.size //xxx readBtnClicked
@@ -260,6 +273,17 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         }
     }
 
+    override fun loadInterrupted() {
+        super.loadInterrupted()
+        mChaptersRvAdapter?.onAdapterLoadMoreFinished()
+    }
+
+    override fun isDataEmpty(): Boolean {
+        mChaptersRvAdapter?.apply {
+            return itemCount == 0
+        }
+        return true
+    }
     override fun loadPrevOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
         chapterImagesFragment = chapterImagesMvpView
         seekPrevChapter()

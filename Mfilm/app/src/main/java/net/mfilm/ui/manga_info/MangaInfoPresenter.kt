@@ -28,14 +28,11 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
     }
 
     override fun requestManga(id: Int) {
-        if (!isViewAttached) return
-        mvpView?.showLoading()
+        mvpView?.showLoading() ?: return
         val d = object : MDisposableObserver<MangaDetailResponse>({ mvpView?.onFailure() },
                 { mvpView?.onNoInternetConnections() }) {
             override fun onNext(t: MangaDetailResponse?) {
-                if (isViewAttached) {
-                    mvpView?.onMangaDetailResponse(t)
-                }
+                mvpView?.onMangaDetailResponse(t)
             }
         }
         retrofitService.mApisService.requestMangaDetail(id)
@@ -44,6 +41,7 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
                 .subscribe(d)
         compositeDisposable.add(d)
     }
+
     override fun initIBus() {
         if (!isViewAttached) return
         val flowable = iBus.asFlowable().filter { it is TapEvent }

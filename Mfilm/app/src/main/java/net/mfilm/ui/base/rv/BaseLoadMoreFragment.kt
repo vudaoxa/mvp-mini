@@ -8,13 +8,39 @@ import net.mfilm.ui.base.error_view.BasePullRefreshFragment
 import net.mfilm.utils.ALoadMore
 import net.mfilm.utils.ICallbackLoadMore
 import net.mfilm.utils.PAGE_START
+import net.mfilm.utils.show
 import timber.log.Timber
 
 /**
  * Created by MRVU on 5/16/2017.
  */
 abstract class BaseLoadMoreFragment : BasePullRefreshFragment(), ICallbackLoadMore {
-    var _pape = PAGE_START
+    override fun initViews() {
+        super.initViews()
+        initErrorView(errorViewLoadMore, subTitleLoadMore)
+    }
+
+    override fun showErrorView(show: Boolean, f: (() -> Unit)?): Boolean {
+        fun show(): Boolean {
+            hideLoading()
+            Timber.e("------------showErrorView--------- $errorViewLoadMore----------------------")
+            errorViewLoadMore?.show(show) ?: return super.showErrorView(show, f)
+            return true
+        }
+        if (show) {
+            if (!isDataEmpty()) {
+                //don't show super onFailure
+                return show()
+            }
+        } else {
+            //hide error
+            return show()
+        }
+        //show super showErrorView
+        return super.showErrorView(show, f)
+    }
+
+    private var _pape = PAGE_START
     override var page: Int
         get() = _pape
         set(value) {
@@ -22,6 +48,7 @@ abstract class BaseLoadMoreFragment : BasePullRefreshFragment(), ICallbackLoadMo
         }
     var mCallBackLoadMore: ALoadMore? = null
     private var mEndlessRvScrollListener: EndlessRvScrollListener? = null
+
     init {
         mCallBackLoadMore = object : ALoadMore({ onLoadMore() }) {
             override fun onLoadMore() {
@@ -38,11 +65,12 @@ abstract class BaseLoadMoreFragment : BasePullRefreshFragment(), ICallbackLoadMo
         reset()
     }
 
-    override fun reset() {
+    override fun reset(f: (() -> Unit)?) {
         Timber.e("-------------------reset-----------------------")
         page = PAGE_START
         mCallBackLoadMore?.reset()
         mEndlessRvScrollListener?.reset()
+        f?.invoke()
     }
 
     fun setupOnLoadMore(rv: RecyclerView, mCallbackLoadMore: ALoadMore?) {
@@ -100,7 +128,8 @@ abstract class BaseLoadMoreFragment : BasePullRefreshFragment(), ICallbackLoadMo
 
     }
 
-    fun nullByAdapter(adapterExisted: Boolean) {
-        Timber.e("------------------------nullByAdapter----------$adapterExisted---------")
+    override fun emptyByAdapter(adapterExisted: Boolean) {
+        Timber.e("------------------------emptyByAdapter----------$adapterExisted---------")
     }
+
 }

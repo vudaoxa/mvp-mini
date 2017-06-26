@@ -58,7 +58,8 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     override val spnFilterTracker = AdapterTracker({
-        onErrorViewDemand()
+        mMangasRvAdapter?.reset()
+        onErrorViewDemand(errorView)
     })
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
@@ -70,10 +71,21 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         get() = error_view
     override val subTitle: Int?
         get() = R.string.failed_to_load
+    override val errorViewLoadMore: ErrorView?
+        get() = error_view_load_more as? ErrorView?
+    override val subTitleLoadMore: Int?
+        get() = R.string.failed_to_load_more
 
-    override fun onErrorViewDemand() {
-        reset()
-        requestMangas()
+    override fun onErrorViewDemand(errorView: ErrorView?) {
+        when (errorView) {
+            this.errorView -> {
+                reset()
+                requestMangas()
+            }
+            errorViewLoadMore -> {
+                onLoadMore()
+            }
+        }
     }
 
     private var mQuery: String? = null
@@ -133,8 +145,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     override fun isDataEmpty(): Boolean {
         mMangasRvAdapter?.apply {
-            if (itemCount == 0) return true
-            return false
+            return itemCount == 0
         }
         return true
     }
@@ -188,10 +199,10 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     //use when refresh(by filter, or reload)
-    override fun reset() {
-        super.reset()
-        mMangasRvAdapter?.reset()
-    }
+//    override fun reset() {
+//        super.reset()
+//        mMangasRvAdapter?.reset()
+//    }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
@@ -207,8 +218,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         if (rv_search_history.isVisible()) {
             f?.invoke()
         } else {
-            rv.show(false)
-            spn_filter.show(false)
+            layout_mangas.show(false)
+            errorView?.show(false)
+            errorViewLoadMore?.show(false)
             rv_search_history.show(true)
         }
     }
@@ -216,11 +228,11 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun requestMangas() {
         val position = spnFilterTracker.mPosition
         Timber.e("---------------requestMangas------ $position--------------------")
-        mMangasPresenter.requestMangas(category?.id, LIMIT, page++, filters[position].content, query)
+        mMangasPresenter.requestMangas(category?.id, LIMIT, page, filters[position].content, query)
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
-        hideLoading()
+        showErrorView(false)
         mangasResponse.let { mr ->
             mr?.apply {
                 mr.mangasPaging.let { mp ->
@@ -243,17 +255,19 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         Timber.e("----------------onMangasNull-----------------")
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
-                nullByAdapter(true)
+                emptyByAdapter(true)
             }
-        } ?: let { nullByAdapter(false) }
+        } ?: let { emptyByAdapter(false) }
     }
 
     //notEmpty condition
     override fun buildMangas(mangas: List<Manga>) {
         Timber.e("---------------buildMangas---------------${mangas.size}")
+        page++
         spn_filter.show(true)
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
+                setRefreshed(false, { mMangasRvAdapter?.reset() })
                 mData?.addAll(mangas)
                 notifyDataSetChanged()
             }
@@ -268,6 +282,17 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         mMangasRvAdapter?.onAdapterLoadMore { requestMangas() }
     }
 
+    override fun emptyByAdapter(adapterExisted: Boolean) {
+        super.emptyByAdapter(adapterExisted)
+        hideSomething()
+
+    }
+
+    override fun loadInterrupted() {
+        super.loadInterrupted()
+        mMangasRvAdapter?.onAdapterLoadMoreFinished()
+        hideSomething()
+    }
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         when (event) {
@@ -281,7 +306,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
             }
             TYPE_ITEM_SEARCH_HISTORY -> {
                 mSearchQueryRvAdapter?.mData?.apply {
-                    //                    onSearch(get(position).query!!)
                     baseActivity?.onSearchHistoryClicked(get(position))
                 }
             }
@@ -290,9 +314,13 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     override fun onSearch(query: String) {
         this.query = query
-        rv.show(true)
+        layout_mangas.show(true)
         rv_search_history.show(false)
-        reset()
+        reset { mMangasRvAdapter?.reset(true) }
         requestMangas()
+    }
+
+    fun hideSomething() {
+        spn_filter.show(false)
     }
 }

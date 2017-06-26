@@ -32,19 +32,24 @@ abstract class ALoadMore(val f: () -> Unit) {
 }
 
 interface ICallbackLoadMore {
+    val errorViewLoadMore: ErrorView?
+    val subTitleLoadMore: Int?
     var isDataEnd: Boolean
     var page: Int
+    //    fun showErrorViewLoadMore(show: Boolean)
     fun onLoadMore()
-    fun reset()
+
+    fun reset(f: (() -> Unit)? = null)
+    fun emptyByAdapter(adapterExisted: Boolean)
 }
 
 interface IAdapterLoadMore {
     //    fun onAdapterLoadMore()
-    fun onAdapterLoadMore(f: () -> Unit)
+    fun onAdapterLoadMore(f: (() -> Unit)? = null)
 
-    fun reset()
+    fun reset(notify: Boolean? = false)
     //    fun onAdapterLoadMoreFinished()
-    fun onAdapterLoadMoreFinished(f: () -> Unit)
+    fun onAdapterLoadMoreFinished(f: (() -> Unit)? = null)
 }
 
 interface ICallbackRefresh {
@@ -114,14 +119,14 @@ interface IBackListener {
 interface ICallbackErrorView {
     val errorView: ErrorView?
     val subTitle: Int?
-    fun initErrorView()
-    fun showErrorView(show: Boolean): Boolean
+    fun initErrorView(errorView: ErrorView?, subTitle: Int?)
+    fun showErrorView(show: Boolean, f: (() -> Unit)? = null): Boolean
     //    fun showErrorView(show: Boolean, status_code: Int)
-    fun onErrorViewDemand()
+    fun onErrorViewDemand(errorView: ErrorView?)
 
-    fun onErrorViewRetry(f: () -> Unit)
+    fun onErrorViewRetry(errorView: ErrorView?, f: () -> Unit)
     fun isDataEmpty(): Boolean = false
-    fun loadFinished()
+    fun loadInterrupted()
 }
 
 interface ICallbackSpanCount {
@@ -131,7 +136,6 @@ interface ICallbackSpanCount {
 interface IBus {
     fun send(obj: Any?)
     fun asFlowable(): Flowable<Any?>
-//    fun hasObservers(): Boolean
 }
 
 interface ICallbackBus {

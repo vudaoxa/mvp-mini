@@ -4,19 +4,20 @@ import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.utils.ICallbackErrorView
 import net.mfilm.utils.show
 import timber.log.Timber
+import tr.xip.errorview.ErrorView
 
 /**
  * Created by MRVU on 6/5/2017.
  */
 abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
     override fun initViews() {
-        initErrorView()
+        initErrorView(errorView, subTitle)
     }
 
-    override fun initErrorView() {
+    override fun initErrorView(errorView: ErrorView?, subTitle: Int?) {
         errorView?.apply {
             fun retry() {
-                onErrorViewRetry({ onErrorViewDemand() })
+                onErrorViewRetry(this, { onErrorViewDemand(this) })
             }
             setOnClickListener { retry() }
             setOnRetryListener { retry() }
@@ -26,7 +27,7 @@ abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
         }
     }
 
-    override fun onErrorViewRetry(f: () -> Unit) {
+    override fun onErrorViewRetry(errorView: ErrorView?, f: () -> Unit) {
         Timber.e("--------------onErrorViewRetry--------------")
         errorView?.apply {
             show(false)
@@ -34,7 +35,7 @@ abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
         }
     }
 
-    override fun showErrorView(show: Boolean): Boolean {
+    override fun showErrorView(show: Boolean, f: (() -> Unit)?): Boolean {
         fun show() {
             hideLoading()
             errorView?.show(show)
@@ -46,25 +47,25 @@ abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
                 return true
             }
         } else {
+            //hide error
             show()
         }
         //show super onFailure
+        f?.invoke()
         return false
     }
 
     override fun onFailure() {
-        if (!showErrorView(true))
-            super.onFailure()
-        loadFinished()
+        showErrorView(true, { super.onFailure() })
+        loadInterrupted()
     }
 
     override fun onNoInternetConnections() {
-        if (!showErrorView(true))
-            super.onNoInternetConnections()
-        loadFinished()
+        showErrorView(true, { super.onNoInternetConnections() })
+        loadInterrupted()
     }
 
-    override fun loadFinished() {
-        Timber.e("------------loadFinished--------------")
+    override fun loadInterrupted() {
+        Timber.e("------------loadInterrupted--------------")
     }
 }

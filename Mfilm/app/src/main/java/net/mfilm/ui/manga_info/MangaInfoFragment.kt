@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_manga_info.*
 import kotlinx.android.synthetic.main.layout_manga_info_header.*
 import kotlinx.android.synthetic.main.layout_manga_info_text.*
@@ -12,19 +13,18 @@ import kotlinx.android.synthetic.main.layout_manga_thumb.*
 import net.mfilm.R
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangaDetailResponse
-import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.base.error_view.BaseErrorViewFragment
 import net.mfilm.ui.chapters.ChaptersFragment
-import net.mfilm.utils.IndexTags
-import net.mfilm.utils.TimeUtils
-import net.mfilm.utils.setText
+import net.mfilm.utils.*
 import timber.log.Timber
+import tr.xip.errorview.ErrorView
 import java.io.Serializable
 import javax.inject.Inject
 
 /**
  * Created by tusi on 5/18/17.
  */
-class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
+class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
     companion object {
         const val KEY_MANGA = "KEY_MANGA"
         const val KEY_MANGA_ID = "KEY_MANGA_ID"
@@ -44,6 +44,10 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
         }
     }
 
+    override val errorView: ErrorView?
+        get() = error_view
+    override val subTitle: Int?
+        get() = R.string.failed_to_load
     @Inject
     lateinit var mMangaInfoMvpPresenter: MangaInfoMvpPresenter<MangaInfoMvpView>
     private var mChaptersFragment: ChaptersFragment? = null
@@ -73,6 +77,7 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.initViews()
         buildManga()
     }
     override fun onDestroy() {
@@ -111,6 +116,19 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
         isFavorite()
     }
 
+    override fun onErrorViewDemand(errorView: ErrorView?) {
+        when (errorView) {
+            this.errorView -> {
+                obtainManga()
+            }
+        }
+    }
+
+    override fun isDataEmpty(): Boolean {
+        layout_manga_info.show(false)
+        btn_read.enable(false)
+        return true
+    }
     override fun requestManga(id: Int) {
         mMangaInfoMvpPresenter.requestManga(id)
     }
@@ -136,6 +154,8 @@ class MangaInfoFragment : BaseStackFragment(), MangaInfoMvpView {
 
     override fun initMangaInfoHeader() {
         mManga?.apply {
+            layout_manga_info.show(true)
+            btn_read.enable(true)
             img_thumb.setImageURI(coverUrl)
             tv_name.text = name
             setText(context, tv_other_name, R.string.title_other_name, otherName)

@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Layout_match_wrap"
-    android:background="@drawable/main_background"
+    style="@style/LinearLayout_center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <com.joanzapata.iconify.widget.IconTextView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        style="@style/Layout_wrap"
+        android:layout_margin="12dp"
         android:gravity="center"
-        android:padding="@dimen/dimen5"
         android:shadowColor="@color/shadow"
         android:shadowDx="3"
         android:shadowDy="3"
         android:shadowRadius="1"
-        android:text="@string/ion_musical_note"
-        android:textSize="30sp" />
+        android:text="@string/ion_happy"
+        android:textColor="@color/grey_60"
+        android:textSize="80sp" />
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/tv_des"
         style="@style/TextStyle.Sans.Regular.14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/selector_blue" />
+        android:gravity="center"
+        android:text="fdkfjdfd"
+        android:textColor="@color/grey_60" />
 </LinearLayout>

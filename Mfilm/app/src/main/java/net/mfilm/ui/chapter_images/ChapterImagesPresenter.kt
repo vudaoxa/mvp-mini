@@ -23,14 +23,11 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
                     dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BasePresenter<V>(dataManager, compositeDisposable), ChapterImagesMvpPresenter<V> {
     override fun requestChapterImages(chapterId: Int) {
-        if (!isViewAttached) return
-        mvpView?.showLoading()
+        mvpView?.showLoading() ?: return
         val d = object : MDisposableObserver<ChapterImagesResponse>({ mvpView?.onFailure() },
                 { mvpView?.onNoInternetConnections() }) {
             override fun onNext(t: ChapterImagesResponse?) {
-                if (isViewAttached) {
-                    mvpView?.onChapterImagesResponse(t)
-                }
+                mvpView?.onChapterImagesResponse(t)
             }
         }
         retrofitService.mApisService.requestChapterImages(chapterId)

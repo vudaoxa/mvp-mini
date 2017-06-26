@@ -153,13 +153,21 @@ fun initIcons(context: Context) {
             IoniconsIcons.ion_ios_close_empty).colorRes(R.color.white).actionBarSize()
 }
 
-fun View.show(show: Boolean) {
-    if (show) {
-        if (isVisible()) return
-        startAnimation(anim)
-        postOnAnimationDelayed({ visibility = visible }, 250)
-    } else {
-        visibility = gone
+fun View?.enable(enable: Boolean) {
+    this?.apply {
+        isEnabled = enable
+    }
+}
+
+fun View?.show(show: Boolean) {
+    this?.apply {
+        if (show) {
+            if (isVisible()) return
+            startAnimation(anim)
+            postOnAnimationDelayed({ visibility = visible }, 250)
+        } else {
+            visibility = gone
+        }
     }
 }
 
@@ -173,7 +181,7 @@ fun showLoadingDialog(context: Context): ProgressDialog {
         setContentView(R.layout.progress_dialog)
         isIndeterminate = true
         setCancelable(true)
-        setCanceledOnTouchOutside(false)
+        setCanceledOnTouchOutside(true)
     }
     return progressDialog
 }

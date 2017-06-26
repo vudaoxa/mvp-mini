@@ -141,14 +141,10 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         * */
 
         mToolbarTitle.show(!search)
-//        mBtnSearch.show(!search)
         mLayoutInputText.show(search)
-//        containerView.show(!search)
-//        showOptionsMenu(!search)
         if (search) {
-//            showBtnBack()
+            edtSearch.requestFocus()
         } else {
-//            showDrawer()
             hideKeyboard()
         }
     }
