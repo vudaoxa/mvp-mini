@@ -6,15 +6,13 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.joanzapata.iconify.widget.IconTextView
 import io.reactivex.Flowable
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
 import net.mfilm.ui.manga.EmptyDataView
+import org.angmarch.views.NiceSpinner
 import tr.xip.errorview.ErrorView
 
 /**
@@ -47,11 +45,8 @@ interface ICallbackLoadMore {
 }
 
 interface IAdapterLoadMore {
-    //    fun onAdapterLoadMore()
     fun onAdapterLoadMore(f: (() -> Unit)? = null)
-
     fun reset(notify: Boolean? = false)
-    //    fun onAdapterLoadMoreFinished()
     fun onAdapterLoadMoreFinished(f: (() -> Unit)? = null)
 }
 
@@ -73,7 +68,7 @@ interface ICallbackSearchView : IBackListener, ICallbackEmptyDataViewHolder {
 
 }
 
-interface ICallbackEmptyDataViewHolder {
+interface ICallbackEmptyDataViewHolder : ICallbackDataEmpty {
     val layoutEmptyData: View?
     val tvDesEmptyData: TextView?
     val emptyDesResId: Int
@@ -87,9 +82,12 @@ interface ICallbackEmptyDataView {
 }
 
 interface ICallbackSearch {
-    fun onSearchHistoryClicked(searchQueryRealm: SearchQueryRealm)
     fun submitSearchSuggestion(query: String)
     fun submitSearch()
+}
+
+interface ICallbackToolbarSearch : ICallbackSearch {
+    fun onSearchHistoryClicked(searchQueryRealm: SearchQueryRealm)
     val mCallbackSearchView: ICallbackSearchView?
 }
 
@@ -97,6 +95,14 @@ interface ICallbackFragmentOptionMenu {
     val optionsMenuId: Int
 }
 
+interface ICallbackFilter {
+    val spnFilter: NiceSpinner
+}
+
+interface ICallbackEdit {
+    val btnDone: Button
+    fun toggleEdit(edit: Boolean)
+}
 interface ICallbackReceiveOptionsMenu {
     fun onReceiveOptionsMenuItem(item: MenuItem)
 }
@@ -106,7 +112,14 @@ interface ICallbackOptionMenu {
     fun showOptionsMenu(optionsMenuId: Int)
 }
 
-interface ICallbackToolbar : ICallbackSearch, ICallbackOptionMenu {
+interface ICallbackLayoutSearch : ICallbackSearch {
+    val mLayoutInputText: LinearLayout
+    val edtSearch: EditText
+    val imgClear: IconTextView
+    fun initSearch()
+}
+
+interface ICallbackToolbar : ICallbackToolbarSearch, ICallbackOptionMenu, ICallbackLayoutSearch {
     var optionsMenu: Int
     val actionSettingsId: Int
     val actionAboutId: Int
@@ -119,9 +132,7 @@ interface ICallbackToolbar : ICallbackSearch, ICallbackOptionMenu {
     val mBtnFollow: ImageButton
     val mNavView: NavigationView
     val mLayoutBtnsInfo: LinearLayout
-    val mLayoutInputText: LinearLayout
-    val edtSearch: EditText
-    val imgClear: IconTextView
+
     fun setScrollToolbarFlag(info: Boolean)
     fun setToolbarTitle(title: String?)
     fun showBtnBack(visi: Boolean)
@@ -131,7 +142,7 @@ interface ICallbackToolbar : ICallbackSearch, ICallbackOptionMenu {
     fun showDrawer()
     fun syncStateDrawer()
     fun onSearchScreenRequested()
-    fun initSearch()
+
     fun showConfirmExit()
     fun onAbout()
     fun onSettings()
@@ -145,16 +156,18 @@ interface IBackListener {
     fun onBackPressed(f: (() -> Unit)?)
 }
 
-interface ICallbackErrorView {
+interface ICallbackDataEmpty {
+    fun isDataEmpty(): Boolean = false
+}
+
+interface ICallbackErrorView : ICallbackDataEmpty {
     val errorView: ErrorView?
     val subTitle: Int?
     fun initErrorView(errorView: ErrorView?, subTitle: Int?)
     fun showErrorView(show: Boolean, f: (() -> Unit)? = null): Boolean
     //    fun showErrorView(show: Boolean, status_code: Int)
     fun onErrorViewDemand(errorView: ErrorView?)
-
     fun onErrorViewRetry(errorView: ErrorView?, f: () -> Unit)
-    fun isDataEmpty(): Boolean = false
     fun loadInterrupted()
 }
 

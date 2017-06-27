@@ -7,10 +7,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.TextView
+import android.view.inputmethod.EditorInfo
+import android.widget.*
+import com.jakewharton.rxbinding2.widget.RxTextView
+import com.joanzapata.iconify.widget.IconTextView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_favorites.*
+import kotlinx.android.synthetic.main.layout_input_text.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaFavoriteRealm
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
@@ -19,11 +23,10 @@ import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.manga.AdapterTracker
 import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.rv.MangasRealmRvAdapter
-import net.mfilm.utils.IndexTags
-import net.mfilm.utils.filtersFavorites
-import net.mfilm.utils.handler
-import net.mfilm.utils.show
+import net.mfilm.utils.*
+import org.angmarch.views.NiceSpinner
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -36,6 +39,17 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             return fragment
         }
     }
+
+    override val spnFilter: NiceSpinner
+        get() = spn_filter
+    override val mLayoutInputText: LinearLayout
+        get() = layout_input_text
+    override val edtSearch: EditText
+        get() = edt_search
+    override val imgClear: IconTextView
+        get() = img_clear
+    override val btnDone: Button
+        get() = btn_done
 
     override val optionsMenuId: Int
         get() = R.menu.favorites
@@ -79,12 +93,59 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     }
 
     override fun initViews() {
+        initSearch()
         initSpnFilters()
         initEmptyDataView()
         initRv()
         requestFavorites()
     }
 
+    private var searchTime = -1L
+    override fun initSearch() {
+        edtSearch.setOnEditorActionListener { _, i, _ ->
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+                submitSearch()
+                //searchTime to avoid conflict between searching and searching suggestion
+                searchTime = System.currentTimeMillis()
+                Timber.e("time -------------- " + searchTime)
+            }
+            false
+        }
+        RxTextView.afterTextChangeEvents(edtSearch)
+                .debounce(1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { tvChangeEvent ->
+                    var ok = true
+                    if (searchTime != -1L) {
+                        val currentTime = System.currentTimeMillis()
+                        val l = currentTime - searchTime
+                        Timber.e(currentTime.toString() + " -------------  " + searchTime + " === " + l)
+                        if (l <= AUTO_LOAD_DURATION) {
+                            ok = false
+                        }
+                    }
+                    Timber.e("ok----------------- " + ok)
+                    if (ok) {
+                        val s = tvChangeEvent.view().text.toString()
+                        val text = s.trim { it <= ' ' }
+                        var clearShowed = true
+                        if (text.isNotEmpty()) {
+                            submitSearchSuggestion(text)
+                        } else {
+                            clearShowed = false
+                        }
+                        imgClear.show(clearShowed)
+                    }
+                }
+        imgClear.setOnClickListener {
+            edtSearch.text = null
+            restoreFullData()
+        }
+    }
+
+    fun restoreFullData() {
+
+    }
     override fun initEmptyDataView() {
         emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
     }
@@ -117,20 +178,48 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun onReceiveOptionsMenuItem(item: MenuItem) {
         Timber.e("-----onReceiveOptionsMenuItem-----$isVisible---- ${item.title}--------------------------------------------")
-        if (!isVisible) return
+        if (!isVisible || isDataEmpty()) return
         when (item.itemId) {
             R.id.action_favorites_search -> {
-
+                mLayoutInputText.show(true)
+                edtSearch.requestFocus()
+                spnFilter.show(false)
+                toggleEdit(false)
             }
             R.id.action_favorites_sort -> {
-
+                mLayoutInputText.show(false)
+                spnFilter.show(true)
+                toggleEdit(false)
             }
             R.id.action_favorites_edit -> {
-
+                mLayoutInputText.show(false)
+                spnFilter.show(false)
+                toggleEdit(true)
             }
         }
     }
 
+    override fun submitSearch() {
+        val query = edtSearch.text.toString().trim()
+        if (query.isEmpty()) return
+//        mFavoritesPresenter.search
+        hideKeyboard()
+    }
+
+    override fun submitSearchSuggestion(query: String) {
+
+    }
+
+    fun search(query: String) {
+        mMangasRvAdapter?.apply {
+            val x = mData?.filter { it.name!!.contains(query) }
+            xx
+        }
+    }
+
+    override fun toggleEdit(edit: Boolean) {
+
+    }
     override fun requestFavorites() {
         mFavoritesPresenter.requestFavorites()
     }
@@ -170,6 +259,12 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
+    override fun isDataEmpty(): Boolean {
+        mMangasRvAdapter?.apply {
+            return itemCount == 0
+        }
+        return true
+    }
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         if (event != TYPE_ITEM) return

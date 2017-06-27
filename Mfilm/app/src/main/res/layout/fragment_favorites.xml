@@ -3,9 +3,19 @@
     style="@style/default_background">
 
     <LinearLayout
-        style="@style/Layout_match"
+        style="@style/LinearLayout_center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include layout="@layout/layout_input_text" />
+
+        <Button
+            android:id="@+id/btn_done"
+            style="@style/PrimaryFlatButton"
+            android:text="@string/done_button"
+            android:theme="@style/PrimaryFlatButton"
+            android:visibility="gone" />
         <org.angmarch.views.NiceSpinner
             android:id="@+id/spn_filter"
             style="@style/Layout_match_wrap"

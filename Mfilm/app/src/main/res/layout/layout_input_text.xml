@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_input_text"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginRight="@dimen/dimen10"
-    android:layout_toLeftOf="@+id/layout_btns"
-    android:layout_toRightOf="@+id/toolbar_title"
+    style="@style/Layout_match_wrap"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:visibility="gone">
@@ -19,8 +15,10 @@
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:maxLines="1"
-        android:minHeight="48dp"
-        android:text=""
+        android:minHeight="@dimen/dimen48"
+        android:paddingLeft="@dimen/dimen5"
+        android:textColor="@color/white"
+        android:textColorHint="@color/grey_40"
         android:textSize="15sp" />
 
     <com.joanzapata.iconify.widget.IconTextView
