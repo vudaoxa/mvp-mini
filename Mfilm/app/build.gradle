@@ -107,8 +107,6 @@ android {
 kapt {
     generateStubs = true
 }
-dependencies {
-}
 tasks.whenTaskAdded { task ->
     if (task.name.equals("lint")) {
         task.enabled = false
