@@ -22,6 +22,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
+import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -57,6 +58,13 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     var mMenu: Menu? = null
     var mToggle: ActionBarDrawerToggle? = null
     private var searchTime = -1L
+    private var mOptionsMenuId = -1
+    override var optionsMenu: Int
+        get() = mOptionsMenuId
+        set(value) {
+            mOptionsMenuId = value
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -158,16 +166,24 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
                 setToolbarTitle(f.title)
                 Timber.e("---------mLayoutBtnsInfo.show($info)-------------")
                 mLayoutBtnsInfo.show(info)
-                mBtnSearch.show(home)
-                showOptionsMenu(home)
+                setScrollToolbarFlag(info)
+                mBtnSearch.show(searchable)
+                showOptionsMenu(optionsMenuId)
                 if (back) {
                     showBtnBack()
                 } else {
                     showDrawer()
                 }
-                onSearch(search)
+                onSearch(searching)
                 supportActionBar?.show()
             }
+        }
+    }
+
+    override fun setScrollToolbarFlag(info: Boolean) {
+        val params = mToolbar.layoutParams as (AppBarLayout.LayoutParams)
+        params.scrollFlags = if (info) 0 else {
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
         }
     }
 
@@ -188,12 +204,16 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        Timber.e("---------onOptionsItemSelected--------${item.itemId}--------------------")
         when (item.itemId) {
             actionSettingsId -> {
                 onSettings()
             }
             actionAboutId -> {
                 onAbout()
+            }
+            else -> {
+                sendOptionsMenuItem(item)
             }
         }
         return true
@@ -216,10 +236,27 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         mToolbar.navigationIcon = null
     }
 
+//    override fun showOptionsMenu(show: Boolean) {
+//        mMenu?.apply {
+//            findItem(actionSettingsId).isVisible = show
+//            findItem(actionAboutId).isVisible = show
+//        }
+//    }
+
     override fun showOptionsMenu(show: Boolean) {
         mMenu?.apply {
-            findItem(actionSettingsId).isVisible = show
-            findItem(actionAboutId).isVisible = show
+            if (!show) {
+                clear()
+            }
+        }
+    }
+
+    override fun showOptionsMenu(optionsMenuId: Int) {
+        optionsMenu = optionsMenuId
+        if (optionsMenu != -1)
+            invalidateOptionsMenu()
+        else {
+            showOptionsMenu(false)
         }
     }
 
@@ -234,7 +271,8 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(optionsMenuId, menu)
+        Timber.e("----onCreateOptionsMenu----------------------------")
+        menuInflater.inflate(optionsMenu, menu)
         mMenu = menu
         return true
     }
@@ -262,7 +300,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         edtSearch.setOnEditorActionListener { _, i, _ ->
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 submitSearch()
-                //searchTime to avoid conflict between search and search suggestion
+                //searchTime to avoid conflict between searching and searching suggestion
                 searchTime = System.currentTimeMillis()
                 Timber.e("time -------------- " + searchTime)
             }
@@ -303,6 +341,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         edtSearch.setText(searchQueryRealm.query)
 //        sendHit(CATEGORY_ACTION, ACTION_CLICK_SEARCH_HISTORY_ITEM)
     }
+
     override fun submitSearchSuggestion(query: String) {
         Timber.e("submitSearchSuggestion--------------------------------" + query)
         //send to MainSearchFragment
@@ -323,7 +362,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         if (mLayoutInputText.isVisible()) {
             mCallbackSearchView?.onBackPressed {
                 onSearch(false)
-                //pop fragment search
+                //pop fragment searching
                 super.onBackPressed()
             }
         } else {

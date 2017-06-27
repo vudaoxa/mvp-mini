@@ -1,10 +1,12 @@
 package net.mfilm.ui.history
 
+import android.view.MenuItem
 import io.reactivex.disposables.CompositeDisposable
 import io.realm.RealmResults
 import net.mfilm.data.DataManager
 import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.ui.base.realm.BaseRealmPresenter
+import net.mfilm.utils.IBus
 import net.mfilm.utils.MRealmDisposableObserver
 import javax.inject.Inject
 
@@ -12,8 +14,21 @@ import javax.inject.Inject
  * Created by tusi on 6/25/17.
  */
 class HistoryPresenter<V : HistoryMvpView> @Inject
-constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) :
+constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BaseRealmPresenter<V>(dataManager, compositeDisposable), HistoryMvpPresenter<V> {
+    override fun onAttach(mvpView: V) {
+        super.onAttach(mvpView)
+        initIBus()
+    }
+
+    override fun initIBus() {
+        val flowable = iBus.asFlowable().filter { it is MenuItem }
+        val favEventEmitter = flowable.publish()
+        compositeDisposable.apply {
+            add(favEventEmitter.subscribe { mvpView?.onReceiveOptionsMenuItem((it as MenuItem)) })
+            add(favEventEmitter.connect())
+        }
+    }
     override fun requestHistory() {
         mvpView?.showLoading() ?: return
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<MangaHistoryRealm>>({ mvpView?.onFailure() }) {

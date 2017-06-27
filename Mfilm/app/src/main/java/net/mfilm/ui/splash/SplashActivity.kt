@@ -31,6 +31,7 @@ import javax.inject.Inject
  */
 
 class SplashActivity : BaseActivity(), SplashMvpView {
+
     override fun onNoInternetConnections() {
     }
 

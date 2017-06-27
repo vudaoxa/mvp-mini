@@ -16,6 +16,7 @@
 package net.mfilm.ui.main
 
 
+import android.view.MenuItem
 import io.reactivex.disposables.CompositeDisposable
 import net.mfilm.data.DataManager
 import net.mfilm.ui.base.BasePresenter
@@ -39,6 +40,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
     }
 
     override fun initIBus() {
+        //flowable to receive favorite response from mangaInfoPresenter to up date mvpView
         val flowable = iBus.asFlowable().filter { it is Favorite }
         val favEventEmitter = flowable.publish()
         compositeDisposable.apply {
@@ -47,6 +49,9 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
         }
     }
 
+    override fun sendOptionsMenuItem(item: MenuItem) {
+        iBus.send(item)
+    }
     override fun onFollow() {
         iBus.send(TapEvent)
     }
@@ -68,9 +73,8 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
     }
 
     override fun onNavMenuCreated() {
-        if (!isViewAttached) {
-            return
+        mvpView?.apply {
+            updateAppVersion()
         }
-        mvpView!!.updateAppVersion()
     }
 }

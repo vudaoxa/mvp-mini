@@ -3,14 +3,16 @@ package net.mfilm.ui.favorites
 import net.mfilm.data.db.models.MangaFavoriteRealm
 import net.mfilm.ui.base.MvpView
 import net.mfilm.ui.manga.AdapterTracker
-import net.mfilm.utils.ICallbackEmptyDataView
+import net.mfilm.utils.ICallbackEmptyDataViewHolder
 import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.ICallbackReceiveOptionsMenu
 import net.mfilm.utils.ICallbackSpanCount
 
 /**
  * Created by MRVU on 6/20/2017.
  */
-interface FavoritesMvpView : MvpView, ICallbackOnClick, ICallbackSpanCount, ICallbackEmptyDataView {
+interface FavoritesMvpView : MvpView, ICallbackOnClick,
+        ICallbackSpanCount, ICallbackEmptyDataViewHolder, ICallbackReceiveOptionsMenu {
     val spnFilterTracker: AdapterTracker
     fun initRv()
     fun initSpnFilters()

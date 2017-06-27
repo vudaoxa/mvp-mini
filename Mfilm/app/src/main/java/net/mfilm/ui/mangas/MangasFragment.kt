@@ -25,6 +25,7 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.manga.AdapterTracker
+import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.rv.MangasRealmRvAdapter
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
@@ -73,8 +74,14 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override val emptyDesResId: Int
         get() {
             category?.apply { return R.string.empty_data_category }
-            if (search) return R.string.empty_data_search
+            if (searching) return R.string.empty_data_search
             return R.string.empty_data_
+        }
+    private var mEmptyDataView: EmptyDataView? = null
+    override var emptyDataView: EmptyDataView?
+        get() = mEmptyDataView
+        set(value) {
+            mEmptyDataView = value
         }
     override val swipeContainer: SwipeRefreshLayout?
         get() = swipe
@@ -137,24 +144,28 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         activityComponent.inject(this)
         mMangasPresenter.onAttach(this)
         mSearchHistoryPresenter.onAttach(this)
-        search = arguments.getBoolean(KEY_SEARCH)
+        searching = arguments.getBoolean(KEY_SEARCH)
         category = arguments.getSerializable(KEY_CATEGORY) as? Category?
-        back = search || category != null
+        back = searching || category != null
         title = category?.name
     }
 
     override fun initViews() {
         super.initViews()
         initSpnFilters()
+        initEmptyDataView()
         initRv()
         initSwipe()
-        if (search) {
+        if (searching) {
             requestSearchHistory()
         } else {
             requestMangas()
         }
     }
 
+    override fun initEmptyDataView() {
+        emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
+    }
     override fun isDataEmpty(): Boolean {
         mMangasRvAdapter?.apply {
             return itemCount == 0
@@ -237,7 +248,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         layout_mangas.show(false)
         errorView?.show(false)
         errorViewLoadMore?.show(false)
-        showEmptyDataView(false)
+        emptyDataView?.showEmptyDataView(false)
         rv_search_history.show(true)
 
     }
@@ -285,7 +296,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         Timber.e("---------------buildMangas---------------${mangas.size}")
         page++
         spn_filter.show(true)
-        showEmptyDataView(false)
+        emptyDataView?.showEmptyDataView(false)
         mMangasRvAdapter?.apply {
             onAdapterLoadMoreFinished {
                 setRefreshed(false, { mMangasRvAdapter?.reset() })
@@ -306,15 +317,17 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun adapterEmpty(empty: Boolean) {
         super.adapterEmpty(empty)
         if (empty) {
-            hideSomething()
-            showEmptyDataView(true)
+            emptyDataView?.apply {
+                hideSomething()
+                showEmptyDataView(true)
+            }
         }
     }
 
     override fun loadInterrupted() {
         super.loadInterrupted()
         mMangasRvAdapter?.onAdapterLoadMoreFinished()
-        hideSomething()
+        emptyDataView?.hideSomething()
     }
 
     override fun onClick(position: Int, event: Int) {
@@ -342,16 +355,5 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         rv_search_history.show(false)
         reset { mMangasRvAdapter?.reset(true) }
         requestMangas()
-    }
-
-    override fun hideSomething() {
-        spn_filter.show(false)
-//        showEmptyDataView(true)
-    }
-
-    override fun showEmptyDataView(show: Boolean) {
-        layoutEmptyData?.show(show)
-        if (show)
-            tvDesEmptyData?.text = getText(emptyDesResId)
     }
 }

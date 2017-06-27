@@ -1,7 +1,12 @@
 package net.mfilm.ui.manga
 
+import android.content.Context
 import android.view.View
 import android.widget.AdapterView
+import android.widget.TextView
+import net.mfilm.utils.ICallbackEmptyDataView
+import net.mfilm.utils.show
+import org.angmarch.views.NiceSpinner
 import timber.log.Timber
 
 /**
@@ -21,5 +26,19 @@ class AdapterTracker(val f: (() -> Unit)? = null) : AdapterView.OnItemSelectedLi
         mPosition = position
         Timber.e("-------------onItemSelected--- $mPosition ------------------------")
         f?.invoke()
+    }
+}
+
+class EmptyDataView(val context: Context, val spnFilter: NiceSpinner?, val layoutEmptyData: View?,
+                    val tvDesEmptyData: TextView?, val emptyDesResId: Int)
+    : ICallbackEmptyDataView {
+    override fun hideSomething() {
+        spnFilter.show(false)
+    }
+
+    override fun showEmptyDataView(show: Boolean) {
+        layoutEmptyData?.show(show)
+        if (show)
+            tvDesEmptyData?.text = context.getText(emptyDesResId)
     }
 }

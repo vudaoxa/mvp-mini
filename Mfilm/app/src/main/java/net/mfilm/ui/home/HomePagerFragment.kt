@@ -23,7 +23,9 @@ class HomePagerFragment : BaseStackFragment() {
         }
     }
 
-    internal var prevMenuItem: MenuItem? = null
+    override val optionsMenuId: Int
+        get() = R.menu.main
+
     override fun initViews() {
         viewpager.apply {
             adapter = HomePagerAdapter(fragmentManager, SIZE_TABS)
@@ -42,6 +44,7 @@ class HomePagerFragment : BaseStackFragment() {
     }
 
     val mPageChangedListener = object : ViewPager.OnPageChangeListener {
+        private var prevMenuItem: MenuItem? = null
         override fun onPageScrollStateChanged(state: Int) {
 
         }
@@ -66,6 +69,7 @@ class HomePagerFragment : BaseStackFragment() {
 
     override fun initFields() {
         home = true
+        searchable = true
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -16,6 +16,7 @@
 package net.mfilm.ui.main
 
 
+import android.view.MenuItem
 import net.mfilm.di.PerActivity
 import net.mfilm.ui.base.MvpPresenter
 import net.mfilm.utils.ICallbackBus
@@ -32,4 +33,5 @@ interface MainMvpPresenter<V : MainMvpView> : MvpPresenter<V>, ICallbackBus {
     fun onCardExhausted()
     fun onNavMenuCreated()
     fun onFollow()
+    fun sendOptionsMenuItem(item: MenuItem)
 }

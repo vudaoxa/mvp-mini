@@ -10,6 +10,7 @@ import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.ui.base.rv.holders.BaseViewHolder
 import net.mfilm.utils.ICallbackOnClick
+import timber.log.Timber
 
 /**
  * Created by tusi on 5/16/17.
@@ -23,6 +24,10 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View, mCa
                     obj.coverUrl?.apply { img_thumb.setImageURI(this) }
                     tv_name.text = obj.name
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
+                    setOnLongClickListener {
+                        Timber.e("-------------onLongClick-------$position----------")
+                        true
+                    }
                 }
             }
             is MangaHistoryRealm -> {
@@ -30,6 +35,10 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View, mCa
                     obj.coverUrl?.apply { img_thumb.setImageURI(this) }
                     tv_name.text = obj.name
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
+                    setOnLongClickListener {
+                        Timber.e("-------------onLongClick-------$position----------")
+                        true
+                    }
                 }
             }
             is SearchQueryRealm -> {

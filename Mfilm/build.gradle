@@ -29,7 +29,6 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-
 ext {
     // Sdk and tools
     minSdkVersion = 16

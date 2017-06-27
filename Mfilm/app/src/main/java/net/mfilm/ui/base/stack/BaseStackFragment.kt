@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment
 import android.view.View
 import net.mfilm.di.components.ActComponent
 import net.mfilm.ui.base.MvpView
+import net.mfilm.utils.ICallbackFragmentOptionMenu
 import net.mfilm.utils.anim
 import net.mfilm.utils.handler
 import net.mfilm.utils.isVisOk
@@ -32,10 +33,13 @@ import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
  * Created by janisharali on 27/01/17.
  */
 
-abstract class BaseStackFragment : BaseFragmentStack(), MvpView {
+abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragmentOptionMenu {
 
     var baseActivity: BaseStackActivity? = null
         private set
+
+    override val optionsMenuId: Int
+        get() = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

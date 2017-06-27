@@ -44,11 +44,8 @@ constructor(val dataManager: DataManager, val compositeDisposable: CompositeDisp
         mvpView = null
     }
 
-    val isViewAttached: Boolean
-        get() = mvpView != null
-
     fun checkViewAttached() {
-        if (!isViewAttached) throw MvpViewNotAttachedException()
+        mvpView ?: throw MvpViewNotAttachedException()
     }
 
     override fun setUserAsLoggedOut() {

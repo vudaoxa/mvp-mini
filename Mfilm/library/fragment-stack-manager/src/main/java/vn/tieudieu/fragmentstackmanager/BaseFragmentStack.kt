@@ -11,8 +11,10 @@ abstract class BaseFragmentStack : BaseFragment() {
     var back = false
     var fullScreen = false
     var home = false
-    var search = false
+    var searching = false
+    var searchable = false
     var info = false
+
     protected var screenManager: ScreenManager? = null
         private set
 

@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -16,6 +17,7 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.manga.AdapterTracker
+import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.rv.MangasRealmRvAdapter
 import net.mfilm.utils.IndexTags
 import net.mfilm.utils.filtersFavorites
@@ -35,6 +37,8 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
+    override val optionsMenuId: Int
+        get() = R.menu.favorites
     override val layoutEmptyData: View?
         get() = layout_empty_data
     override val tvDesEmptyData: TextView?
@@ -42,6 +46,12 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override val emptyDesResId: Int
         get() {
             return R.string.empty_data_favorite
+        }
+    private var mEmptyDataView: EmptyDataView? = null
+    override var emptyDataView: EmptyDataView?
+        get() = mEmptyDataView
+        set(value) {
+            mEmptyDataView = value
         }
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
@@ -62,6 +72,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         mFavoritesPresenter.onDetach()
     }
     override fun initFields() {
+        searchable = true
         activityComponent.inject(this)
         mFavoritesPresenter.onAttach(this)
         title = getString(R.string.favorites)
@@ -69,10 +80,14 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun initViews() {
         initSpnFilters()
+        initEmptyDataView()
         initRv()
         requestFavorites()
     }
 
+    override fun initEmptyDataView() {
+        emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
+    }
     override fun initSpnFilters() {
         val banksAdapter = ArrayAdapter(activity,
                 R.layout.item_spn_filter, filtersFavorites.map { getString(it.resId) })
@@ -100,6 +115,22 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         })
     }
 
+    override fun onReceiveOptionsMenuItem(item: MenuItem) {
+        Timber.e("-----onReceiveOptionsMenuItem-----$isVisible---- ${item.title}--------------------------------------------")
+        if (!isVisible) return
+        when (item.itemId) {
+            R.id.action_favorites_search -> {
+
+            }
+            R.id.action_favorites_sort -> {
+
+            }
+            R.id.action_favorites_edit -> {
+
+            }
+        }
+    }
+
     override fun requestFavorites() {
         mFavoritesPresenter.requestFavorites()
     }
@@ -118,15 +149,17 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
         mMangasRvAdapter?.clear()
-        hideSomething()
-        showEmptyDataView(true)
+        emptyDataView?.apply {
+            hideSomething()
+            showEmptyDataView(true)
+        }
     }
 
     override fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
         Timber.e("---------------buildFavorites---------------${mangaFavoriteRealms.size}")
         context ?: return
         spn_filter.show(true)
-        showEmptyDataView(false)
+        emptyDataView?.showEmptyDataView(false)
         mMangasRvAdapter?.apply {
             clear()
             mData?.addAll(mangaFavoriteRealms)
@@ -144,15 +177,4 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
         }
     }
-
-    override fun hideSomething() {
-        spn_filter.show(false)
-    }
-
-    override fun showEmptyDataView(show: Boolean) {
-        layoutEmptyData?.show(show)
-        if (show)
-            tvDesEmptyData?.text = getText(emptyDesResId)
-    }
-
 }

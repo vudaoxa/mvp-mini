@@ -43,7 +43,8 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
     }
 
     override fun initIBus() {
-        if (!isViewAttached) return
+        mvpView ?: return
+        //flowable to receive TapEvent from MainPresenter
         val flowable = iBus.asFlowable().filter { it is TapEvent }
         val tapEventEmitter = flowable.publish()
         val tapCountConsumer = tapEventEmitter.publish { it.buffer(it.debounce(1, TimeUnit.SECONDS)) }

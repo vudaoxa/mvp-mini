@@ -4,6 +4,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
@@ -13,6 +14,7 @@ import com.joanzapata.iconify.widget.IconTextView
 import io.reactivex.Flowable
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
+import net.mfilm.ui.manga.EmptyDataView
 import tr.xip.errorview.ErrorView
 
 /**
@@ -63,7 +65,7 @@ interface ICallbackRefresh {
     val swipeContainer: SwipeRefreshLayout?
 }
 
-interface ICallbackSearchView : IBackListener, ICallbackEmptyDataView {
+interface ICallbackSearchView : IBackListener, ICallbackEmptyDataViewHolder {
     fun onSearch(query: String)
     fun showSearchHistory()
     var query: String?
@@ -71,22 +73,41 @@ interface ICallbackSearchView : IBackListener, ICallbackEmptyDataView {
 
 }
 
-interface ICallbackEmptyDataView {
+interface ICallbackEmptyDataViewHolder {
     val layoutEmptyData: View?
     val tvDesEmptyData: TextView?
     val emptyDesResId: Int
+    fun initEmptyDataView()
+    var emptyDataView: EmptyDataView?
+}
+
+interface ICallbackEmptyDataView {
     fun hideSomething()
     fun showEmptyDataView(show: Boolean)
-//    fun initEmptyDataView()
 }
+
 interface ICallbackSearch {
     fun onSearchHistoryClicked(searchQueryRealm: SearchQueryRealm)
     fun submitSearchSuggestion(query: String)
     fun submitSearch()
     val mCallbackSearchView: ICallbackSearchView?
 }
-interface ICallbackToolbar : ICallbackSearch {
+
+interface ICallbackFragmentOptionMenu {
     val optionsMenuId: Int
+}
+
+interface ICallbackReceiveOptionsMenu {
+    fun onReceiveOptionsMenuItem(item: MenuItem)
+}
+
+interface ICallbackOptionMenu {
+    fun showOptionsMenu(show: Boolean)
+    fun showOptionsMenu(optionsMenuId: Int)
+}
+
+interface ICallbackToolbar : ICallbackSearch, ICallbackOptionMenu {
+    var optionsMenu: Int
     val actionSettingsId: Int
     val actionAboutId: Int
     val mToolbarTitle: TextView
@@ -101,26 +122,23 @@ interface ICallbackToolbar : ICallbackSearch {
     val mLayoutInputText: LinearLayout
     val edtSearch: EditText
     val imgClear: IconTextView
+    fun setScrollToolbarFlag(info: Boolean)
     fun setToolbarTitle(title: String?)
     fun showBtnBack(visi: Boolean)
     fun showBtnBack()
     fun hideDrawerToggle()
-    fun showOptionsMenu(show: Boolean)
+
     fun showDrawer()
     fun syncStateDrawer()
     fun onSearchScreenRequested()
-    //    var mMenu: Menu?
-//    var mToggle: ActionBarDrawerToggle?
     fun initSearch()
     fun showConfirmExit()
-
     fun onAbout()
     fun onSettings()
-    //    fun onSearch(search: Boolean, back: Boolean=false)
     fun onSearch(search: Boolean)
     fun onShare()
     fun onFollow()
-
+    fun sendOptionsMenuItem(item: MenuItem)
 }
 
 interface IBackListener {
@@ -150,5 +168,6 @@ interface IBus {
 }
 
 interface ICallbackBus {
+    //ibus to receive signal
     fun initIBus()
 }

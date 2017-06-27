@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -16,6 +17,7 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.manga.AdapterTracker
+import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.rv.MangasRealmRvAdapter
 import net.mfilm.utils.IndexTags
 import net.mfilm.utils.filtersFavorites
@@ -35,6 +37,8 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
         }
     }
 
+    override val optionsMenuId: Int
+        get() = R.menu.history
     override val layoutEmptyData: View?
         get() = layout_empty_data
     override val tvDesEmptyData: TextView?
@@ -42,6 +46,12 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
     override val emptyDesResId: Int
         get() {
             return R.string.empty_data_history
+        }
+    private var mEmptyDataView: EmptyDataView? = null
+    override var emptyDataView: EmptyDataView?
+        get() = mEmptyDataView
+        set(value) {
+            mEmptyDataView = value
         }
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
@@ -62,6 +72,7 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
     }
 
     override fun initFields() {
+        searchable = true
         activityComponent.inject(this)
         mHistoryPresenter.onAttach(this)
         title = getString(R.string.history)
@@ -69,10 +80,14 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
 
     override fun initViews() {
         initSpnFilters()
+        initEmptyDataView()
         initRv()
         requestHistory()
     }
 
+    override fun initEmptyDataView() {
+        emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
+    }
     override fun initSpnFilters() {
         val banksAdapter = ArrayAdapter(activity,
                 R.layout.item_spn_filter, filtersFavorites.map { getString(it.resId) })
@@ -87,6 +102,22 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
             mMangasRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
             layoutManager = mMangasRvLayoutManagerWrapper
+        }
+    }
+
+    override fun onReceiveOptionsMenuItem(item: MenuItem) {
+        Timber.e("-----onReceiveOptionsMenuItem-----$isVisible---- ${item.title}--------------------------------------------")
+        if (!isVisible) return
+        when (item.itemId) {
+            R.id.action_history_search -> {
+
+            }
+            R.id.action_history_sort -> {
+
+            }
+            R.id.action_history_edit -> {
+
+            }
         }
     }
 
@@ -118,8 +149,10 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
     override fun onHistoryNull() {
         Timber.e("----------------onHistoryNull------------------")
         mMangasRvAdapter?.clear()
-        hideSomething()
-        showEmptyDataView(true)
+        emptyDataView?.apply {
+            hideSomething()
+            showEmptyDataView(true)
+        }
     }
 
     override fun buildHistory(mangaHistoryRealms: List<MangaHistoryRealm>) {
@@ -142,15 +175,5 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
         mMangasRvAdapter?.mData?.apply {
             screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
         }
-    }
-
-    override fun hideSomething() {
-        spn_filter.show(false)
-    }
-
-    override fun showEmptyDataView(show: Boolean) {
-        layoutEmptyData?.show(show)
-        if (show)
-            tvDesEmptyData?.text = getText(emptyDesResId)
     }
 }

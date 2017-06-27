@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/tv_des"
-        style="@style/TextStyle.Sans.Regular.14"
+        style="@style/TextStyle.Sans.Regular.16"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

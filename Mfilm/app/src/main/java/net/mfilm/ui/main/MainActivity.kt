@@ -67,8 +67,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         get() = R.id.action_settings
     override val actionAboutId: Int
         get() = R.id.action_about
-    override val optionsMenuId: Int
-        get() = R.menu.main
     override val resLayout: Int
         get() = R.layout.activity_main
 
@@ -86,6 +84,9 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    override fun sendOptionsMenuItem(item: MenuItem) {
+        mMainPresenter.sendOptionsMenuItem(item)
+    }
     override fun onSettings() {
         Timber.e("---------------onSettings-----------")
     }
@@ -132,7 +133,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
             IndexTags.FRAGMENT_HOME -> {
                 onMainScreenRequested()
             }
-        //search, category
+        //searching, category
             IndexTags.FRAGMENT_SEARCH -> {
                 fragmentStackManager.swapFragment(MangasFragment.newInstance(null, true))
             }

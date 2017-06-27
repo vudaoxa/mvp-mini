@@ -116,3 +116,5 @@ class Favorite(val fav: Boolean?) {
         return fav?.toString() ?: "null"
     }
 }
+
+//class OptionMenuItem(val itemId: Int)
