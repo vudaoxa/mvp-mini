@@ -362,7 +362,8 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                 mMangasRvAdapter.let { ad ->
                     ad?.apply {
                         mData?.apply {
-
+                            ad.itemsSelectable = true
+                            ad.notifyDataSetChanged()
                         }
                     }
                 }

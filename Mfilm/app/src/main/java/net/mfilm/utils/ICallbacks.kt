@@ -25,10 +25,12 @@ interface IRV {
 }
 
 interface IRvSelectable<V : Any?> {
+    var itemsSelectable: Boolean
     fun addSelectableItem(item: SelectableItem)
     fun add(item: V)
     fun addAll(items: List<V>)
     fun addSelectableItems(size: Int)
+    fun removeSelectableItems(indices: List<Int>)
 }
 interface ICallbackOnClick {
     fun onClick(position: Int, event: Int)

@@ -5,14 +5,14 @@ import android.view.View
 import kotlinx.android.synthetic.main.item_manga.view.*
 import kotlinx.android.synthetic.main.layout_manga_thumb.view.*
 import net.mfilm.data.network_retrofit.Manga
-import net.mfilm.ui.base.rv.holders.BaseViewHolder
+import net.mfilm.ui.base.rv.holders.BaseItemViewHolder
 import net.mfilm.utils.ICallbackOnClick
 
 /**
  * Created by tusi on 5/16/17.
  */
 class MangaItemViewHolder(mContext: Context, type: Int, itemView: View, mCallbackOnclick: ICallbackOnClick?)
-    : BaseViewHolder(mContext, type, itemView, mCallbackOnclick) {
+    : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick) {
     override fun bindView(obj: Any?, position: Int) {
         if (obj is Manga) {
             obj.apply {

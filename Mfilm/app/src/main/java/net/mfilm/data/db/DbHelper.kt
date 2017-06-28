@@ -14,6 +14,7 @@ import net.mfilm.data.db.models.SearchQueryRealm
 interface DbHelper {
     fun loadSearchHistory(observer: DisposableObserver<RealmResults<SearchQueryRealm>>? = null): Disposable
     fun loadFavorites(observer: DisposableObserver<RealmResults<MangaFavoriteRealm>>? = null): Disposable
+
     fun loadHistory(observer: DisposableObserver<RealmResults<MangaHistoryRealm>>? = null): Disposable
     fun isFavorite(id: Int): MangaFavoriteRealm?
 //    fun isHistory(id: Int): MangaHistoryRealm?

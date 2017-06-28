@@ -46,4 +46,12 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
         compositeDisposable.add(disposable)
         compositeDisposable.add(mRealmDisposableObserver)
     }
+
+    //with condition non-empty list, all have same fav value
+    override fun toggleFav(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
+        mangaFavoriteRealms.apply {
+            val newMangaFavoriteRealms = map { MangaFavoriteRealm(it.id, it.name, it.coverUrl, System.currentTimeMillis(), !it.fav) }
+            dataManager.saveObjects(newMangaFavoriteRealms)
+        }
+    }
 }

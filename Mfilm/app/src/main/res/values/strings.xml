@@ -19,6 +19,7 @@
     <string name="ion_musical_note">{ion-ios-musical-note}</string>
     <string name="fa_history">{fa-history}</string>
     <string name="ion_happy">{ion-happy-outline}</string>
+    <string name="ion_checkmark">{ion-checkmark-circled}</string>
     <string name="home">Home</string>
     <string name="categories">Categories</string>
     <string name="favorites">Favorites</string>

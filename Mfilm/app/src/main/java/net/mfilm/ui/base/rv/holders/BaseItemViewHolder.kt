@@ -9,11 +9,10 @@ import net.mfilm.utils.ICallbackOnLongClick
 /**
  * Created by tusi on 4/5/17.
  */
-abstract class BaseViewHolder(protected val mContext: Context, val type: Int = -1,
-                              itemView: View) : RecyclerView.ViewHolder(itemView) {
+abstract class BaseItemViewHolder(protected val mContext: Context, val type: Int = -1,
+                                  itemView: View) : RecyclerView.ViewHolder(itemView) {
     var mCallbackOnClick: ICallbackOnClick? = null
     var mCallbackOnLongClick: ICallbackOnLongClick? = null
-    var selectable = false
     constructor(mContext: Context, type: Int, itemView: View, mCallbackOnClick: ICallbackOnClick?)
             : this(mContext, type, itemView) {
         this.mCallbackOnClick = mCallbackOnClick
