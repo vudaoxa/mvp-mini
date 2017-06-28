@@ -18,11 +18,13 @@ import kotlinx.android.synthetic.main.layout_input_text.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaFavoriteRealm
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM_FILTER
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.manga.AdapterTracker
 import net.mfilm.ui.manga.EmptyDataView
-import net.mfilm.ui.manga.rv.MangasRealmRvAdapter
+import net.mfilm.ui.manga.Filter
+import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.utils.*
 import org.angmarch.views.NiceSpinner
 import timber.log.Timber
@@ -40,6 +42,8 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
+    override val mFilters: List<Filter>
+        get() = filtersFavorites
     override val spnFilter: NiceSpinner
         get() = spn_filter
     override val mLayoutInputText: LinearLayout
@@ -70,13 +74,15 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
     override val spnFilterTracker = AdapterTracker({
-        Timber.e("--------------spnFilterTracker---------")
+        sort()
     })
 
     @Inject
     lateinit var mFavoritesPresenter: FavoritesMvpPresenter<FavoritesMvpView>
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
-    var mMangasRvAdapter: MangasRealmRvAdapter<MangaFavoriteRealm>? = null
+    lateinit var mMangasRvFilterLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
+    var mMangasRvAdapter: BaseRvRealmAdapter<MangaFavoriteRealm>? = null
+    var mMangasFilterRvAdapter: BaseRvRealmAdapter<MangaFavoriteRealm>? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_favorites, container, false)
     }
@@ -85,6 +91,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         super.onDestroy()
         mFavoritesPresenter.onDetach()
     }
+
     override fun initFields() {
         searchable = true
         activityComponent.inject(this)
@@ -133,25 +140,34 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                             submitSearchSuggestion(text)
                         } else {
                             clearShowed = false
+                            restoreOriginalData()
                         }
                         imgClear.show(clearShowed)
                     }
                 }
         imgClear.setOnClickListener {
             edtSearch.text = null
-            restoreFullData()
+            restoreOriginalData()
         }
     }
 
-    fun restoreFullData() {
-
+    override fun restoreOriginalData() {
+        if (isDataEmpty()) return
+        Timber.e("------------------restoreOriginalData--------------------------")
+        handler({
+            rv.show(true)
+            rv_filter.show(false)
+            showEmptyDataView(false)
+        })
     }
+
     override fun initEmptyDataView() {
         emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
     }
+
     override fun initSpnFilters() {
         val banksAdapter = ArrayAdapter(activity,
-                R.layout.item_spn_filter, filtersFavorites.map { getString(it.resId) })
+                R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
         spn_filter.apply {
             setAdapter(banksAdapter)
             setOnItemSelectedListener(spnFilterTracker)
@@ -164,6 +180,11 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                     StaggeredGridLayoutManager.VERTICAL)
             layoutManager = mMangasRvLayoutManagerWrapper
         }
+        rv_filter.apply {
+            mMangasRvFilterLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
+                    StaggeredGridLayoutManager.VERTICAL)
+            layoutManager = mMangasRvFilterLayoutManagerWrapper
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -171,6 +192,10 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         handler({
             rv.apply {
                 mMangasRvLayoutManagerWrapper.spanCount = spanCount
+                requestLayout()
+            }
+            rv_filter.apply {
+                mMangasRvFilterLayoutManagerWrapper.spanCount = spanCount
                 requestLayout()
             }
         })
@@ -189,6 +214,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             R.id.action_favorites_sort -> {
                 mLayoutInputText.show(false)
                 spnFilter.show(true)
+                sort()
                 toggleEdit(false)
             }
             R.id.action_favorites_edit -> {
@@ -202,24 +228,71 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override fun submitSearch() {
         val query = edtSearch.text.toString().trim()
         if (query.isEmpty()) return
-//        mFavoritesPresenter.search
+        search(query)
         hideKeyboard()
     }
 
     override fun submitSearchSuggestion(query: String) {
-
+        search(query)
     }
 
-    fun search(query: String) {
-        mMangasRvAdapter?.apply {
-            val x = mData?.filter { it.name!!.contains(query) }
-            xx
+    override fun search(query: String) {
+        val favoritesFilter = mMangasRvAdapter?.mData?.filter { it.name!!.contains(query, true) }
+        favoritesFilter.let { ff ->
+            ff?.apply {
+                if (ff.isNotEmpty()) {
+                    buildMangaFavoritesRealmFilter(ff)
+                } else onRealmFilterNull()
+            } ?: let { onRealmFilterNull() }
         }
     }
 
+    override fun buildMangaFavoritesRealmFilter(objs: List<MangaFavoriteRealm>) {
+        Timber.e("----------buildMangaFavoritesRealmFilter-------- ${objs.size}----------------------------")
+        mMangasFilterRvAdapter?.apply {
+            clear()
+            mData?.addAll(objs)
+            notifyDataSetChanged()
+        } ?: let {
+            mMangasFilterRvAdapter = BaseRvRealmAdapter(context, objs.toMutableList(), this@FavoritesFragment, this, true)
+            rv_filter.adapter = mMangasFilterRvAdapter
+        }
+        showEmptyDataView(false)
+        handler({
+            rv.show(false)
+            rv_filter.show(true)
+        })
+    }
+
+    override fun onRealmFilterNull() {
+        Timber.e("-------------onRealmFilterNull-----------------------------")
+        rv.show(false)
+        rv_filter.show(false)
+        showEmptyDataView(true)
+    }
+
+    override fun sort() {
+        Timber.e("------------sort---------------------------")
+        val filter = mFilters[spnFilterTracker.mPosition]
+        when (filter.content) {
+            TYPE_FILTER_AZ -> {
+                mMangasRvAdapter?.apply {
+                    mData?.sortBy { it.name }
+                    notifyDataSetChanged()
+                }
+            }
+            TYPE_FILTER_TIME -> {
+                mMangasRvAdapter?.apply {
+                    mData?.sortByDescending { it.time }
+                    notifyDataSetChanged()
+                }
+            }
+        }
+    }
     override fun toggleEdit(edit: Boolean) {
 
     }
+
     override fun requestFavorites() {
         mFavoritesPresenter.requestFavorites()
     }
@@ -238,23 +311,23 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
         mMangasRvAdapter?.clear()
-        emptyDataView?.apply {
-            hideSomething()
-            showEmptyDataView(true)
-        }
+        showEmptyDataView(true)
+    }
+
+    override fun showEmptyDataView(show: Boolean) {
+        emptyDataView?.showEmptyDataView(show)
     }
 
     override fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
-        Timber.e("---------------buildFavorites---------------${mangaFavoriteRealms.size}")
+        Timber.e("---------------buildFavorites--------$context-------${mangaFavoriteRealms.size}")
         context ?: return
-        spn_filter.show(true)
-        emptyDataView?.showEmptyDataView(false)
+        showEmptyDataView(false)
         mMangasRvAdapter?.apply {
             clear()
             mData?.addAll(mangaFavoriteRealms)
             notifyDataSetChanged()
         } ?: let {
-            mMangasRvAdapter = MangasRealmRvAdapter(context, mangaFavoriteRealms.toMutableList(), this)
+            mMangasRvAdapter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this)
             rv.adapter = mMangasRvAdapter
         }
     }
@@ -265,11 +338,38 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
         return true
     }
+
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
-        if (event != TYPE_ITEM) return
-        mMangasRvAdapter?.mData?.apply {
-            screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
+        when (event) {
+            TYPE_ITEM -> {
+                mMangasRvAdapter?.mData?.apply {
+                    screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
+                }
+            }
+            TYPE_ITEM_FILTER -> {
+                mMangasFilterRvAdapter?.mData?.apply {
+                    screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
+                }
+            }
+        }
+    }
+
+    override fun onLongClick(position: Int, event: Int) {
+        Timber.e("---------------------onLongClick--------------------$position")
+        when (event) {
+            TYPE_ITEM -> {
+                mMangasRvAdapter.let { ad ->
+                    ad?.apply {
+                        mData?.apply {
+
+                        }
+                    }
+                }
+            }
+            TYPE_ITEM_FILTER -> {
+
+            }
         }
     }
 }

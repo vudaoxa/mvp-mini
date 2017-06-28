@@ -233,15 +233,12 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun hideDrawerToggle() {
-        mToolbar.navigationIcon = null
+        mToolbar.apply {
+            while (navigationIcon != null) {
+                navigationIcon = null
+            }
+        }
     }
-
-//    override fun showOptionsMenu(show: Boolean) {
-//        mMenu?.apply {
-//            findItem(actionSettingsId).isVisible = show
-//            findItem(actionAboutId).isVisible = show
-//        }
-//    }
 
     override fun showOptionsMenu(show: Boolean) {
         mMenu?.apply {

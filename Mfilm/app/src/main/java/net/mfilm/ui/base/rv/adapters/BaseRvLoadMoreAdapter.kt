@@ -13,6 +13,7 @@ import timber.log.Timber
  */
 abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick)
     : BaseRvAdapter<V>(mContext, mData, mCallbackOnClick), IAdapterLoadMore {
+    var isMoreLoading = false
     override fun getItemViewType(position: Int): Int {
         mData?.apply {
             val item = this[position]

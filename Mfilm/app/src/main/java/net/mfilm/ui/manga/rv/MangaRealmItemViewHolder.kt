@@ -10,13 +10,14 @@ import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.ui.base.rv.holders.BaseViewHolder
 import net.mfilm.utils.ICallbackOnClick
-import timber.log.Timber
+import net.mfilm.utils.ICallbackOnLongClick
 
 /**
  * Created by tusi on 5/16/17.
  */
-class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View, mCallbackOnclick: ICallbackOnClick?)
-    : BaseViewHolder(mContext, type, itemView, mCallbackOnclick) {
+class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
+                               mCallbackOnclick: ICallbackOnClick?, mCallbackOnLongClick: ICallbackOnLongClick? = null)
+    : BaseViewHolder(mContext, type, itemView, mCallbackOnclick, mCallbackOnLongClick) {
     override fun bindView(obj: Any?, position: Int) {
         when (obj) {
             is MangaFavoriteRealm -> {
@@ -25,7 +26,7 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View, mCa
                     tv_name.text = obj.name
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
                     setOnLongClickListener {
-                        Timber.e("-------------onLongClick-------$position----------")
+                        mCallbackOnLongClick?.onLongClick(position, type)
                         true
                     }
                 }
@@ -36,7 +37,7 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View, mCa
                     tv_name.text = obj.name
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
                     setOnLongClickListener {
-                        Timber.e("-------------onLongClick-------$position----------")
+                        mCallbackOnLongClick?.onLongClick(position, type)
                         true
                     }
                 }

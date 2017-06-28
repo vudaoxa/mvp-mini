@@ -13,7 +13,7 @@
         <Button
             android:id="@+id/btn_done"
             style="@style/PrimaryFlatButton"
-            android:text="@string/done_button"
+            android:text="@string/done"
             android:theme="@style/PrimaryFlatButton"
             android:visibility="gone" />
         <org.angmarch.views.NiceSpinner
@@ -25,6 +25,9 @@
             android:id="@+id/rv"
             style="@style/Layout_match_wrap" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_filter"
+            style="@style/Layout_match_wrap" />
     </LinearLayout>
 
     <include layout="@layout/empty_data_view" />

@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.TextView
 import net.mfilm.utils.ICallbackEmptyDataView
+import net.mfilm.utils.ItemSelections
 import net.mfilm.utils.show
 import org.angmarch.views.NiceSpinner
 import timber.log.Timber
@@ -42,3 +43,5 @@ class EmptyDataView(val context: Context, val spnFilter: NiceSpinner?, val layou
             tvDesEmptyData?.text = context.getText(emptyDesResId)
     }
 }
+
+class SelectableItem(var selected: ItemSelections)

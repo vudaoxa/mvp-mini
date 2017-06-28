@@ -18,7 +18,7 @@ import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.manga.AdapterTracker
 import net.mfilm.ui.manga.EmptyDataView
-import net.mfilm.ui.manga.rv.MangasRealmRvAdapter
+import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.utils.IndexTags
 import net.mfilm.utils.filtersFavorites
 import net.mfilm.utils.handler
@@ -61,7 +61,7 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
     @Inject
     lateinit var mHistoryPresenter: HistoryMvpPresenter<HistoryMvpView>
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
-    var mMangasRvAdapter: MangasRealmRvAdapter<MangaHistoryRealm>? = null
+    var mMangasRvAdapter: BaseRvRealmAdapter<MangaHistoryRealm>? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_history, container, false)
     }
@@ -87,6 +87,10 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
 
     override fun initEmptyDataView() {
         emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
+    }
+
+    override fun showEmptyDataView(show: Boolean) {
+        emptyDataView?.showEmptyDataView(show)
     }
     override fun initSpnFilters() {
         val banksAdapter = ArrayAdapter(activity,
@@ -150,7 +154,6 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
         Timber.e("----------------onHistoryNull------------------")
         mMangasRvAdapter?.clear()
         emptyDataView?.apply {
-            hideSomething()
             showEmptyDataView(true)
         }
     }
@@ -164,7 +167,7 @@ class HistoryFragment : BaseStackFragment(), HistoryMvpView {
             mData?.addAll(mangaHistoryRealms)
             notifyDataSetChanged()
         } ?: let {
-            mMangasRvAdapter = MangasRealmRvAdapter(context, mangaHistoryRealms.toMutableList(), this)
+            mMangasRvAdapter = BaseRvRealmAdapter(context, mangaHistoryRealms.toMutableList(), this)
             rv.adapter = mMangasRvAdapter
         }
     }

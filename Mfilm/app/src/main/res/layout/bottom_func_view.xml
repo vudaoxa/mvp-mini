@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.mfilm.ui.custom.SimpleViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_bottom_func"
+    style="@style/Layout_match_wrap"
+    android:background="@color/cyan_light_"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="visible">
+
+    <RelativeLayout style="@style/Layout_match_wrap">
+
+        <Button
+            android:id="@+id/btn_toggle_select"
+            style="@style/PrimaryFlatButton"
+            android:text="@string/select_all"
+            android:theme="@style/PrimaryFlatButton" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            style="@style/PrimaryFlatButton"
+            android:layout_alignParentRight="true"
+            android:text="@string/delete"
+            android:theme="@style/PrimaryFlatButton" />
+    </RelativeLayout>
+</net.mfilm.ui.custom.SimpleViewAnimator>

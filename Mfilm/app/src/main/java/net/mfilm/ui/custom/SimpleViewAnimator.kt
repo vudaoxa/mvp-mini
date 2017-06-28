@@ -19,7 +19,6 @@ class SimpleViewAnimator : LinearLayout {
     private var inAnimation: Animation? = null
     private var outAnimation: Animation? = null
 
-
     constructor(context: Context) : super(context) {
         setInAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up))
         setOutAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_out_view))

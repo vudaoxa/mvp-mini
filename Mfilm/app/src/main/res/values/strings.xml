@@ -107,4 +107,8 @@
     <string name="failed_to_load">Không thể tải trang</string>
     <string name="failed_to_load_more">Không thể tải thêm</string>
     <string name="failed_to_load_app">Không thể khởi động ứng dụng</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
+    <string name="select_all">Select All</string>
+    <string name="deselect_all">Deselect All</string>
 </resources>

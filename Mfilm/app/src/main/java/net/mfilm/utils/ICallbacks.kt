@@ -12,16 +12,31 @@ import io.reactivex.Flowable
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
 import net.mfilm.ui.manga.EmptyDataView
+import net.mfilm.ui.manga.Filter
+import net.mfilm.ui.manga.SelectableItem
 import org.angmarch.views.NiceSpinner
 import tr.xip.errorview.ErrorView
 
 /**
  * Created by tusi on 5/16/17.
  */
+interface IRV {
+    fun clear(): Boolean
+}
+
+interface IRvSelectable<V : Any?> {
+    fun addSelectableItem(item: SelectableItem)
+    fun add(item: V)
+    fun addAll(items: List<V>)
+    fun addSelectableItems(size: Int)
+}
 interface ICallbackOnClick {
     fun onClick(position: Int, event: Int)
 }
 
+interface ICallbackOnLongClick {
+    fun onLongClick(position: Int, event: Int)
+}
 abstract class ALoadMore(val f: () -> Unit) {
     protected var countLoadMore: Int = 0
     //    abstract fun onLoadMore(f: ()->Unit)
@@ -73,6 +88,7 @@ interface ICallbackEmptyDataViewHolder : ICallbackDataEmpty {
     val tvDesEmptyData: TextView?
     val emptyDesResId: Int
     fun initEmptyDataView()
+    fun showEmptyDataView(show: Boolean)
     var emptyDataView: EmptyDataView?
 }
 
@@ -103,6 +119,11 @@ interface ICallbackEdit {
     val btnDone: Button
     fun toggleEdit(edit: Boolean)
 }
+
+interface ICallbackSort {
+    val mFilters: List<Filter>
+    fun sort()
+}
 interface ICallbackReceiveOptionsMenu {
     fun onReceiveOptionsMenuItem(item: MenuItem)
 }
@@ -119,6 +140,12 @@ interface ICallbackLayoutSearch : ICallbackSearch {
     fun initSearch()
 }
 
+interface ICallbackLocalSearch : ICallbackLayoutSearch {
+    fun search(query: String)
+
+    fun onRealmFilterNull()
+    fun restoreOriginalData()
+}
 interface ICallbackToolbar : ICallbackToolbarSearch, ICallbackOptionMenu, ICallbackLayoutSearch {
     var optionsMenu: Int
     val actionSettingsId: Int

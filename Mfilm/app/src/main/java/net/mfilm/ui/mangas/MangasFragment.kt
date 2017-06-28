@@ -26,7 +26,7 @@ import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.manga.AdapterTracker
 import net.mfilm.ui.manga.EmptyDataView
-import net.mfilm.ui.manga.rv.MangasRealmRvAdapter
+import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
 import net.mfilm.utils.*
@@ -128,7 +128,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     @Inject
     lateinit var mSearchHistoryPresenter: SearchHistoryMvpPresenter<MangasMvpView>
     var mMangasRvAdapter: MangasRvAdapter<Manga>? = null
-    var mSearchQueryRvAdapter: MangasRealmRvAdapter<SearchQueryRealm>? = null
+    var mSearchQueryRvAdapter: BaseRvRealmAdapter<SearchQueryRealm>? = null
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_mangas, container, false)
@@ -166,6 +166,11 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun initEmptyDataView() {
         emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
     }
+
+    override fun showEmptyDataView(show: Boolean) {
+        emptyDataView?.showEmptyDataView(show)
+    }
+
     override fun isDataEmpty(): Boolean {
         mMangasRvAdapter?.apply {
             return itemCount == 0
@@ -217,7 +222,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
             mData?.addAll(searchHistoryRealms)
             notifyDataSetChanged()
         } ?: let {
-            mSearchQueryRvAdapter = MangasRealmRvAdapter(context, searchHistoryRealms.toMutableList(), this)
+            mSearchQueryRvAdapter = BaseRvRealmAdapter(context, searchHistoryRealms.toMutableList(), this)
             rv_search_history.adapter = mSearchQueryRvAdapter
         }
     }
