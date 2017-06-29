@@ -5,7 +5,6 @@ import net.mfilm.ui.manga.SelectableItem
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackOnLongClick
 import net.mfilm.utils.IRvSelectable
-import net.mfilm.utils.ItemSelections
 
 /**
  * Created by MRVU on 6/28/2017.
@@ -16,26 +15,56 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
                                                  mCallbackOnClick: ICallbackOnClick,
                                                  mCallbackOnLongClick: ICallbackOnLongClick? = null)
     : BaseRvAdapter<V>(mContext, mData, mCallbackOnClick, mCallbackOnLongClick), IRvSelectable<V> {
-    init {
-        mData?.apply {
-            mSelectableItems = MutableList(size) { _ -> SelectableItem(ItemSelections.INACTIVE) }
-        }
-    }
-
     protected var mSelectableItems = mutableListOf<SelectableItem>()
-    private var mItemsSelectable = false
-    override var itemsSelectable: Boolean
+    var countSelected = 0
+    private var mItemsSelectable: Boolean? = null
+    override var itemsSelectable: Boolean?
         get() = mItemsSelectable
         set(value) {
             mItemsSelectable = value
-            val selected = if (mItemsSelectable) ItemSelections.UNSELECTED else ItemSelections.INACTIVE
-            mSelectableItems.forEach { it.selected = selected }
+            countSelected = if (value == true) mSelectableItems.size else 0
+            mSelectableItems.forEach {
+                it.toggleSelected(value)
+            }
+
         }
+
+    override fun selectedItems(): List<V> {
+        return mData.filterIndexed { index, v -> }
+    }
+
+    override fun obtainCountSelected(selected: Boolean) {
+        countSelected += if (selected) 1 else -1
+    }
+
+    override fun onSelected(position: Int, allSelected: Boolean?): Boolean {
+        allSelected?.apply {
+            itemsSelectable = this
+            notifyDataSetChanged()
+        } ?: let {
+            //the first selected
+            if (itemsSelectable == null) {
+                itemsSelectable = false
+                if (position != -1)
+                    mSelectableItems[position].toggleSelected(true, { obtainCountSelected(true) })
+                notifyDataSetChanged()
+            } else {
+                val selected = mSelectableItems[position].selected
+                selected?.apply {
+                    mSelectableItems[position].toggleSelected(!this, { obtainCountSelected(!this) })
+                    notifyItemChanged(position)
+                }
+            }
+        }
+        return countSelected == mSelectableItems.size
+    }
 
     override fun clear(): Boolean {
         val x = super.clear()
-        if (x)
+        if (x) {
             mSelectableItems.clear()
+            countSelected = 0
+        }
         return x
     }
 
@@ -57,7 +86,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
 
     //use when adapter addAll(items)
     override fun addSelectableItems(size: Int) {
-        val l = List(size) { _ -> SelectableItem(ItemSelections.INACTIVE) }
+        val l = List(size) { _ -> SelectableItem() }
         mSelectableItems.addAll(l)
     }
 

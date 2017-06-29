@@ -39,7 +39,7 @@ class ChaptersRvAdapter<V : Chapter>(mContext: Context, mData: MutableList<V>?, 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         when (holder) {
             is ChaptersItemViewHolder -> {
-                mData?.get(position)?.apply {
+                mData?.getOrNull(position)?.apply {
                     holder.bindView(this, position)
                 }
             }

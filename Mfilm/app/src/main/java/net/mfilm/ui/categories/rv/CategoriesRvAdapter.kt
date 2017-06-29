@@ -21,7 +21,7 @@ class CategoriesRvAdapter<V : Any?>(mContext: Context, mData: MutableList<V>?, m
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         if (holder is CategoriesItemViewHolder) {
-            mData?.get(position)?.apply {
+            mData?.getOrNull(position)?.apply {
                 holder.bindView(this, position)
             }
         }

@@ -39,7 +39,7 @@ class MangasRvAdapter<V : Manga>(mContext: Context, mData: MutableList<V>?, mCal
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         when (holder) {
             is MangaItemViewHolder -> {
-                mData?.get(position)?.apply {
+                mData?.getOrNull(position)?.apply {
                     holder.bindView(this, position)
                 }
             }

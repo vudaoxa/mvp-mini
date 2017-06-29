@@ -12,6 +12,7 @@ import android.widget.*
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.joanzapata.iconify.widget.IconTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.bottom_fun_view.*
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import kotlinx.android.synthetic.main.layout_input_text.*
@@ -21,6 +22,7 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_FILTER
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.custom.SimpleViewAnimator
 import net.mfilm.ui.manga.AdapterTracker
 import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.Filter
@@ -42,6 +44,29 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
+    private var mAllSelected = false
+    override var allSelected: Boolean
+        get() = mAllSelected
+        set(value) {
+            mAllSelected = value
+            var text = R.string.select_all
+            if (mAllSelected)
+                text = R.string.deselect_all
+            selectBtn.setText(text)
+            bottomFunView.show(true)
+            btnDone.show(true)
+            mMangasRvAdapter?.apply {
+                btnDone.enable(countSelected > 0)
+            }
+        }
+    override val bottomFunView: SimpleViewAnimator
+        get() = bottom_fun
+    override val selectBtn: Button
+        get() = btn_toggle_select
+    override val undoBtn: Button
+        get() = btn_undo
+    override val submitBtn: Button
+        get() = btn_delete
     override val mFilters: List<Filter>
         get() = filtersFavorites
     override val spnFilter: NiceSpinner
@@ -104,6 +129,8 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         initSpnFilters()
         initEmptyDataView()
         initRv()
+        initBottomFun()
+        initBtnDone()
         requestFavorites()
     }
 
@@ -187,6 +214,40 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
+    override fun initBottomFun() {
+        selectBtn.setOnClickListener { toggleSelectAll() }
+        undoBtn.setOnClickListener { undo() }
+        submitBtn.setOnClickListener { submit() }
+    }
+
+    override fun initBtnDone() {
+        btnDone.setOnClickListener { done() }
+    }
+
+    override fun done() {
+        mMangasRvAdapter?.apply {
+            itemsSelectable = null
+            notifyDataSetChanged()
+        }
+        btnDone.show(false)
+        bottomFunView.show(false)
+    }
+
+    override fun toggleSelectAll() {
+        Timber.e("-----toggleSelectAll------allSelected------$allSelected------------------------")
+        mMangasRvAdapter?.apply {
+            allSelected = onSelected(-1, !allSelected)
+        }
+    }
+
+    override fun undo() {
+
+    }
+
+    override fun submit() {
+
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         handler({
@@ -212,10 +273,13 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                 toggleEdit(false)
             }
             R.id.action_favorites_sort -> {
-                mLayoutInputText.show(false)
-                spnFilter.show(true)
-                sort()
-                toggleEdit(false)
+                mMangasRvAdapter?.apply {
+                    if (itemCount < 2) return
+                    mLayoutInputText.show(false)
+                    spnFilter.show(true)
+                    sort()
+                    toggleEdit(false)
+                }
             }
             R.id.action_favorites_edit -> {
                 mLayoutInputText.show(false)
@@ -289,8 +353,15 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             }
         }
     }
-    override fun toggleEdit(edit: Boolean) {
 
+    override fun toggleEdit(edit: Boolean) {
+        if (!edit)
+            done()
+        else {
+            mMangasRvAdapter?.apply {
+                allSelected = onSelected(-1)
+            }
+        }
     }
 
     override fun requestFavorites() {
@@ -324,7 +395,8 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         showEmptyDataView(false)
         mMangasRvAdapter?.apply {
             clear()
-            mData?.addAll(mangaFavoriteRealms)
+//            mData?.addAll(mangaFavoriteRealms)
+            addAll(mangaFavoriteRealms)
             notifyDataSetChanged()
         } ?: let {
             mMangasRvAdapter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this)
@@ -339,12 +411,25 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         return true
     }
 
+    override fun obtainSelect(allSelected: Boolean) {
+
+    }
+
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         when (event) {
             TYPE_ITEM -> {
-                mMangasRvAdapter?.mData?.apply {
-                    screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
+                mMangasRvAdapter.let { ad ->
+                    ad?.apply {
+                        ad.itemsSelectable?.apply {
+                            allSelected = ad.onSelected(position)
+                        } ?: let {
+                            ad.mData?.apply {
+                                screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
+                                        typeContent = null, obj = this[position].id)
+                            }
+                        }
+                    }
                 }
             }
             TYPE_ITEM_FILTER -> {
@@ -359,13 +444,8 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         Timber.e("---------------------onLongClick--------------------$position")
         when (event) {
             TYPE_ITEM -> {
-                mMangasRvAdapter.let { ad ->
-                    ad?.apply {
-                        mData?.apply {
-                            ad.itemsSelectable = true
-                            ad.notifyDataSetChanged()
-                        }
-                    }
+                mMangasRvAdapter?.apply {
+                    allSelected = onSelected(position)
                 }
             }
             TYPE_ITEM_FILTER -> {

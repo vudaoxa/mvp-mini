@@ -128,7 +128,7 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         mCategoriesRvAdapter?.mData?.apply {
-            screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CATEGORY, typeContent = null, obj = get(position))
+            screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CATEGORY, typeContent = null, obj = getOrNull(position))
         }
     }
 }

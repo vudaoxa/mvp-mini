@@ -3,6 +3,7 @@ package net.mfilm.ui.base.rv.holders
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
+//import net.mfilm.ui.manga.SelectableItem
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackOnLongClick
 
@@ -26,9 +27,6 @@ abstract class BaseItemViewHolder(protected val mContext: Context, val type: Int
 
     abstract fun bindView(obj: Any?, position: Int)
 }
-
-const val TYPE_ITEM_SELECTED = 100
-const val TYPE_ITEM_UNSELECTED = 99
 
 const val TYPE_ITEM = 0
 const val TYPE_ITEM_SEARCH_HISTORY = 1

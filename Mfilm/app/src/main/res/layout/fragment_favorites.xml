@@ -2,33 +2,45 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/default_background">
 
-    <LinearLayout
-        style="@style/LinearLayout_center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <RelativeLayout style="@style/Layout_match">
 
-        <include layout="@layout/layout_input_text" />
+        <LinearLayout
+            style="@style/LinearLayout_center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottom_fun"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_done"
-            style="@style/PrimaryFlatButton"
-            android:text="@string/done"
-            android:theme="@style/PrimaryFlatButton"
-            android:visibility="gone" />
-        <org.angmarch.views.NiceSpinner
-            android:id="@+id/spn_filter"
-            style="@style/Layout_match_wrap"
-            android:visibility="gone" />
+            <include layout="@layout/layout_input_text" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv"
-            style="@style/Layout_match_wrap" />
+            <Button
+                android:id="@+id/btn_done"
+                style="@style/PrimaryFlatButton"
+                android:text="@string/done"
+                android:theme="@style/PrimaryFlatButton"
+                android:visibility="gone" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_filter"
-            style="@style/Layout_match_wrap" />
-    </LinearLayout>
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/spn_filter"
+                style="@style/Layout_match_wrap"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv"
+                style="@style/Layout_match_wrap" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_filter"
+                style="@style/Layout_match_wrap" />
+        </LinearLayout>
+
+        <include
+            layout="@layout/bottom_fun_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
 
     <include layout="@layout/empty_data_view" />
+
 </FrameLayout>

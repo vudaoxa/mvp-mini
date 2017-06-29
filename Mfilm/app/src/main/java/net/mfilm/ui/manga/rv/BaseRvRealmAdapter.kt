@@ -11,8 +11,10 @@ import net.mfilm.ui.base.rv.adapters.BaseRvSelectableAdapter
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_FILTER
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
+import net.mfilm.ui.manga.SelectableItem
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackOnLongClick
+import timber.log.Timber
 
 /**
  * Created by tusi on 6/21/17.
@@ -22,6 +24,14 @@ class BaseRvRealmAdapter<V : RealmObject>(mContext: Context, mData: MutableList<
                                           mCallbackOnLongClick: ICallbackOnLongClick? = null,
                                           private val filter: Boolean = false)
     : BaseRvSelectableAdapter<V>(mContext, mData, mCallbackOnClick, mCallbackOnLongClick) {
+    //do not use this method in abstract class
+    init {
+        mData?.apply {
+            mSelectableItems = MutableList(size) { _ -> SelectableItem() }
+            Timber.e("------BaseRvSelectableAdapter--------- $size----------${mSelectableItems.size}----------------------------")
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         var layoutId = R.layout.item_manga
         when (viewType) {
@@ -35,8 +45,10 @@ class BaseRvRealmAdapter<V : RealmObject>(mContext: Context, mData: MutableList<
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         if (holder is MangaRealmItemViewHolder) {
-            mData?.get(position)?.apply {
-                holder.bindView(this, position, mSelectableItems[position])
+            mData?.getOrNull(position)?.apply {
+                val x = mSelectableItems[position]
+                Timber.e("--onBindViewHolder-------------------$x-----------------------")
+                holder.bindViewSelectable(this, position, x)
             }
         }
     }

@@ -11,21 +11,43 @@ import com.joanzapata.iconify.widget.IconTextView
 import io.reactivex.Flowable
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
+import net.mfilm.ui.custom.SimpleViewAnimator
 import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.SelectableItem
+//import net.mfilm.ui.manga.SelectableItem
 import org.angmarch.views.NiceSpinner
 import tr.xip.errorview.ErrorView
 
 /**
  * Created by tusi on 5/16/17.
  */
+interface ICallbackBottomFun {
+    fun initBottomFun()
+    fun undo()
+    fun submit()
+    fun toggleSelectAll()
+    var allSelected: Boolean
+    val bottomFunView: SimpleViewAnimator
+    val selectBtn: Button
+    val undoBtn: Button
+    val submitBtn: Button
+    fun obtainSelect(allSelected: Boolean)
+}
 interface IRV {
     fun clear(): Boolean
 }
 
+interface ISelectable {
+    fun toggleSelected(selected: Boolean?, f: (() -> Unit)? = null)
+}
 interface IRvSelectable<V : Any?> {
-    var itemsSelectable: Boolean
+    //return all item selected or not
+    fun onSelected(position: Int, allSelected: Boolean? = null): Boolean
+
+    fun obtainCountSelected(selected: Boolean)
+    fun selectedItems(): List<V>
+    var itemsSelectable: Boolean?
     fun addSelectableItem(item: SelectableItem)
     fun add(item: V)
     fun addAll(items: List<V>)
@@ -118,8 +140,10 @@ interface ICallbackFilter {
 }
 
 interface ICallbackEdit {
+    fun initBtnDone()
     val btnDone: Button
     fun toggleEdit(edit: Boolean)
+    fun done()
 }
 
 interface ICallbackSort {

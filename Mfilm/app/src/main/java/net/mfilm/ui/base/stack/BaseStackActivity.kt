@@ -268,7 +268,8 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        Timber.e("----onCreateOptionsMenu----------------------------")
+        Timber.e("----onCreateOptionsMenu--------$optionsMenu--------------------")
+        if (optionsMenu == -1) return false
         menuInflater.inflate(optionsMenu, menu)
         mMenu = menu
         return true
