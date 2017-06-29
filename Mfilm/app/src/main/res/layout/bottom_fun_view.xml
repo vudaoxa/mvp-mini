@@ -4,7 +4,7 @@
     style="@style/Layout_match_wrap"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <RelativeLayout style="@style/Layout_match_wrap">
 

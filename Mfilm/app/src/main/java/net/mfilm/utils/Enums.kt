@@ -15,7 +15,3 @@ enum class IndexTags {
     FRAGMENT_MANGA,
     FRAGMENT_FULL_READ
 }
-
-enum class ItemSelections {
-    INACTIVE, UNSELECTED, SELECTED
-}

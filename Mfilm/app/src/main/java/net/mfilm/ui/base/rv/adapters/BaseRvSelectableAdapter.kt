@@ -29,8 +29,11 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
 
         }
 
-    override fun selectedItems(): List<V> {
-        return mData.filterIndexed { index, v -> }
+    override fun selectedItems(): List<IndexedValue<V>>? {
+        val selectedIndices = mSelectableItems.indices.filter { mSelectableItems[it].selected == true }
+        val selectedItems = mData?.withIndex()?.filter { it.index in selectedIndices }
+
+        return selectedItems
     }
 
     override fun obtainCountSelected(selected: Boolean) {

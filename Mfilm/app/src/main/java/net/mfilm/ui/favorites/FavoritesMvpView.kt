@@ -11,7 +11,7 @@ import net.mfilm.utils.*
 interface FavoritesMvpView : MvpView, ICallbackOnClick,
         ICallbackSpanCount, ICallbackEmptyDataViewHolder, ICallbackReceiveOptionsMenu,
         ICallbackFilter, ICallbackLocalSearch, ICallbackEdit, ICallbackSort,
-        ICallbackOnLongClick, ICallbackBottomFun {
+        ICallbackOnLongClick, ICallbackBottomFun, ICallbackConfirm {
     fun buildMangaFavoritesRealmFilter(objs: List<MangaFavoriteRealm>)
     val spnFilterTracker: AdapterTracker
     fun initRv()

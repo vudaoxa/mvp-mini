@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import com.afollestad.materialdialogs.MaterialDialog
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.joanzapata.iconify.widget.IconTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,29 +45,32 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
-    private var mAllSelected = false
-    override var allSelected: Boolean
+    private var mAllSelected: Boolean? = null
+    override var allSelected: Boolean?
         get() = mAllSelected
         set(value) {
             mAllSelected = value
             var text = R.string.select_all
-            if (mAllSelected)
+            if (mAllSelected == true)
                 text = R.string.deselect_all
-            selectBtn.setText(text)
+            btnSelect.setText(text)
             bottomFunView.show(true)
             btnDone.show(true)
             mMangasRvAdapter?.apply {
-                btnDone.enable(countSelected > 0)
+                Timber.e("-----countSelected---- $countSelected--------------------------")
+                btnSubmit.enable(countSelected > 0)
             }
         }
     override val bottomFunView: SimpleViewAnimator
         get() = bottom_fun
-    override val selectBtn: Button
+    override val btnSelect: Button
         get() = btn_toggle_select
-    override val undoBtn: Button
+    override val btnUndo: Button
         get() = btn_undo
-    override val submitBtn: Button
+    override val btnSubmit: Button
         get() = btn_delete
+    override val btnDone: Button
+        get() = btn_done
     override val mFilters: List<Filter>
         get() = filtersFavorites
     override val spnFilter: NiceSpinner
@@ -77,8 +81,6 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         get() = edt_search
     override val imgClear: IconTextView
         get() = img_clear
-    override val btnDone: Button
-        get() = btn_done
 
     override val optionsMenuId: Int
         get() = R.menu.favorites
@@ -179,7 +181,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     }
 
     override fun restoreOriginalData() {
-        if (isDataEmpty()) return
+        if (isDataEmpty() || rv.isVisible()) return
         Timber.e("------------------restoreOriginalData--------------------------")
         handler({
             rv.show(true)
@@ -215,9 +217,9 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     }
 
     override fun initBottomFun() {
-        selectBtn.setOnClickListener { toggleSelectAll() }
-        undoBtn.setOnClickListener { undo() }
-        submitBtn.setOnClickListener { submit() }
+        btnSelect.setOnClickListener { toggleSelectAll() }
+        btnUndo.setOnClickListener { undo() }
+        btnSubmit.setOnClickListener { submit() }
     }
 
     override fun initBtnDone() {
@@ -229,6 +231,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             itemsSelectable = null
             notifyDataSetChanged()
         }
+        allSelected = null
         btnDone.show(false)
         bottomFunView.show(false)
     }
@@ -236,7 +239,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override fun toggleSelectAll() {
         Timber.e("-----toggleSelectAll------allSelected------$allSelected------------------------")
         mMangasRvAdapter?.apply {
-            allSelected = onSelected(-1, !allSelected)
+            allSelected = onSelected(-1, !allSelected!!)
         }
     }
 
@@ -245,9 +248,23 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     }
 
     override fun submit() {
-
+        showConfirm()
     }
 
+    fun doIt() {
+        val selectedItems = mMangasRvAdapter?.selectedItems()?.map { it.value }
+        selectedItems?.apply {
+            if (isNotEmpty()) {
+                Timber.e("------selectedItems--------${first()}---------------------")
+            }
+            mFavoritesPresenter.toggleFav(this)
+        }
+    }
+
+    override fun showConfirm() {
+        DialogUtil.showMessageConfirm(context, R.string.notifications, R.string.confirm_exit,
+                MaterialDialog.SingleButtonCallback { _, _ -> doIt() })
+    }
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         handler({
@@ -282,6 +299,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                 }
             }
             R.id.action_favorites_edit -> {
+                if (allSelected != null) return
                 mLayoutInputText.show(false)
                 spnFilter.show(false)
                 toggleEdit(true)
