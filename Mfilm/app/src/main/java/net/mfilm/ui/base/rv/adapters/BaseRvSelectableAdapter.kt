@@ -77,11 +77,11 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
         return x
     }
 
-    override fun retainAll(elements: List<V>?): Boolean {
-        val x = super.retainAll(elements)
+    override fun recoverAll(elements: List<V>?): Boolean {
+        val x = super.addAll(elements)
         if (x) {
             selectedItems?.apply {
-                val y = mSelectableItems.retainAll(this)
+                val y = mSelectableItems.addAll(this)
                 if (y) countSelected += this.size
                 return y
             }

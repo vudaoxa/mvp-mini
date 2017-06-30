@@ -14,6 +14,7 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
 import net.mfilm.ui.manga.SelectableItem
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackOnLongClick
+import net.mfilm.utils.handler
 import timber.log.Timber
 
 /**
@@ -44,13 +45,22 @@ class BaseRvRealmAdapter<V : RealmObject>(mContext: Context, mData: MutableList<
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        val x = mSelectableItems[position]
-        Timber.e("--onBindViewHolder-------------------$x-----------------------")
-        if (holder is MangaRealmItemViewHolder) {
-            mData?.get(position)?.apply {
-                holder.bindViewSelectable(this, position, x)
+        handler({
+            val x = mSelectableItems[position]
+            Timber.e("--onBindViewHolder-------------------$x-----------------------")
+            if (holder is MangaRealmItemViewHolder) {
+                mData?.get(position)?.apply {
+                    holder.bindViewSelectable(this, position, x)
+                }
             }
-        }
+        })
+//        val x = mSelectableItems[position]
+//        Timber.e("--onBindViewHolder-------------------$x-----------------------")
+//        if (holder is MangaRealmItemViewHolder) {
+//            mData?.get(position)?.apply {
+//                holder.bindViewSelectable(this, position, x)
+//            }
+//        }
     }
 
     override fun getItemViewType(position: Int): Int {

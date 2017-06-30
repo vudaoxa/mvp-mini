@@ -43,7 +43,7 @@ interface ICallbackBottomFun {
 interface IRV<V : Any?> {
     fun clear(): Boolean
     fun removeAll(elements: List<V>?): Boolean
-    fun retainAll(elements: List<V>?): Boolean
+    fun recoverAll(elements: List<V>?): Boolean
     //    fun add(item: V?)
     fun addAll(items: List<V>?): Boolean
 }

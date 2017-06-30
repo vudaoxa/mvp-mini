@@ -35,9 +35,9 @@ abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: Mutable
         return false
     }
 
-    override fun retainAll(elements: List<V>?): Boolean {
+    override fun recoverAll(elements: List<V>?): Boolean {
         elements?.apply {
-            return mData?.retainAll(this) ?: return false
+            return mData?.addAll(this) ?: return false
         }
         return false
     }

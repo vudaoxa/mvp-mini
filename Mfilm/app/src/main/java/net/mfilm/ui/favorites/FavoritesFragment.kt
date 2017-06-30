@@ -414,14 +414,48 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
+        mMangasRvAdapter.let { ad ->
+            ad?.apply {
+                allSelected?.apply {
+                    if (undo) {
+                        //btnUndo clicked
+                        val x = ad.recoverAll(selectedItems)
+                        Timber.e("----------recoverAll----------------$x-------${ad.itemCount}-----------")
+                        ad.notifyDataSetChanged()
+                        btnUndo.show(false)
+                        undo = false
+                    } else {
+                        //after delete selected items
+                        val x = ad.removeAll(selectedItems)
+                        Timber.e("----------removeAll----------------$x------------------")
+                        ad.notifyDataSetChanged()
+                        btnUndo.show(true)
+                    }
+
+                } ?: let {
+                    ad.clear()
+                    ad.notifyDataSetChanged()
+                    setScrollToolbarFlag(true)
+                    showEmptyDataView(true)
+                }
+            }
+        }
+
+    }
+
+    /*override fun onFavoritesNull() {
+        Timber.e("----------------onFavoritesNull------------------")
         mMangasRvAdapter?.apply {
             clear()
             notifyDataSetChanged()
         }
         setScrollToolbarFlag(true)
         showEmptyDataView(true)
+        allSelected?.apply {
+            btnUndo.show(!undo)
+        }
     }
-
+*/
     override fun showEmptyDataView(show: Boolean) {
         emptyDataView?.showEmptyDataView(show)
     }
@@ -436,8 +470,9 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             ad?.apply {
                 allSelected?.apply {
                     if (undo) {
-                        val x = ad.retainAll(selectedItems)
-                        Timber.e("----------retainAll----------------$x------------------")
+                        //btnUndo clicked
+                        val x = ad.recoverAll(selectedItems)
+                        Timber.e("----------recoverAll----------------$x-------${ad.itemCount}-----------")
                         ad.notifyDataSetChanged()
                         btnUndo.show(false)
                         undo = false
@@ -450,7 +485,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                     }
 
                 } ?: let {
-                    //reset from scratch
+                    //original state, no selection
                     Timber.e("---------------buildFavorites--------clear------")
                     ad.clear()
                     ad.addAll(mangaFavoriteRealms)
@@ -487,10 +522,14 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
         selectedItems = adapter?.selectedItems()?.map { it.value }
         selectedItems?.apply {
+            fun doIt() {
+                mFavoritesPresenter.toggleFav(this)
+                btnUndo.show(true)
+            }
             Timber.e("------selectedItems--------$indices---------------------")
             if (isNotEmpty()) {
                 DialogUtil.showMessageConfirm(context, R.string.notifications, R.string.confirm_delete,
-                        MaterialDialog.SingleButtonCallback { _, _ -> mFavoritesPresenter.toggleFav(this) })
+                        MaterialDialog.SingleButtonCallback { _, _ -> doIt() })
             } else {
                 updateBtnSubmit()
             }
