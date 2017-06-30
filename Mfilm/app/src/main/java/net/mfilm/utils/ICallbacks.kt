@@ -23,9 +23,9 @@ import tr.xip.errorview.ErrorView
  * Created by tusi on 5/16/17.
  */
 
-interface ICallbackConfirm {
-    fun showConfirm()
-}
+//interface ICallbackConfirm {
+//    fun showConfirm()
+//}
 
 interface ICallbackBottomFun {
     fun initBottomFun()
@@ -37,10 +37,15 @@ interface ICallbackBottomFun {
     val btnSelect: Button
     val btnUndo: Button
     val btnSubmit: Button
-    fun obtainSelect(allSelected: Boolean)
+//    fun obtainSelect(allSelected: Boolean)
 }
-interface IRV {
+
+interface IRV<V : Any?> {
     fun clear(): Boolean
+    fun removeAll(elements: List<V>?): Boolean
+    fun retainAll(elements: List<V>?): Boolean
+    //    fun add(item: V?)
+    fun addAll(items: List<V>?): Boolean
 }
 
 interface ISelectable {
@@ -54,11 +59,11 @@ interface IRvSelectable<V : Any?> {
     //    fun selectedItems(): List<V>?
     fun selectedItems(): List<IndexedValue<V>>?
     var itemsSelectable: Boolean?
+    //not use
     fun addSelectableItem(item: SelectableItem)
-    fun add(item: V)
-    fun addAll(items: List<V>)
+
     fun addSelectableItems(size: Int)
-    fun removeSelectableItems(indices: List<Int>)
+//    fun removeSelectableItems(indices: List<Int>)
 }
 interface ICallbackOnClick {
     fun onClick(position: Int, event: Int)

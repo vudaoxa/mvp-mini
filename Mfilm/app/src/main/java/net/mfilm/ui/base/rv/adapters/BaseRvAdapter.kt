@@ -10,7 +10,7 @@ import net.mfilm.utils.IRV
  * Created by MRVU on 5/16/2017.
  */
 abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: MutableList<V>?)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IRV {
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IRV<V> {
 
     var mCallbackOnClick: ICallbackOnClick? = null
     var mCallbackOnLongClick: ICallbackOnLongClick? = null
@@ -26,5 +26,31 @@ abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: Mutable
     override fun clear(): Boolean {
         mData?.clear() ?: return false
         return true
+    }
+
+    override fun removeAll(elements: List<V>?): Boolean {
+        elements?.apply {
+            return mData?.removeAll(this) ?: return false
+        }
+        return false
+    }
+
+    override fun retainAll(elements: List<V>?): Boolean {
+        elements?.apply {
+            return mData?.retainAll(this) ?: return false
+        }
+        return false
+    }
+
+    //not use
+//    override fun add(item: V?) {
+//
+//    }
+
+    override fun addAll(items: List<V>?): Boolean {
+        items?.apply {
+            return mData?.addAll(this) ?: return false
+        }
+        return false
     }
 }

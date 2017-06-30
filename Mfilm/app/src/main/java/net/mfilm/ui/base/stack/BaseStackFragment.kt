@@ -60,6 +60,9 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
         }
     }
 
+    override fun setScrollToolbarFlag(info: Boolean) {
+        baseActivity?.setScrollToolbarFlag(info)
+    }
     override fun showLoading() {
         baseActivity?.showLoading()
     }

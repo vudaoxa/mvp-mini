@@ -5,6 +5,7 @@ import net.mfilm.ui.manga.SelectableItem
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackOnLongClick
 import net.mfilm.utils.IRvSelectable
+import timber.log.Timber
 
 /**
  * Created by MRVU on 6/28/2017.
@@ -18,6 +19,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
     protected var mSelectableItems = mutableListOf<SelectableItem>()
     var countSelected = 0
     private var mItemsSelectable: Boolean? = null
+    //use for select/deselect all, done
     override var itemsSelectable: Boolean?
         get() = mItemsSelectable
         set(value) {
@@ -26,14 +28,16 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
             mSelectableItems.forEach {
                 it.toggleSelected(value)
             }
-
         }
 
+    private var selectedIndices: List<Int>? = null
     override fun selectedItems(): List<IndexedValue<V>>? {
-        val selectedIndices = mSelectableItems.indices.filter { mSelectableItems[it].selected == true }
-        val selectedItems = mData?.withIndex()?.filter { it.index in selectedIndices }
-
-        return selectedItems
+        selectedIndices = mSelectableItems.indices.filter { mSelectableItems[it].selected == true }
+        selectedIndices?.apply {
+            val selectedItems = mData?.withIndex()?.filter { it.index in this }
+            return selectedItems
+        }
+        return null
     }
 
     override fun obtainCountSelected(selected: Boolean) {
@@ -41,6 +45,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
     }
 
     override fun onSelected(position: Int, allSelected: Boolean?): Boolean {
+        Timber.e("-----onSelected----------$position---------------$allSelected-----------------------------")
         allSelected?.apply {
             itemsSelectable = this
             notifyDataSetChanged()
@@ -62,6 +67,30 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
         return countSelected == mSelectableItems.size
     }
 
+    override fun addAll(items: List<V>?): Boolean {
+        val x = super.addAll(items)
+        if (x) {
+            items?.apply {
+                addSelectableItems(size)
+            }
+        }
+        return x
+    }
+
+    override fun retainAll(elements: List<V>?): Boolean {
+        val x = super.retainAll(elements)
+        if (x) {
+            selectedIndices?.apply {
+                //                val selectedItems = mSelectableItems.filterIndexed { index, _ -> index in this }
+                selectedItems?.apply {
+                    val y = mSelectableItems.retainAll(this)
+                    if (y) countSelected += this.size
+                    return y
+                }
+            }
+        }
+        return x
+    }
     override fun clear(): Boolean {
         val x = super.clear()
         if (x) {
@@ -71,20 +100,24 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
         return x
     }
 
+    private var selectedItems: List<SelectableItem>? = null
+    override fun removeAll(elements: List<V>?): Boolean {
+        val x = super.removeAll(elements)
+        if (x) {
+            selectedIndices?.apply {
+                selectedItems = mSelectableItems.filterIndexed { index, _ -> index in this }
+                selectedItems?.apply {
+                    val y = mSelectableItems.removeAll(this)
+                    if (y) countSelected -= this.size
+                    return y
+                }
+            }
+        }
+        return x
+    }
+
     override fun addSelectableItem(item: SelectableItem) {
         mSelectableItems.add(item)
-    }
-
-    //not use
-    override fun add(item: V) {
-
-    }
-
-    override fun addAll(items: List<V>) {
-        mData?.apply {
-            addAll(items)
-            addSelectableItems(items.size)
-        }
     }
 
     //use when adapter addAll(items)
@@ -92,14 +125,4 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
         val l = List(size) { _ -> SelectableItem() }
         mSelectableItems.addAll(l)
     }
-
-    //use when adapter remove items at indices
-    override fun removeSelectableItems(indices: List<Int>) {
-        var removed = 0
-        indices.forEach {
-            mSelectableItems.removeAt(it - removed)
-            removed++
-        }
-    }
-
 }

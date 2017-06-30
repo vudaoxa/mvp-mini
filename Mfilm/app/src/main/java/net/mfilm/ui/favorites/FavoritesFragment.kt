@@ -54,11 +54,36 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             if (mAllSelected == true)
                 text = R.string.deselect_all
             btnSelect.setText(text)
-            bottomFunView.show(true)
-            btnDone.show(true)
-            mMangasRvAdapter?.apply {
-                Timber.e("-----countSelected---- $countSelected--------------------------")
-                btnSubmit.enable(countSelected > 0)
+            mAllSelected?.apply {
+                bottomFunView.show(true)
+                btnDone.show(true)
+                edtSearch.enable(false)
+                imgClear.enable(false)
+                if (rv.isVisible()) {
+                    mMangasRvAdapter?.apply {
+                        Timber.e("-----countSelected---- $countSelected--------------------------")
+                        btnSubmit.enable(countSelected > 0)
+                    }
+                } else if (rv_filter.isVisible()) {
+                    mMangasFilterRvAdapter?.apply {
+                        Timber.e("----filter-countSelected---- $countSelected--------------------------")
+                        btnSubmit.enable(countSelected > 0)
+                    }
+                }
+            } ?: let {
+                if (rv.isVisible()) {
+                    mMangasRvAdapter?.apply {
+                        itemsSelectable = null
+                        notifyDataSetChanged()
+                    }
+                } else if (rv_filter.isVisible()) {
+                    mMangasFilterRvAdapter?.apply {
+                        itemsSelectable = null
+                        notifyDataSetChanged()
+                    }
+                } else {
+
+                }
             }
         }
     override val bottomFunView: SimpleViewAnimator
@@ -227,44 +252,27 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     }
 
     override fun done() {
-        mMangasRvAdapter?.apply {
-            itemsSelectable = null
-            notifyDataSetChanged()
-        }
         allSelected = null
+        edtSearch.enable(true)
+        imgClear.enable(true)
         btnDone.show(false)
         bottomFunView.show(false)
     }
 
     override fun toggleSelectAll() {
         Timber.e("-----toggleSelectAll------allSelected------$allSelected------------------------")
-        mMangasRvAdapter?.apply {
-            allSelected = onSelected(-1, !allSelected!!)
-        }
-    }
-
-    override fun undo() {
-
-    }
-
-    override fun submit() {
-        showConfirm()
-    }
-
-    fun doIt() {
-        val selectedItems = mMangasRvAdapter?.selectedItems()?.map { it.value }
-        selectedItems?.apply {
-            if (isNotEmpty()) {
-                Timber.e("------selectedItems--------${first()}---------------------")
+        if (rv.isVisible()) {
+            mMangasRvAdapter?.apply {
+                allSelected = onSelected(-1, !allSelected!!)
             }
-            mFavoritesPresenter.toggleFav(this)
+        } else if (rv_filter.isVisible()) {
+            mMangasFilterRvAdapter?.apply {
+                allSelected = onSelected(-1, !allSelected!!)
+            }
         }
+
     }
 
-    override fun showConfirm() {
-        DialogUtil.showMessageConfirm(context, R.string.notifications, R.string.confirm_exit,
-                MaterialDialog.SingleButtonCallback { _, _ -> doIt() })
-    }
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         handler({
@@ -290,6 +298,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                 toggleEdit(false)
             }
             R.id.action_favorites_sort -> {
+                if (!rv.isVisible()) return
                 mMangasRvAdapter?.apply {
                     if (itemCount < 2) return
                     mLayoutInputText.show(false)
@@ -333,7 +342,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         Timber.e("----------buildMangaFavoritesRealmFilter-------- ${objs.size}----------------------------")
         mMangasFilterRvAdapter?.apply {
             clear()
-            mData?.addAll(objs)
+            addAll(objs)
             notifyDataSetChanged()
         } ?: let {
             mMangasFilterRvAdapter = BaseRvRealmAdapter(context, objs.toMutableList(), this@FavoritesFragment, this, true)
@@ -376,8 +385,14 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         if (!edit)
             done()
         else {
-            mMangasRvAdapter?.apply {
-                allSelected = onSelected(-1)
+            if (rv.isVisible()) {
+                mMangasRvAdapter?.apply {
+                    allSelected = onSelected(-1)
+                }
+            } else if (rv_filter.isVisible()) {
+                mMangasFilterRvAdapter?.apply {
+                    allSelected = onSelected(-1)
+                }
             }
         }
     }
@@ -399,7 +414,11 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
-        mMangasRvAdapter?.clear()
+        mMangasRvAdapter?.apply {
+            clear()
+            notifyDataSetChanged()
+        }
+        setScrollToolbarFlag(true)
         showEmptyDataView(true)
     }
 
@@ -407,18 +426,76 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         emptyDataView?.showEmptyDataView(show)
     }
 
+    //it's for rv only
     override fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
         Timber.e("---------------buildFavorites--------$context-------${mangaFavoriteRealms.size}")
         context ?: return
         showEmptyDataView(false)
-        mMangasRvAdapter?.apply {
-            clear()
-//            mData?.addAll(mangaFavoriteRealms)
-            addAll(mangaFavoriteRealms)
-            notifyDataSetChanged()
+        setScrollToolbarFlag(false)
+        mMangasRvAdapter.let { ad ->
+            ad?.apply {
+                allSelected?.apply {
+                    if (undo) {
+                        val x = ad.retainAll(selectedItems)
+                        Timber.e("----------retainAll----------------$x------------------")
+                        ad.notifyDataSetChanged()
+                        btnUndo.show(false)
+                        undo = false
+                    } else {
+                        //after delete selected items
+                        val x = ad.removeAll(selectedItems)
+                        Timber.e("----------removeAll----------------$x------------------")
+                        ad.notifyDataSetChanged()
+                        btnUndo.show(true)
+                    }
+
+                } ?: let {
+                    //reset from scratch
+                    Timber.e("---------------buildFavorites--------clear------")
+                    ad.clear()
+                    ad.addAll(mangaFavoriteRealms)
+                    ad.notifyDataSetChanged()
+                }
+            } ?: let {
+                //the first build
+                mMangasRvAdapter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this)
+                rv.adapter = mMangasRvAdapter
+            }
+        }
+    }
+
+    private var undo = false
+    override fun undo() {
+        selectedItems?.apply {
+            undo = true
+            mFavoritesPresenter.toggleFav(this)
+        }
+    }
+
+    private var selectedItems: List<MangaFavoriteRealm>? = null
+    override fun submit() {
+        val adapter = if (rv.isVisible()) {
+            mMangasRvAdapter
+        } else if (rv_filter.isVisible()) {
+            mMangasFilterRvAdapter
+        } else null
+
+        fun updateBtnSubmit() {
+            adapter?.apply {
+                btnSubmit.enable(countSelected > 0)
+            }
+        }
+        selectedItems = adapter?.selectedItems()?.map { it.value }
+        selectedItems?.apply {
+            Timber.e("------selectedItems--------$indices---------------------")
+            if (isNotEmpty()) {
+                DialogUtil.showMessageConfirm(context, R.string.notifications, R.string.confirm_delete,
+                        MaterialDialog.SingleButtonCallback { _, _ -> mFavoritesPresenter.toggleFav(this) })
+            } else {
+                updateBtnSubmit()
+            }
         } ?: let {
-            mMangasRvAdapter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this)
-            rv.adapter = mMangasRvAdapter
+            updateBtnSubmit()
         }
     }
 
@@ -429,9 +506,9 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         return true
     }
 
-    override fun obtainSelect(allSelected: Boolean) {
-
-    }
+//    override fun obtainSelect(allSelected: Boolean) {
+//
+//    }
 
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
@@ -451,8 +528,17 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                 }
             }
             TYPE_ITEM_FILTER -> {
-                mMangasFilterRvAdapter?.mData?.apply {
-                    screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position].id)
+                mMangasFilterRvAdapter.let { ad ->
+                    ad?.apply {
+                        ad.itemsSelectable?.apply {
+                            allSelected = ad.onSelected(position)
+                        } ?: let {
+                            ad.mData?.apply {
+                                screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
+                                        typeContent = null, obj = this[position].id)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -467,7 +553,9 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                 }
             }
             TYPE_ITEM_FILTER -> {
-
+                mMangasFilterRvAdapter?.apply {
+                    allSelected = onSelected(position)
+                }
             }
         }
     }

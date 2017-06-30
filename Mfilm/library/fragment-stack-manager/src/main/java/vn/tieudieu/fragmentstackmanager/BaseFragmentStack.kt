@@ -29,4 +29,5 @@ abstract class BaseFragmentStack : BaseFragment() {
     val indexTag: Int
         get() = 0
 
+    abstract fun setScrollToolbarFlag(info: Boolean)
 }

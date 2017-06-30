@@ -36,6 +36,7 @@
     <string name="api_default_error">Something wrong happened!</string>
     <string name="notifications">Confirm</string>
     <string name="confirm_exit">You want to exit app?</string>
+    <string name="confirm_delete">You want to delete them?</string>
     <string name="some_error">Some Error Occurred!</string>
     <string name="connection_error">Internet connection lost!</string>
     <string name="text_all_click_back_exit_app">Press back 1 more searchTime to exit</string>
