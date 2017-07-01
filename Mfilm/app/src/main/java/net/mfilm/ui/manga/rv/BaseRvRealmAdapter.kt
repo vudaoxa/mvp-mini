@@ -46,18 +46,17 @@ class BaseRvRealmAdapter<V : RealmObject>(mContext: Context, mData: MutableList<
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         handler({
-            val x = mSelectableItems[position]
-            Timber.e("--onBindViewHolder-------------------$x-----------------------")
             if (holder is MangaRealmItemViewHolder) {
-                mData?.get(position)?.apply {
+                mData?.getOrNull(position)?.apply {
+                    val x = mSelectableItems.getOrNull(position)
                     holder.bindViewSelectable(this, position, x)
                 }
             }
         })
-//        val x = mSelectableItems[position]
-//        Timber.e("--onBindViewHolder-------------------$x-----------------------")
+
 //        if (holder is MangaRealmItemViewHolder) {
-//            mData?.get(position)?.apply {
+//            mData?.getOrNull(position)?.apply {
+//                val x = mSelectableItems.getOrNull(position)
 //                holder.bindViewSelectable(this, position, x)
 //            }
 //        }

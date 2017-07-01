@@ -16,7 +16,6 @@ import net.mfilm.ui.manga.SelectableItem
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackOnLongClick
 import net.mfilm.utils.show
-import timber.log.Timber
 
 /**
  * Created by tusi on 5/16/17.
@@ -58,14 +57,16 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
 
     }
 
-    override fun bindViewSelectable(obj: Any?, position: Int, selectableItem: SelectableItem) {
-        Timber.e("------bindView--------------$obj------------$selectableItem----------------------------")
+    override fun bindViewSelectable(obj: Any?, position: Int, selectableItem: SelectableItem?) {
+//        Timber.e("------bindView--------------$obj------------$selectableItem----------------------------")
         when (obj) {
             is MangaFavoriteRealm -> {
                 itemView.apply {
                     obj.coverUrl?.apply { img_thumb.setImageURI(this) }
                     tv_name.text = obj.name
-                    iconSelected(icon_selected, selectableItem.selected)
+                    selectableItem?.apply {
+                        iconSelected(icon_selected, selected)
+                    }
                     initOnClicked(this)
                 }
             }

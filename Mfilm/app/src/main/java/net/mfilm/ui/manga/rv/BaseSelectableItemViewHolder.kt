@@ -14,6 +14,6 @@ import net.mfilm.utils.ICallbackOnLongClick
 abstract class BaseSelectableItemViewHolder(mContext: Context, type: Int, itemView: View,
                                             mCallbackOnclick: ICallbackOnClick?, mCallbackOnLongClick: ICallbackOnLongClick? = null)
     : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick, mCallbackOnLongClick) {
-    abstract fun bindViewSelectable(obj: Any?, position: Int, selectableItem: SelectableItem)
+    abstract fun bindViewSelectable(obj: Any?, position: Int, selectableItem: SelectableItem? = null)
 //    abstract fun bindView(obj: Any?, position: Int, selectableItem: Boolean?)
 }

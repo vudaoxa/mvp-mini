@@ -3,6 +3,7 @@ package net.mfilm.ui.manga
 import android.content.Context
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.TextView
 import net.mfilm.utils.ICallbackEmptyDataView
 import net.mfilm.utils.ISelectable
@@ -49,5 +50,44 @@ class SelectableItem(var selected: Boolean? = null) : ISelectable {
     override fun toggleSelected(selected: Boolean?, f: (() -> Unit)?) {
         this.selected = selected
         f?.invoke()
+    }
+}
+
+class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, val f: (() -> Unit)? = null) {
+    init {
+        btnUndo.setOnClickListener {
+            undo = true
+            f?.invoke()
+        }
+    }
+
+    fun reset() {
+        undo = null
+
+    }
+
+    fun onUndo(undo: Boolean) {
+        this.undo = undo
+    }
+
+    fun onSelected(fTrue: (() -> Unit)? = null, fFalse: (() -> Unit)? = null, fNull: (() -> Unit)? = null) {
+        Timber.e("-----undo: $undo---------------------------------")
+        when (undo) {
+            true -> {
+                //btnUndo clicked
+                btnUndo.show(false)
+                undo = null
+                fTrue?.invoke()
+            }
+            false -> {
+                //after delete selected items
+                btnUndo.show(true)
+                fFalse?.invoke()
+            }
+            null -> {
+                fNull?.invoke()
+            }
+
+        }
     }
 }

@@ -27,6 +27,7 @@ import net.mfilm.ui.custom.SimpleViewAnimator
 import net.mfilm.ui.manga.AdapterTracker
 import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.Filter
+import net.mfilm.ui.manga.UndoBtn
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.utils.*
 import org.angmarch.views.NiceSpinner
@@ -59,6 +60,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                 btnDone.show(true)
                 edtSearch.enable(false)
                 imgClear.enable(false)
+                spnFilter.show(false)
                 if (rv.isVisible()) {
                     mMangasRvAdapter?.apply {
                         Timber.e("-----countSelected---- $countSelected--------------------------")
@@ -90,6 +92,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         get() = bottom_fun
     override val btnSelect: Button
         get() = btn_toggle_select
+    var undoBtn: UndoBtn? = null
     override val btnUndo: Button
         get() = btn_undo
     override val btnSubmit: Button
@@ -163,6 +166,12 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     private var searchTime = -1L
     override fun initSearch() {
+        initImeActionSearch()
+        initRxSearch()
+        initImgClear()
+    }
+
+    override fun initImeActionSearch() {
         edtSearch.setOnEditorActionListener { _, i, _ ->
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 submitSearch()
@@ -172,6 +181,9 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
             }
             false
         }
+    }
+
+    override fun initRxSearch() {
         RxTextView.afterTextChangeEvents(edtSearch)
                 .debounce(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -199,6 +211,9 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                         imgClear.show(clearShowed)
                     }
                 }
+    }
+
+    override fun initImgClear() {
         imgClear.setOnClickListener {
             edtSearch.text = null
             restoreOriginalData()
@@ -243,8 +258,10 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun initBottomFun() {
         btnSelect.setOnClickListener { toggleSelectAll() }
-        btnUndo.setOnClickListener { undo() }
         btnSubmit.setOnClickListener { submit() }
+//        btnUndo.setOnClickListener { undo() }
+        undoBtn = UndoBtn(null, btnUndo, { undo() })
+//        btnUndo.setOnClickListener { undo() }
     }
 
     override fun initBtnDone() {
@@ -253,10 +270,12 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun done() {
         allSelected = null
+        undoBtn?.reset()
         edtSearch.enable(true)
         imgClear.enable(true)
         btnDone.show(false)
         bottomFunView.show(false)
+        requestFavorites()
     }
 
     override fun toggleSelectAll() {
@@ -402,6 +421,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     }
 
     override fun onFavoritesResponse(mangaFavoriteRealms: List<MangaFavoriteRealm>?) {
+//        Timber.e("------onFavoritesResponse-----------$mangaFavoriteRealms---------------------")
         hideLoading()
         mangaFavoriteRealms.let { mr ->
             mr?.apply {
@@ -414,48 +434,42 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
+        showEmptyDataView(true)
         mMangasRvAdapter.let { ad ->
             ad?.apply {
-                allSelected?.apply {
-                    if (undo) {
-                        //btnUndo clicked
-                        val x = ad.recoverAll(selectedItems)
-                        Timber.e("----------recoverAll----------------$x-------${ad.itemCount}-----------")
-                        ad.notifyDataSetChanged()
-                        btnUndo.show(false)
-                        undo = false
-                    } else {
-                        //after delete selected items
-                        val x = ad.removeAll(selectedItems)
-                        Timber.e("----------removeAll----------------$x------------------")
-                        ad.notifyDataSetChanged()
-                        btnUndo.show(true)
-                    }
-
-                } ?: let {
-                    ad.clear()
-                    ad.notifyDataSetChanged()
-                    setScrollToolbarFlag(true)
-                    showEmptyDataView(true)
-                }
+                doByAllSelected(ad)
             }
         }
 
     }
 
-    /*override fun onFavoritesNull() {
-        Timber.e("----------------onFavoritesNull------------------")
-        mMangasRvAdapter?.apply {
-            clear()
-            notifyDataSetChanged()
-        }
+    fun noSelection(ad: BaseRvRealmAdapter<MangaFavoriteRealm>) {
+        //original state, no selection
+        ad.clear()
+        ad.notifyDataSetChanged()
         setScrollToolbarFlag(true)
-        showEmptyDataView(true)
+    }
+
+    fun doByAllSelected(ad: BaseRvRealmAdapter<MangaFavoriteRealm>) {
         allSelected?.apply {
-            btnUndo.show(!undo)
+            undoBtn?.onSelected(
+                    {
+                        val x = ad.recoverAll(selectedItems)
+                        Timber.e("----------recoverAll----------------$x-------${ad.itemCount}-----------")
+                        ad.notifyDataSetChanged()
+                        btnSubmit.enable(ad.countSelected > 0)
+                    },
+                    {
+                        val x = ad.removeAll(selectedItems)
+                        Timber.e("----onFavoritesNull------removeAll----------------$x------------------")
+                        ad.notifyDataSetChanged()
+                        btnSubmit.enable(ad.countSelected > 0)
+                    }
+            )
+        } ?: let {
+            noSelection(ad)
         }
     }
-*/
     override fun showEmptyDataView(show: Boolean) {
         emptyDataView?.showEmptyDataView(show)
     }
@@ -468,29 +482,7 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         setScrollToolbarFlag(false)
         mMangasRvAdapter.let { ad ->
             ad?.apply {
-                allSelected?.apply {
-                    if (undo) {
-                        //btnUndo clicked
-                        val x = ad.recoverAll(selectedItems)
-                        Timber.e("----------recoverAll----------------$x-------${ad.itemCount}-----------")
-                        ad.notifyDataSetChanged()
-                        btnUndo.show(false)
-                        undo = false
-                    } else {
-                        //after delete selected items
-                        val x = ad.removeAll(selectedItems)
-                        Timber.e("----------removeAll----------------$x------------------")
-                        ad.notifyDataSetChanged()
-                        btnUndo.show(true)
-                    }
-
-                } ?: let {
-                    //original state, no selection
-                    Timber.e("---------------buildFavorites--------clear------")
-                    ad.clear()
-                    ad.addAll(mangaFavoriteRealms)
-                    ad.notifyDataSetChanged()
-                }
+                doByAllSelected(ad)
             } ?: let {
                 //the first build
                 mMangasRvAdapter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this)
@@ -499,16 +491,16 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
-    private var undo = false
     override fun undo() {
         selectedItems?.apply {
-            undo = true
+            undoBtn?.onUndo(true)
             mFavoritesPresenter.toggleFav(this)
         }
     }
 
     private var selectedItems: List<MangaFavoriteRealm>? = null
     override fun submit() {
+        Timber.e("-------submit------------------------------------")
         val adapter = if (rv.isVisible()) {
             mMangasRvAdapter
         } else if (rv_filter.isVisible()) {
@@ -520,14 +512,17 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                 btnSubmit.enable(countSelected > 0)
             }
         }
-        selectedItems = adapter?.selectedItems()?.map { it.value }
-        selectedItems?.apply {
+
+        val items = adapter?.selectedItems()?.map { it.value }
+        items?.apply {
             fun doIt() {
+                undoBtn?.onUndo(false)
+                Timber.e("-------doIt--------------------")
                 mFavoritesPresenter.toggleFav(this)
-                btnUndo.show(true)
             }
             Timber.e("------selectedItems--------$indices---------------------")
             if (isNotEmpty()) {
+                selectedItems = this
                 DialogUtil.showMessageConfirm(context, R.string.notifications, R.string.confirm_delete,
                         MaterialDialog.SingleButtonCallback { _, _ -> doIt() })
             } else {
@@ -544,10 +539,6 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
         return true
     }
-
-//    override fun obtainSelect(allSelected: Boolean) {
-//
-//    }
 
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")

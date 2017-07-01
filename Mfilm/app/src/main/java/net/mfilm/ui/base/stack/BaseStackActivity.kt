@@ -295,6 +295,12 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     override fun initSearch() {
         mBtnSearch.setImageDrawable(icon_search)
+        initImeActionSearch()
+        initRxSearch()
+        initImgClear()
+    }
+
+    override fun initImeActionSearch() {
         edtSearch.setOnEditorActionListener { _, i, _ ->
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 submitSearch()
@@ -304,6 +310,9 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
             }
             false
         }
+    }
+
+    override fun initRxSearch() {
         RxTextView.afterTextChangeEvents(edtSearch)
                 .debounce(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -330,11 +339,13 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
                         imgClear.show(clearShowed)
                     }
                 }
+    }
+
+    override fun initImgClear() {
         imgClear.setOnClickListener {
             edtSearch.text = null
         }
     }
-
     override fun onSearchHistoryClicked(searchQueryRealm: SearchQueryRealm) {
         edtSearch.setText(searchQueryRealm.query)
 //        sendHit(CATEGORY_ACTION, ACTION_CLICK_SEARCH_HISTORY_ITEM)

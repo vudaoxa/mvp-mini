@@ -1,5 +1,6 @@
 package net.mfilm.utils
 
+//import net.mfilm.ui.manga.SelectableItem
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
@@ -15,17 +16,12 @@ import net.mfilm.ui.custom.SimpleViewAnimator
 import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.SelectableItem
-//import net.mfilm.ui.manga.SelectableItem
 import org.angmarch.views.NiceSpinner
 import tr.xip.errorview.ErrorView
 
 /**
  * Created by tusi on 5/16/17.
  */
-
-//interface ICallbackConfirm {
-//    fun showConfirm()
-//}
 
 interface ICallbackBottomFun {
     fun initBottomFun()
@@ -36,6 +32,7 @@ interface ICallbackBottomFun {
     val bottomFunView: SimpleViewAnimator
     val btnSelect: Button
     val btnUndo: Button
+    //    val undoBtn: UndoBtn
     val btnSubmit: Button
 //    fun obtainSelect(allSelected: Boolean)
 }
@@ -175,6 +172,9 @@ interface ICallbackLayoutSearch : ICallbackSearch {
     val edtSearch: EditText
     val imgClear: IconTextView
     fun initSearch()
+    fun initImeActionSearch()
+    fun initRxSearch()
+    fun initImgClear()
 }
 
 interface ICallbackLocalSearch : ICallbackLayoutSearch {
