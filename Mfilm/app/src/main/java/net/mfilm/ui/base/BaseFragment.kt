@@ -21,6 +21,7 @@ import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 
 import net.mfilm.di.components.ActComponent
+import net.mfilm.ui.manga.PassByTime
 
 /**
  * Created by janisharali on 27/01/17.
@@ -85,9 +86,9 @@ abstract class BaseFragment : Fragment(), MvpView {
         get() = baseActivity?.mActComponent!!
 
     interface Callback {
-
         fun onFragmentAttached()
-
         fun onFragmentDetached(tag: String)
+        var screenRequestPassByTime: PassByTime?
+        fun initScreenRequestPassByTime()
     }
 }

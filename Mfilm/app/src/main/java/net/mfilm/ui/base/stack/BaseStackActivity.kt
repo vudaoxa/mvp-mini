@@ -158,6 +158,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun onFragmentEntered(f: Fragment?) {
+        Timber.e("----onFragmentEntered-----$f---------------------------")
         f as BaseStackFragment
         f.apply {
             if (fullScreen) {
@@ -181,6 +182,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun setScrollToolbarFlag(info: Boolean) {
+        Timber.e("---setScrollToolbarFlag--------------$info----------------------------")
         val params = mToolbar.layoutParams as (AppBarLayout.LayoutParams)
         params.scrollFlags = if (info) 0 else {
             AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS

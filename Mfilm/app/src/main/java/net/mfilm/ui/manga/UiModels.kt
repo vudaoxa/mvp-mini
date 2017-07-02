@@ -63,7 +63,7 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
 
     fun reset() {
         undo = null
-
+        btnUndo.show(false)
     }
 
     fun onUndo(undo: Boolean) {
@@ -89,5 +89,15 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
             }
 
         }
+    }
+}
+
+class PassByTime(private var duration: Long = -1L, private var time: Long = -1L) {
+    fun passByTime(f: (() -> Unit)? = null) {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - time > duration) {
+            time = currentTime
+        } else return
+        f?.invoke()
     }
 }

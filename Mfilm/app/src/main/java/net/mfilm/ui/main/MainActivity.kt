@@ -27,6 +27,7 @@ import net.mfilm.ui.favorites.FavoritesFragment
 import net.mfilm.ui.filmy.FullReadFragment
 import net.mfilm.ui.history.HistoryFragment
 import net.mfilm.ui.home.HomePagerFragment
+import net.mfilm.ui.manga.PassByTime
 import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.ui.mangas.MangasFragment
 import net.mfilm.utils.*
@@ -37,6 +38,12 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     @Inject
     lateinit var mMainPresenter: MainMvpPresenter<MainMvpView>
 
+    private var mScreenRequestPassByTime: PassByTime? = null
+    override var screenRequestPassByTime: PassByTime?
+        get() = mScreenRequestPassByTime
+        set(value) {
+            mScreenRequestPassByTime = value
+        }
     override val mCallbackSearchView: ICallbackSearchView?
         get() = MangasFragment.getSearchInstance()
     override val edtSearch: EditText
@@ -121,55 +128,68 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun initViews(savedInstanceState: Bundle?) {
         super.initViews(savedInstanceState)
+        initScreenRequestPassByTime()
         mNavView.setNavigationItemSelectedListener(this)
+    }
+
+    override fun initScreenRequestPassByTime() {
+        screenRequestPassByTime = PassByTime(AUTO_LOAD_DURATION)
     }
 
     override fun showConfirmExit() {
         DialogUtil.showMessageConfirm(this, R.string.notifications, R.string.confirm_exit,
                 MaterialDialog.SingleButtonCallback { _, _ -> finish() })
     }
-    override fun onNewScreenRequested(indexTag: Any?, typeContent: String?, obj: Any?) {
-        when (indexTag) {
-            IndexTags.FRAGMENT_HOME -> {
-                onMainScreenRequested()
-            }
-        //searching, category
-            IndexTags.FRAGMENT_SEARCH -> {
-                fragmentStackManager.swapFragment(MangasFragment.newInstance(null, true))
-            }
-            IndexTags.FRAGMENT_CATEGORY -> {
-                fragmentStackManager.swapFragment(MangasFragment.newInstance(obj, false))
-            }
-            IndexTags.FRAGMENT_MANGA_INFO -> {
-                fragmentStackManager.swapFragment(MangaInfoFragment.newInstance(obj))
-            }
-            IndexTags.FRAGMENT_FULL_READ -> {
-                fragmentStackManager.swapFragment(FullReadFragment.newInstance(obj), true)
-            }
-            IndexTags.FRAGMENT_CHAPTER_INFO -> {
 
-            }
-            IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
-            }
-            IndexTags.FRAGMENT_FAV -> {
-                fragmentStackManager.swapFragment(FavoritesFragment.newInstance())
-            }
-            IndexTags.FRAGMENT_HISTORY -> {
-                fragmentStackManager.swapFragment(HistoryFragment.newInstance())
+
+    override fun onNewScreenRequested(indexTag: Any?, typeContent: String?, obj: Any?) {
+        screenRequestPassByTime?.passByTime {
+            when (indexTag) {
+                IndexTags.FRAGMENT_HOME -> {
+                    onMainScreenRequested()
+                }
+            //searching, category
+                IndexTags.FRAGMENT_SEARCH -> {
+                    fragmentStackManager.swapFragment(MangasFragment.newInstance(null, true))
+                }
+                IndexTags.FRAGMENT_CATEGORY -> {
+                    fragmentStackManager.swapFragment(MangasFragment.newInstance(obj, false))
+                }
+                IndexTags.FRAGMENT_MANGA_INFO -> {
+                    fragmentStackManager.swapFragment(MangaInfoFragment.newInstance(obj))
+                }
+                IndexTags.FRAGMENT_FULL_READ -> {
+                    fragmentStackManager.swapFragment(FullReadFragment.newInstance(obj), true)
+                }
+                IndexTags.FRAGMENT_CHAPTER_INFO -> {
+
+                }
+                IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
+                }
+                IndexTags.FRAGMENT_FAV -> {
+                    fragmentStackManager.swapFragment(FavoritesFragment.newInstance())
+                }
+                IndexTags.FRAGMENT_HISTORY -> {
+                    fragmentStackManager.swapFragment(HistoryFragment.newInstance())
+                }
             }
         }
     }
 
     override fun onNewScreenRequested(indexTag: Any?, fragment: Fragment?, obj: Any?) {
-        when (indexTag) {
-            IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
-                fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(fragment), true)
+        screenRequestPassByTime?.passByTime {
+            when (indexTag) {
+                IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
+                    fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(fragment), true)
+                }
             }
         }
     }
 
     override fun onSearchScreenRequested() {
-        onNewScreenRequested(IndexTags.FRAGMENT_SEARCH, typeContent = null, obj = null)
+        screenRequestPassByTime?.passByTime {
+            onNewScreenRequested(IndexTags.FRAGMENT_SEARCH, typeContent = null, obj = null)
+        }
     }
 
     override fun onMainScreenRequested() = fragmentStackManager.run {

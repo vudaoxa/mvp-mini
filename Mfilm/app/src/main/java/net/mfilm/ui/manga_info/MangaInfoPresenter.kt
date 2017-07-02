@@ -47,7 +47,7 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
         //flowable to receive TapEvent from MainPresenter
         val flowable = iBus.asFlowable().filter { it is TapEvent }
         val tapEventEmitter = flowable.publish()
-        val tapCountConsumer = tapEventEmitter.publish { it.buffer(it.debounce(500, TimeUnit.MILLISECONDS)) }
+        val tapCountConsumer = tapEventEmitter.publish { it.buffer(it.debounce(300, TimeUnit.MILLISECONDS)) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     onTaps(it.size)

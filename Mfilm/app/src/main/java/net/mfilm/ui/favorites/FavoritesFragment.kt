@@ -434,24 +434,36 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
-        showEmptyDataView(true)
-        mMangasRvAdapter.let { ad ->
-            ad?.apply {
-                doByAllSelected(ad)
-            }
+        mMangasRvAdapter?.apply {
+            doByAllSelected(this)
+        } ?: let {
+            handler({
+                showEmptyDataView(true)
+                setScrollToolbarFlag(true)
+            })
         }
-
     }
 
-    fun noSelection(ad: BaseRvRealmAdapter<MangaFavoriteRealm>) {
+    fun onOriginal(ad: BaseRvRealmAdapter<MangaFavoriteRealm>, mangaFavoriteRealms: List<MangaFavoriteRealm>? = null) {
         //original state, no selection
         ad.clear()
+        val x = mangaFavoriteRealms == null
+        Timber.e("-----onOriginal-------------$x-----------------")
+        showEmptyDataView(x)
+        setScrollToolbarFlag(x)
+        mangaFavoriteRealms?.apply {
+            ad.addAll(this)
+//            showEmptyDataView(false)
+        }
         ad.notifyDataSetChanged()
-        setScrollToolbarFlag(true)
     }
 
-    fun doByAllSelected(ad: BaseRvRealmAdapter<MangaFavoriteRealm>) {
+    fun doByAllSelected(ad: BaseRvRealmAdapter<MangaFavoriteRealm>, mangaFavoriteRealms: List<MangaFavoriteRealm>? = null) {
         allSelected?.apply {
+            if (!isVisible) return
+            val x = mangaFavoriteRealms == null
+            showEmptyDataView(x)
+            setScrollToolbarFlag(x)
             undoBtn?.onSelected(
                     {
                         val x = ad.recoverAll(selectedItems)
@@ -467,9 +479,10 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
                     }
             )
         } ?: let {
-            noSelection(ad)
+            onOriginal(ad, mangaFavoriteRealms)
         }
     }
+
     override fun showEmptyDataView(show: Boolean) {
         emptyDataView?.showEmptyDataView(show)
     }
@@ -478,11 +491,11 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
     override fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
         Timber.e("---------------buildFavorites--------$context-------${mangaFavoriteRealms.size}")
         context ?: return
-        showEmptyDataView(false)
+//        showEmptyDataView (false)
         setScrollToolbarFlag(false)
         mMangasRvAdapter.let { ad ->
             ad?.apply {
-                doByAllSelected(ad)
+                doByAllSelected(ad, mangaFavoriteRealms)
             } ?: let {
                 //the first build
                 mMangasRvAdapter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this)

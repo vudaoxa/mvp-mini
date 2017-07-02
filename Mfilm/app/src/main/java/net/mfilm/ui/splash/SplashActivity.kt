@@ -23,6 +23,7 @@ import android.os.Bundle
 import net.mfilm.R
 import net.mfilm.ui.base.BaseActivity
 import net.mfilm.ui.main.MainActivity
+import net.mfilm.ui.manga.PassByTime
 import javax.inject.Inject
 
 
@@ -31,6 +32,15 @@ import javax.inject.Inject
  */
 
 class SplashActivity : BaseActivity(), SplashMvpView {
+
+    //not use
+    override var screenRequestPassByTime: PassByTime?
+        get() = null
+        set(value) {}
+
+    override fun initScreenRequestPassByTime() {
+
+    }
 
     override fun onNoInternetConnections() {
     }
