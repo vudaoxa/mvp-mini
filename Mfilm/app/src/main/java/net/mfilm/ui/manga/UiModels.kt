@@ -45,7 +45,6 @@ class EmptyDataView(val context: Context, val spnFilter: NiceSpinner?, val layou
     }
 }
 
-//class SelectableItem(var selected: ItemSelections)
 class SelectableItem(var selected: Boolean? = null) : ISelectable {
     override fun toggleSelected(selected: Boolean?, f: (() -> Unit)?) {
         this.selected = selected
@@ -70,7 +69,8 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
         this.undo = undo
     }
 
-    fun onSelected(fTrue: (() -> Unit)? = null, fFalse: (() -> Unit)? = null, fNull: (() -> Unit)? = null) {
+    fun onSelected(fTrue: (() -> Unit)? = null, fFalse: (() -> Unit)? = null,
+                   fNull: (() -> Unit)? = null) {
         Timber.e("-----undo: $undo---------------------------------")
         when (undo) {
             true -> {
@@ -81,7 +81,7 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
             }
             false -> {
                 //after delete selected items
-                btnUndo.show(true)
+                btnUndo.show(true, 5000, { reset() })
                 fFalse?.invoke()
             }
             null -> {
@@ -92,10 +92,13 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
     }
 }
 
-class PassByTime(private var duration: Long = -1L, private var time: Long = -1L) {
+class PassByTime(private var duration: Long = -1L, var time: Long = -1L) {
+    private var count = 0
     fun passByTime(f: (() -> Unit)? = null) {
         val currentTime = System.currentTimeMillis()
-        if (currentTime - time > duration) {
+        val l = currentTime - time
+        Timber.e("-passByTime---${count++}- $time--- $l-------$duration------------$f---------------")
+        if (l > duration) {
             time = currentTime
         } else return
         f?.invoke()

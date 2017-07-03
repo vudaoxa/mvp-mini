@@ -41,6 +41,7 @@ import net.mfilm.di.components.DaggerActComponent
 import net.mfilm.di.modules.ActModule
 import net.mfilm.ui.base.BaseFragment
 import net.mfilm.ui.base.MvpView
+import net.mfilm.ui.manga.PassByTime
 import net.mfilm.utils.*
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
@@ -57,7 +58,12 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         private set
     var mMenu: Menu? = null
     var mToggle: ActionBarDrawerToggle? = null
-    private var searchTime = -1L
+    private var mSearchPassByTime: PassByTime? = null
+    override var searchPassByTime: PassByTime?
+        get() = mSearchPassByTime
+        set(value) {
+            mSearchPassByTime = value
+        }
     private var mOptionsMenuId = -1
     override var optionsMenu: Int
         get() = mOptionsMenuId
@@ -297,18 +303,23 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     override fun initSearch() {
         mBtnSearch.setImageDrawable(icon_search)
+        initSearchPassByTime()
         initImeActionSearch()
         initRxSearch()
         initImgClear()
     }
 
+    override fun initSearchPassByTime() {
+        searchPassByTime = PassByTime(AUTO_LOAD_DURATION)
+    }
     override fun initImeActionSearch() {
         edtSearch.setOnEditorActionListener { _, i, _ ->
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 submitSearch()
                 //searchTime to avoid conflict between searching and searching suggestion
-                searchTime = System.currentTimeMillis()
-                Timber.e("time -------------- " + searchTime)
+                searchPassByTime?.apply {
+                    time = System.currentTimeMillis()
+                }
             }
             false
         }
@@ -319,17 +330,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
                 .debounce(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { tvChangeEvent ->
-                    var ok = true
-                    if (searchTime != -1L) {
-                        val currentTime = System.currentTimeMillis()
-                        val l = currentTime - searchTime
-                        Timber.e(currentTime.toString() + " -------------  " + searchTime + " === " + l)
-                        if (l <= AUTO_LOAD_DURATION) {
-                            ok = false
-                        }
-                    }
-                    Timber.e("ok----------------- " + ok)
-                    if (ok) {
+                    searchPassByTime?.passByTime {
                         val s = tvChangeEvent.view().text.toString()
                         val text = s.trim { it <= ' ' }
                         var clearShowed = true

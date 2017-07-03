@@ -1,28 +1,39 @@
 package net.mfilm.utils
 
-//import net.mfilm.ui.manga.SelectableItem
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.joanzapata.iconify.widget.IconTextView
 import io.reactivex.Flowable
+import io.realm.RealmObject
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
+import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.custom.SimpleViewAnimator
-import net.mfilm.ui.manga.EmptyDataView
+import net.mfilm.ui.manga.*
 import net.mfilm.ui.manga.Filter
-import net.mfilm.ui.manga.SelectableItem
+import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import org.angmarch.views.NiceSpinner
 import tr.xip.errorview.ErrorView
 
 /**
  * Created by tusi on 5/16/17.
  */
-
+interface ICallbackRealm<V : RealmObject> {
+    fun onToggle()
+    val rvMain: RecyclerView
+    val rvFilter: RecyclerView
+    var adapterMain: BaseRvRealmAdapter<V>?
+    var adapterFilter: BaseRvRealmAdapter<V>?
+    var layoutManagerMain: StaggeredGridLayoutManagerWrapper
+    var layoutManagerFilter: StaggeredGridLayoutManagerWrapper
+    fun adapterClicked(ad: BaseRvRealmAdapter<V>, position: Int, f: (() -> Unit)? = null)
+}
 interface ICallbackBottomFun {
     fun initBottomFun()
     fun undo()
@@ -30,18 +41,16 @@ interface ICallbackBottomFun {
     fun toggleSelectAll()
     var allSelected: Boolean?
     val bottomFunView: SimpleViewAnimator
+    var undoBtn: UndoBtn?
     val btnSelect: Button
     val btnUndo: Button
-    //    val undoBtn: UndoBtn
     val btnSubmit: Button
-//    fun obtainSelect(allSelected: Boolean)
 }
 
 interface IRV<V : Any?> {
     fun clear(): Boolean
     fun removeAll(elements: List<V>?): Boolean
     fun recoverAll(elements: List<V>?): Boolean
-    //    fun add(item: V?)
     fun addAll(items: List<V>?): Boolean
 }
 
@@ -56,6 +65,7 @@ interface IRvSelectable<V : Any?> {
     //    fun selectedItems(): List<V>?
     fun selectedItems(): List<IndexedValue<V>>?
     var itemsSelectable: Boolean?
+    fun onOriginal()
     //not use
     fun addSelectableItem(item: SelectableItem)
 
@@ -143,10 +153,6 @@ interface ICallbackFragmentOptionMenu {
     val optionsMenuId: Int
 }
 
-interface ICallbackFilter {
-    val spnFilter: NiceSpinner
-}
-
 interface ICallbackEdit {
     fun initBtnDone()
     val btnDone: Button
@@ -155,6 +161,9 @@ interface ICallbackEdit {
 }
 
 interface ICallbackSort {
+    fun initSpnFilters()
+    val spnFilterTracker: AdapterTracker
+    val spnFilter: NiceSpinner
     val mFilters: List<Filter>
     fun sort()
 }
@@ -172,6 +181,8 @@ interface ICallbackLayoutSearch : ICallbackSearch {
     val edtSearch: EditText
     val imgClear: IconTextView
     fun initSearch()
+    var searchPassByTime: PassByTime?
+    fun initSearchPassByTime()
     fun initImeActionSearch()
     fun initRxSearch()
     fun initImgClear()
@@ -179,7 +190,6 @@ interface ICallbackLayoutSearch : ICallbackSearch {
 
 interface ICallbackLocalSearch : ICallbackLayoutSearch {
     fun search(query: String)
-
     fun onRealmFilterNull()
     fun restoreOriginalData()
 }
@@ -217,7 +227,7 @@ interface ICallbackToolbar : ICallbackToolbarSearch, ICallbackOptionMenu, ICallb
 }
 
 interface IBackListener {
-    fun onBackPressed(f: (() -> Unit)?)
+    fun onBackPressed(f: (() -> Unit)? = null)
 }
 
 interface ICallbackDataEmpty {

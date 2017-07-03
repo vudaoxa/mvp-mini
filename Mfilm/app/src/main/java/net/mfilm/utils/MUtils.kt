@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
+import android.os.CountDownTimer
 import android.os.Handler
 import android.provider.Settings
 import android.support.annotation.StringRes
@@ -27,6 +28,7 @@ import com.joanzapata.iconify.fonts.IoniconsModule
 import net.mfilm.R
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.NavItem
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -159,16 +161,34 @@ fun View?.enable(enable: Boolean) {
     }
 }
 
-fun View?.show(show: Boolean) {
+fun View?.show(show: Boolean, duration: Long? = null, f: (() -> Unit)? = null) {
     this?.apply {
         if (show) {
             if (isVisible()) return
             startAnimation(anim)
             postOnAnimationDelayed({ visibility = visible }, 250)
+            duration?.apply {
+                schedule(this, {
+                    f?.invoke()
+                })
+            }
         } else {
             visibility = gone
         }
     }
+}
+
+fun schedule(duration: Long, f: (() -> Unit)? = null) {
+    val timer = object : CountDownTimer(duration, 1000) {
+        override fun onTick(p0: Long) {
+            Timber.d("------------------- ------ onTick---- $p0")
+        }
+
+        override fun onFinish() {
+            f?.invoke()
+        }
+    }
+    timer.start()
 }
 
 fun Int.isEven() = this % 2 == 0
@@ -178,6 +198,7 @@ fun View?.isVisible(): Boolean {
     }
     return false
 }
+
 fun showLoadingDialog(context: Context): ProgressDialog {
     val progressDialog = ProgressDialog(context)
     progressDialog.apply {

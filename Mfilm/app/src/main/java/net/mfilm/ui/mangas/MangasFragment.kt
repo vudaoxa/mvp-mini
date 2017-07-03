@@ -264,6 +264,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
+        Timber.e("---onMangasResponse---------${mangasResponse?.mangasPaging?.mangas?.size}------------------------------------")
         showErrorView(false)
         mangasResponse.let { mr ->
             mr?.apply {

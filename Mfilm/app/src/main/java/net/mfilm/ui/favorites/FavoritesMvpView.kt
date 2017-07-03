@@ -1,22 +1,18 @@
 package net.mfilm.ui.favorites
 
 import net.mfilm.data.db.models.MangaFavoriteRealm
-import net.mfilm.ui.base.MvpView
-import net.mfilm.ui.manga.AdapterTracker
-import net.mfilm.utils.*
+import net.mfilm.ui.base.realm.RealmMvpView
 
 /**
  * Created by MRVU on 6/20/2017.
  */
-interface FavoritesMvpView : MvpView, ICallbackOnClick,
-        ICallbackSpanCount, ICallbackEmptyDataViewHolder, ICallbackReceiveOptionsMenu,
-        ICallbackFilter, ICallbackLocalSearch, ICallbackEdit, ICallbackSort,
-        ICallbackOnLongClick, ICallbackBottomFun {
-    fun buildMangaFavoritesRealmFilter(objs: List<MangaFavoriteRealm>)
-    val spnFilterTracker: AdapterTracker
+interface FavoritesMvpView : RealmMvpView<MangaFavoriteRealm> {
+    fun buildFavoritesFilter(mangaFavoriteRealms: List<MangaFavoriteRealm>)
+
     fun initRv()
-    fun initSpnFilters()
+
     fun requestFavorites()
+
     fun onFavoritesResponse(mangaFavoriteRealms: List<MangaFavoriteRealm>?)
     fun onFavoritesNull()
     fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>)

@@ -30,6 +30,10 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
             }
         }
 
+    override fun onOriginal() {
+        itemsSelectable = null
+        notifyDataSetChanged()
+    }
     private var selectedIndices: List<Int>? = null
     override fun selectedItems(): List<IndexedValue<V>>? {
         selectedIndices = mSelectableItems.indices.filter { mSelectableItems[it].selected == true }

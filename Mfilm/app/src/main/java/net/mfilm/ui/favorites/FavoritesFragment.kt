@@ -1,44 +1,36 @@
 package net.mfilm.ui.favorites
 
-import android.content.res.Configuration
 import android.os.Bundle
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.*
-import com.afollestad.materialdialogs.MaterialDialog
-import com.jakewharton.rxbinding2.widget.RxTextView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.joanzapata.iconify.widget.IconTextView
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.bottom_fun_view.*
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import kotlinx.android.synthetic.main.layout_input_text.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaFavoriteRealm
-import net.mfilm.ui.base.rv.holders.TYPE_ITEM
-import net.mfilm.ui.base.rv.holders.TYPE_ITEM_FILTER
+import net.mfilm.ui.base.realm.BaseRealmFragment
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
-import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.custom.SimpleViewAnimator
-import net.mfilm.ui.manga.AdapterTracker
-import net.mfilm.ui.manga.EmptyDataView
-import net.mfilm.ui.manga.Filter
-import net.mfilm.ui.manga.UndoBtn
+import net.mfilm.ui.manga.*
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.utils.*
 import org.angmarch.views.NiceSpinner
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
  * Created by MRVU on 6/20/2017.
  */
-class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
+class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpView {
     companion object {
         fun newInstance(): FavoritesFragment {
             val fragment = FavoritesFragment()
@@ -46,53 +38,46 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
-    private var mAllSelected: Boolean? = null
-    override var allSelected: Boolean?
-        get() = mAllSelected
+    override val rvMain: RecyclerView
+        get() = rv
+    override val rvFilter: RecyclerView
+        get() = rv_filter
+    override var layoutManagerMain: StaggeredGridLayoutManagerWrapper
+        get() = mMangasRvLayoutManagerWrapper
         set(value) {
-            mAllSelected = value
-            var text = R.string.select_all
-            if (mAllSelected == true)
-                text = R.string.deselect_all
-            btnSelect.setText(text)
-            mAllSelected?.apply {
-                bottomFunView.show(true)
-                btnDone.show(true)
-                edtSearch.enable(false)
-                imgClear.enable(false)
-                spnFilter.show(false)
-                if (rv.isVisible()) {
-                    mMangasRvAdapter?.apply {
-                        Timber.e("-----countSelected---- $countSelected--------------------------")
-                        btnSubmit.enable(countSelected > 0)
-                    }
-                } else if (rv_filter.isVisible()) {
-                    mMangasFilterRvAdapter?.apply {
-                        Timber.e("----filter-countSelected---- $countSelected--------------------------")
-                        btnSubmit.enable(countSelected > 0)
-                    }
-                }
-            } ?: let {
-                if (rv.isVisible()) {
-                    mMangasRvAdapter?.apply {
-                        itemsSelectable = null
-                        notifyDataSetChanged()
-                    }
-                } else if (rv_filter.isVisible()) {
-                    mMangasFilterRvAdapter?.apply {
-                        itemsSelectable = null
-                        notifyDataSetChanged()
-                    }
-                } else {
-
-                }
-            }
+            mMangasRvLayoutManagerWrapper = value
+        }
+    override var layoutManagerFilter: StaggeredGridLayoutManagerWrapper
+        get() = mMangasRvFilterLayoutManagerWrapper
+        set(value) {
+            mMangasRvFilterLayoutManagerWrapper = value
+        }
+    override var adapterMain: BaseRvRealmAdapter<MangaFavoriteRealm>?
+        get() = mMangasRvAdapter
+        set(value) {
+            mMangasRvAdapter = value
+        }
+    override var adapterFilter: BaseRvRealmAdapter<MangaFavoriteRealm>?
+        get() = mMangasFilterRvAdapter
+        set(value) {
+            mMangasFilterRvAdapter = value
+        }
+    private var mSearchPassByTime: PassByTime? = null
+    override var searchPassByTime: PassByTime?
+        get() = mSearchPassByTime
+        set(value) {
+            mSearchPassByTime = value
         }
     override val bottomFunView: SimpleViewAnimator
         get() = bottom_fun
     override val btnSelect: Button
         get() = btn_toggle_select
-    var undoBtn: UndoBtn? = null
+    var mUndoBtn: UndoBtn? = null
+    override var undoBtn: UndoBtn?
+        get() = mUndoBtn
+        set(value) {
+            mUndoBtn = value
+        }
     override val btnUndo: Button
         get() = btn_undo
     override val btnSubmit: Button
@@ -164,235 +149,48 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         requestFavorites()
     }
 
-    private var searchTime = -1L
-    override fun initSearch() {
-        initImeActionSearch()
-        initRxSearch()
-        initImgClear()
-    }
-
-    override fun initImeActionSearch() {
-        edtSearch.setOnEditorActionListener { _, i, _ ->
-            if (i == EditorInfo.IME_ACTION_SEARCH) {
-                submitSearch()
-                //searchTime to avoid conflict between searching and searching suggestion
-                searchTime = System.currentTimeMillis()
-                Timber.e("time -------------- " + searchTime)
-            }
-            false
-        }
-    }
-
-    override fun initRxSearch() {
-        RxTextView.afterTextChangeEvents(edtSearch)
-                .debounce(1, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { tvChangeEvent ->
-                    var ok = true
-                    if (searchTime != -1L) {
-                        val currentTime = System.currentTimeMillis()
-                        val l = currentTime - searchTime
-                        Timber.e(currentTime.toString() + " -------------  " + searchTime + " === " + l)
-                        if (l <= AUTO_LOAD_DURATION) {
-                            ok = false
-                        }
-                    }
-                    Timber.e("ok----------------- " + ok)
-                    if (ok) {
-                        val s = tvChangeEvent.view().text.toString()
-                        val text = s.trim { it <= ' ' }
-                        var clearShowed = true
-                        if (text.isNotEmpty()) {
-                            submitSearchSuggestion(text)
-                        } else {
-                            clearShowed = false
-                            restoreOriginalData()
-                        }
-                        imgClear.show(clearShowed)
-                    }
-                }
-    }
-
-    override fun initImgClear() {
-        imgClear.setOnClickListener {
-            edtSearch.text = null
-            restoreOriginalData()
-        }
-    }
-
-    override fun restoreOriginalData() {
-        if (isDataEmpty() || rv.isVisible()) return
-        Timber.e("------------------restoreOriginalData--------------------------")
-        handler({
-            rv.show(true)
-            rv_filter.show(false)
-            showEmptyDataView(false)
-        })
-    }
-
-    override fun initEmptyDataView() {
-        emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
-    }
-
-    override fun initSpnFilters() {
-        val banksAdapter = ArrayAdapter(activity,
-                R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
-        spn_filter.apply {
-            setAdapter(banksAdapter)
-            setOnItemSelectedListener(spnFilterTracker)
-        }
-    }
-
     override fun initRv() {
-        rv.apply {
-            mMangasRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
+        rvMain.apply {
+            layoutManagerMain = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
-            layoutManager = mMangasRvLayoutManagerWrapper
+            layoutManager = layoutManagerMain
         }
-        rv_filter.apply {
-            mMangasRvFilterLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
+        rvFilter.apply {
+            layoutManagerFilter = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
-            layoutManager = mMangasRvFilterLayoutManagerWrapper
+            layoutManager = layoutManagerFilter
         }
-    }
-
-    override fun initBottomFun() {
-        btnSelect.setOnClickListener { toggleSelectAll() }
-        btnSubmit.setOnClickListener { submit() }
-//        btnUndo.setOnClickListener { undo() }
-        undoBtn = UndoBtn(null, btnUndo, { undo() })
-//        btnUndo.setOnClickListener { undo() }
-    }
-
-    override fun initBtnDone() {
-        btnDone.setOnClickListener { done() }
     }
 
     override fun done() {
-        allSelected = null
-        undoBtn?.reset()
-        edtSearch.enable(true)
-        imgClear.enable(true)
-        btnDone.show(false)
-        bottomFunView.show(false)
+        super.done()
         requestFavorites()
     }
 
-    override fun toggleSelectAll() {
-        Timber.e("-----toggleSelectAll------allSelected------$allSelected------------------------")
-        if (rv.isVisible()) {
-            mMangasRvAdapter?.apply {
-                allSelected = onSelected(-1, !allSelected!!)
-            }
-        } else if (rv_filter.isVisible()) {
-            mMangasFilterRvAdapter?.apply {
-                allSelected = onSelected(-1, !allSelected!!)
-            }
-        }
-
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        handler({
-            rv.apply {
-                mMangasRvLayoutManagerWrapper.spanCount = spanCount
-                requestLayout()
-            }
-            rv_filter.apply {
-                mMangasRvFilterLayoutManagerWrapper.spanCount = spanCount
-                requestLayout()
-            }
-        })
-    }
-
-    override fun onReceiveOptionsMenuItem(item: MenuItem) {
-        Timber.e("-----onReceiveOptionsMenuItem-----$isVisible---- ${item.title}--------------------------------------------")
-        if (!isVisible || isDataEmpty()) return
-        when (item.itemId) {
-            R.id.action_favorites_search -> {
-                mLayoutInputText.show(true)
-                edtSearch.requestFocus()
-                spnFilter.show(false)
-                toggleEdit(false)
-            }
-            R.id.action_favorites_sort -> {
-                if (!rv.isVisible()) return
-                mMangasRvAdapter?.apply {
-                    if (itemCount < 2) return
-                    mLayoutInputText.show(false)
-                    spnFilter.show(true)
-                    sort()
-                    toggleEdit(false)
-                }
-            }
-            R.id.action_favorites_edit -> {
-                if (allSelected != null) return
-                mLayoutInputText.show(false)
-                spnFilter.show(false)
-                toggleEdit(true)
-            }
-        }
-    }
-
-    override fun submitSearch() {
-        val query = edtSearch.text.toString().trim()
-        if (query.isEmpty()) return
-        search(query)
-        hideKeyboard()
-    }
-
-    override fun submitSearchSuggestion(query: String) {
-        search(query)
-    }
-
     override fun search(query: String) {
-        val favoritesFilter = mMangasRvAdapter?.mData?.filter { it.name!!.contains(query, true) }
+        val favoritesFilter = adapterMain?.mData?.filter { it.name!!.contains(query, true) }
         favoritesFilter.let { ff ->
             ff?.apply {
                 if (ff.isNotEmpty()) {
-                    buildMangaFavoritesRealmFilter(ff)
+                    buildFavoritesFilter(ff)
                 } else onRealmFilterNull()
             } ?: let { onRealmFilterNull() }
         }
     }
 
-    override fun buildMangaFavoritesRealmFilter(objs: List<MangaFavoriteRealm>) {
-        Timber.e("----------buildMangaFavoritesRealmFilter-------- ${objs.size}----------------------------")
-        mMangasFilterRvAdapter?.apply {
-            clear()
-            addAll(objs)
-            notifyDataSetChanged()
-        } ?: let {
-            mMangasFilterRvAdapter = BaseRvRealmAdapter(context, objs.toMutableList(), this@FavoritesFragment, this, true)
-            rv_filter.adapter = mMangasFilterRvAdapter
-        }
-        showEmptyDataView(false)
-        handler({
-            rv.show(false)
-            rv_filter.show(true)
-        })
-    }
-
-    override fun onRealmFilterNull() {
-        Timber.e("-------------onRealmFilterNull-----------------------------")
-        rv.show(false)
-        rv_filter.show(false)
-        showEmptyDataView(true)
-    }
-
+    //100% NOT MOVE, BECAUSE GENERIC CAN'T BE SORTED
     override fun sort() {
         Timber.e("------------sort---------------------------")
         val filter = mFilters[spnFilterTracker.mPosition]
         when (filter.content) {
             TYPE_FILTER_AZ -> {
-                mMangasRvAdapter?.apply {
+                adapterMain?.apply {
                     mData?.sortBy { it.name }
                     notifyDataSetChanged()
                 }
             }
             TYPE_FILTER_TIME -> {
-                mMangasRvAdapter?.apply {
+                adapterMain?.apply {
                     mData?.sortByDescending { it.time }
                     notifyDataSetChanged()
                 }
@@ -400,24 +198,14 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
-    override fun toggleEdit(edit: Boolean) {
-        if (!edit)
-            done()
-        else {
-            if (rv.isVisible()) {
-                mMangasRvAdapter?.apply {
-                    allSelected = onSelected(-1)
-                }
-            } else if (rv_filter.isVisible()) {
-                mMangasFilterRvAdapter?.apply {
-                    allSelected = onSelected(-1)
-                }
-            }
-        }
-    }
-
     override fun requestFavorites() {
         mFavoritesPresenter.requestFavorites()
+    }
+
+    override fun onToggle() {
+        selectedItems?.apply {
+            mFavoritesPresenter.toggleFav(this)
+        }
     }
 
     override fun onFavoritesResponse(mangaFavoriteRealms: List<MangaFavoriteRealm>?) {
@@ -434,9 +222,10 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
 
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
-        mMangasRvAdapter?.apply {
+        adapterMain?.apply {
             doByAllSelected(this)
         } ?: let {
+            //set it after onFragmentEntered
             handler({
                 showEmptyDataView(true)
                 setScrollToolbarFlag(true)
@@ -444,162 +233,42 @@ class FavoritesFragment : BaseStackFragment(), FavoritesMvpView {
         }
     }
 
-    fun onOriginal(ad: BaseRvRealmAdapter<MangaFavoriteRealm>, mangaFavoriteRealms: List<MangaFavoriteRealm>? = null) {
-        //original state, no selection
-        ad.clear()
-        val x = mangaFavoriteRealms == null
-        Timber.e("-----onOriginal-------------$x-----------------")
-        showEmptyDataView(x)
-        setScrollToolbarFlag(x)
-        mangaFavoriteRealms?.apply {
-            ad.addAll(this)
-//            showEmptyDataView(false)
-        }
-        ad.notifyDataSetChanged()
-    }
-
-    fun doByAllSelected(ad: BaseRvRealmAdapter<MangaFavoriteRealm>, mangaFavoriteRealms: List<MangaFavoriteRealm>? = null) {
-        allSelected?.apply {
-            if (!isVisible) return
-            val x = mangaFavoriteRealms == null
-            showEmptyDataView(x)
-            setScrollToolbarFlag(x)
-            undoBtn?.onSelected(
-                    {
-                        val x = ad.recoverAll(selectedItems)
-                        Timber.e("----------recoverAll----------------$x-------${ad.itemCount}-----------")
-                        ad.notifyDataSetChanged()
-                        btnSubmit.enable(ad.countSelected > 0)
-                    },
-                    {
-                        val x = ad.removeAll(selectedItems)
-                        Timber.e("----onFavoritesNull------removeAll----------------$x------------------")
-                        ad.notifyDataSetChanged()
-                        btnSubmit.enable(ad.countSelected > 0)
-                    }
-            )
+    override fun buildFavoritesFilter(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
+        Timber.e("----------buildFavoritesFilter-------- ${mangaFavoriteRealms.size}----------------------------")
+        adapterFilter?.apply {
+            doByAllSelected(this, mangaFavoriteRealms)
         } ?: let {
-            onOriginal(ad, mangaFavoriteRealms)
+            adapterFilter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this, true)
+            rvFilter.adapter = adapterFilter
         }
-    }
-
-    override fun showEmptyDataView(show: Boolean) {
-        emptyDataView?.showEmptyDataView(show)
+        showEmptyDataView(false)
+        handler({
+            rvMain.show(false)
+            rvFilter.show(true)
+        })
     }
 
     //it's for rv only
     override fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
         Timber.e("---------------buildFavorites--------$context-------${mangaFavoriteRealms.size}")
         context ?: return
-//        showEmptyDataView (false)
         setScrollToolbarFlag(false)
-        mMangasRvAdapter.let { ad ->
-            ad?.apply {
-                doByAllSelected(ad, mangaFavoriteRealms)
-            } ?: let {
-                //the first build
-                mMangasRvAdapter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this)
-                rv.adapter = mMangasRvAdapter
-            }
-        }
-    }
-
-    override fun undo() {
-        selectedItems?.apply {
-            undoBtn?.onUndo(true)
-            mFavoritesPresenter.toggleFav(this)
-        }
-    }
-
-    private var selectedItems: List<MangaFavoriteRealm>? = null
-    override fun submit() {
-        Timber.e("-------submit------------------------------------")
-        val adapter = if (rv.isVisible()) {
-            mMangasRvAdapter
-        } else if (rv_filter.isVisible()) {
-            mMangasFilterRvAdapter
-        } else null
-
-        fun updateBtnSubmit() {
-            adapter?.apply {
-                btnSubmit.enable(countSelected > 0)
-            }
-        }
-
-        val items = adapter?.selectedItems()?.map { it.value }
-        items?.apply {
-            fun doIt() {
-                undoBtn?.onUndo(false)
-                Timber.e("-------doIt--------------------")
-                mFavoritesPresenter.toggleFav(this)
-            }
-            Timber.e("------selectedItems--------$indices---------------------")
-            if (isNotEmpty()) {
-                selectedItems = this
-                DialogUtil.showMessageConfirm(context, R.string.notifications, R.string.confirm_delete,
-                        MaterialDialog.SingleButtonCallback { _, _ -> doIt() })
-            } else {
-                updateBtnSubmit()
-            }
+        adapterMain?.apply {
+            doByAllSelected(this, mangaFavoriteRealms)
         } ?: let {
-            updateBtnSubmit()
+            //the first build
+            adapterMain = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this)
+            rvMain.adapter = adapterMain
+            showEmptyDataView(false)
         }
     }
 
-    override fun isDataEmpty(): Boolean {
-        mMangasRvAdapter?.apply {
-            return itemCount == 0
-        }
-        return true
-    }
-
-    override fun onClick(position: Int, event: Int) {
-        Timber.e("---------------------onClick--------------------$position")
-        when (event) {
-            TYPE_ITEM -> {
-                mMangasRvAdapter.let { ad ->
-                    ad?.apply {
-                        ad.itemsSelectable?.apply {
-                            allSelected = ad.onSelected(position)
-                        } ?: let {
-                            ad.mData?.apply {
-                                screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
-                                        typeContent = null, obj = this[position].id)
-                            }
-                        }
-                    }
-                }
+    override fun adapterClicked(ad: BaseRvRealmAdapter<MangaFavoriteRealm>, position: Int, f: (() -> Unit)?) {
+        super.adapterClicked(ad, position, {
+            ad.mData?.apply {
+                screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
+                        typeContent = null, obj = this[position].id)
             }
-            TYPE_ITEM_FILTER -> {
-                mMangasFilterRvAdapter.let { ad ->
-                    ad?.apply {
-                        ad.itemsSelectable?.apply {
-                            allSelected = ad.onSelected(position)
-                        } ?: let {
-                            ad.mData?.apply {
-                                screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
-                                        typeContent = null, obj = this[position].id)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onLongClick(position: Int, event: Int) {
-        Timber.e("---------------------onLongClick--------------------$position")
-        when (event) {
-            TYPE_ITEM -> {
-                mMangasRvAdapter?.apply {
-                    allSelected = onSelected(position)
-                }
-            }
-            TYPE_ITEM_FILTER -> {
-                mMangasFilterRvAdapter?.apply {
-                    allSelected = onSelected(position)
-                }
-            }
-        }
+        })
     }
 }

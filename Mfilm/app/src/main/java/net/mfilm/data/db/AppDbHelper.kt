@@ -121,7 +121,6 @@ class AppDbHelper @Inject constructor() : DbHelper {
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction { it.insertOrUpdate(objs) }
     }
-
     override fun realmClose() {
         Realm.getDefaultInstance().close()
     }

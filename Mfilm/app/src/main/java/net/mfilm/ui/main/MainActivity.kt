@@ -94,6 +94,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun sendOptionsMenuItem(item: MenuItem) {
         mMainPresenter.sendOptionsMenuItem(item)
     }
+
     override fun onSettings() {
         Timber.e("---------------onSettings-----------")
     }
@@ -119,6 +120,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         }
         mBtnFollow.setImageDrawable(icon)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
@@ -140,7 +142,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         DialogUtil.showMessageConfirm(this, R.string.notifications, R.string.confirm_exit,
                 MaterialDialog.SingleButtonCallback { _, _ -> finish() })
     }
-
 
     override fun onNewScreenRequested(indexTag: Any?, typeContent: String?, obj: Any?) {
         screenRequestPassByTime?.passByTime {
@@ -187,9 +188,8 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onSearchScreenRequested() {
-        screenRequestPassByTime?.passByTime {
-            onNewScreenRequested(IndexTags.FRAGMENT_SEARCH, typeContent = null, obj = null)
-        }
+        Timber.e("----onSearchScreenRequested------------------------------------")
+        onNewScreenRequested(IndexTags.FRAGMENT_SEARCH, typeContent = null, obj = null)
     }
 
     override fun onMainScreenRequested() = fragmentStackManager.run {
