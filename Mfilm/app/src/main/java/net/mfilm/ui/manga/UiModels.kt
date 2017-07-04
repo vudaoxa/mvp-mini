@@ -85,9 +85,9 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
                 fTrue?.invoke()
             }
             false -> {
-                //after delete selected items
+                //after toggled selected items
                 btnUndo.show(true, 5000, {
-                    reset({ fFalseFinal })
+                    reset(fFalseFinal)
                 })
                 fFalse?.invoke()
             }
