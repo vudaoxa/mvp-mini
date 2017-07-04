@@ -97,8 +97,10 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
         }
     }
 
-    override fun deleteAll() {
-        mHistoryPresenter.delete(MangaHistoryRealm::class.java)
+    override fun deleteAll(f: (() -> Unit)?) {
+        super.deleteAll({
+            mHistoryPresenter.delete(MangaHistoryRealm::class.java)
+        })
     }
 
     override val rvMain: RecyclerView

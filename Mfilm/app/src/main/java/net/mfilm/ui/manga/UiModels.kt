@@ -62,7 +62,7 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
     }
 
     fun reset(f: (() -> Unit)? = null) {
-        Timber.e("----reset--------${btnUndo.isVisible()}---------$f---------------")
+        Timber.e("--UndoBtn--reset-----btnUndo.isVisible---------${btnUndo.isVisible()}---------$f---------------")
         if (btnUndo.isVisible()) {
             f?.invoke()
         }

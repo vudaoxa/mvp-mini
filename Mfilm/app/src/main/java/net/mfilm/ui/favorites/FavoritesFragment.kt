@@ -195,8 +195,10 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
         }
     }
 
-    override fun deleteAll() {
-        mFavoritesPresenter.delete(MangaFavoriteRealm::class.java)
+    override fun deleteAll(f: (() -> Unit)?) {
+        super.deleteAll({
+            mFavoritesPresenter.delete(MangaFavoriteRealm::class.java)
+        })
     }
     override fun onFavoritesResponse(mangaFavoriteRealms: List<MangaFavoriteRealm>?) {
 //        Timber.e("------onFavoritesResponse-----------$mangaFavoriteRealms---------------------")

@@ -119,14 +119,18 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
                         btnSubmit.enable(ad.countSelected > 0)
                     },
                     {
-                        Timber.e("---deleteAll-------allSelected--------- $allSelected-----------------")
-                        if (allSelected == true) {
-                            deleteAll()
-                        }
+                        deleteAll()
                     }
             )
         } ?: let {
             onOriginal(ad, mangaFavoriteRealms)
+        }
+    }
+
+    override fun deleteAll(f: (() -> Unit)?) {
+        Timber.e("---deleteAll-------allSelected--------- $allSelected-----------------")
+        if (allSelected == true && isDataEmpty()) {
+            f?.invoke()
         }
     }
     override fun initSearch() {
@@ -155,7 +159,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
 
     override fun done() {
         allSelected = null
-        undoBtn?.reset()
+        undoBtn?.reset({ deleteAll() })
         edtSearch.enable(true)
         imgClear.enable(true)
         btnDone.show(false)
