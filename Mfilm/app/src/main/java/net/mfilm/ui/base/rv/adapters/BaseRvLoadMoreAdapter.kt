@@ -15,18 +15,17 @@ abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: Mutable
     : BaseRvAdapter<V>(mContext, mData, mCallbackOnClick), IAdapterLoadMore {
     var isMoreLoading = false
     override fun getItemViewType(position: Int): Int {
-        mData?.apply {
+        return mData?.run {
             val item = this[position]
-            if (isMainItem(item)) return TYPE_ITEM
-            return TYPE_ITEM_LOADING
-        }
-        return -10
+            if (isMainItem(item)) TYPE_ITEM
+            else TYPE_ITEM_LOADING
+        } ?: -10
     }
 
     override fun onAdapterLoadMore(f: (() -> Unit)?) {
         Timber.e("-------------onAdapterLoadMore----------$isMoreLoading-------")
         if (isMoreLoading) return
-        mData?.apply {
+        mData?.run {
             isMoreLoading = true
             add(loadingItem)
             handler({
@@ -38,10 +37,10 @@ abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: Mutable
 
     override fun onAdapterLoadMoreFinished(f: (() -> Unit)?) {
         handler({
-            mData?.apply {
+            mData?.run {
                 val l = itemCount
                 if (l > 0) {
-                    if (isMainItem(last())) return@apply
+                    if (isMainItem(last())) return@run
                     remove(last())
                     notifyItemRemoved(l - 1)
                 }
@@ -55,7 +54,7 @@ abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: Mutable
     override fun reset(notify: Boolean?) {
         Timber.e("-----------------reset-----------------")
         mData?.clear()
-        notify?.apply {
+        notify?.run {
             if (this) notifyDataSetChanged()
         }
     }

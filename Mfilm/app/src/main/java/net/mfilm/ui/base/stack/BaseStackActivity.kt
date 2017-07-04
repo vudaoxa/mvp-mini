@@ -105,7 +105,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun hideLoading() {
-        mProgressDialog?.apply {
+        mProgressDialog?.run {
             if (isShowing)
                 cancel()
         }
@@ -166,7 +166,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     override fun onFragmentEntered(f: Fragment?) {
         Timber.e("----onFragmentEntered-----$f---------------------------")
         f as BaseStackFragment
-        f.apply {
+        f.run {
             if (fullScreen) {
                 supportActionBar?.hide()
             } else {
@@ -241,15 +241,17 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun hideDrawerToggle() {
-        mToolbar.apply {
-            while (navigationIcon != null) {
-                navigationIcon = null
+        handler({
+            mToolbar.run {
+                while (navigationIcon != null) {
+                    navigationIcon = null
+                }
             }
-        }
+        })
     }
 
     override fun showOptionsMenu(show: Boolean) {
-        mMenu?.apply {
+        mMenu?.run {
             if (!show) {
                 clear()
             }
@@ -288,7 +290,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         setSupportActionBar(mToolbar)
         mToggle = ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        mToggle?.apply {
+        mToggle?.run {
             mDrawerLayout.addDrawerListener(this)
             syncState()
         }
@@ -317,7 +319,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 submitSearch()
                 //searchTime to avoid conflict between searching and searching suggestion
-                searchPassByTime?.apply {
+                searchPassByTime?.run {
                     time = System.currentTimeMillis()
                 }
             }

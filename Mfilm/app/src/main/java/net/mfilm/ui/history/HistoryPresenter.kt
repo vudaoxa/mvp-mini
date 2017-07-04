@@ -24,7 +24,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
     override fun initIBus() {
         val flowable = iBus.asFlowable().filter { it is MenuItem }
         val favEventEmitter = flowable.publish()
-        compositeDisposable.apply {
+        compositeDisposable.run {
             add(favEventEmitter.subscribe { mvpView?.onReceiveOptionsMenuItem((it as MenuItem)) })
             add(favEventEmitter.connect())
         }
@@ -33,7 +33,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
         mvpView?.showLoading() ?: return
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<MangaHistoryRealm>>({ mvpView?.onFailure() }) {
             override fun onNext(t: RealmResults<MangaHistoryRealm>?) {
-                mvpView?.apply {
+                mvpView?.run {
                     onHistoryResponse(t)
                     t?.addChangeListener { t, _ ->
                         onHistoryResponse(t)
@@ -41,9 +41,18 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
                 }
             }
         }
-
         val disposable = dataManager.loadHistory(mRealmDisposableObserver)
         compositeDisposable.add(disposable)
         compositeDisposable.add(mRealmDisposableObserver)
+    }
+
+    override fun toggleHistory(mangaHistoryRealms: List<MangaHistoryRealm>) {
+        mangaHistoryRealms.run {
+            val newMangaFavoriteRealms = map {
+                MangaHistoryRealm(it.id, it.name,
+                        it.coverUrl, System.currentTimeMillis(), !it.history)
+            }
+            dataManager.saveObjects(newMangaFavoriteRealms)
+        }
     }
 }

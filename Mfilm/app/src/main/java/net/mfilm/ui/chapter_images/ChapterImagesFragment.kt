@@ -99,9 +99,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun initViews() {
-        mChaptersFragment?.apply {
+        mChaptersFragment?.run {
             currentReadingChapter.let { c ->
-                c?.apply {
+                c?.run {
                     Timber.e("----------initViews---------$c---------")
 //                    addChapter(c, { requestChapterImages(c.id!!) })
                     requestChapterImages(c.id!!)
@@ -117,9 +117,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     override fun onChapterImagesResponse(chapterImagesResponse: ChapterImagesResponse?) {
         hideLoading()
         chapterImagesResponse.let { cir ->
-            cir?.apply {
+            cir?.run {
                 cir.data.let { d ->
-                    d?.apply {
+                    d?.run {
                         if (d.isNotEmpty()) {
                             initChapterImages(d)
                         } else onChapterImagesNull()
@@ -134,21 +134,14 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun initChapterImages(images: List<ChapterImage>) {
-//        current chapter set images
-//        chapters.apply {
-//            val chapter = last()
-//            chapter.data = images
-//            context?.apply {
-//                mChapterImagesPresenter.showFresco(this, chapter, images.map { it.url!! }.toMutableList(), images.size - 2)
-//            }
-//        }
-        context?.apply {
-            mChapterImagesPresenter.showFresco(this, mChaptersFragment?.currentReadingChapter, images.map { it.url!! }.toMutableList(), images.size - 2)
+        context?.run {
+            mChapterImagesPresenter.showFresco(this, mChaptersFragment?.currentReadingChapter,
+                    images.map { it.url!! }.toMutableList(), images.size - 2)
         }
     }
 
     override fun loadMoreOnDemand() {
-        mChaptersFragment?.apply {
+        mChaptersFragment?.run {
             loadMoreOnDemand(this@ChapterImagesFragment)
         }
     }
@@ -157,7 +150,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         //it's must be synchronized with mChaptersFragment, because:
         //read btn behavior
         //get currentReadingPosition from mChaptersFragment, to reload images in $chapters
-        mChaptersFragment?.apply {
+        mChaptersFragment?.run {
             loadPrevOnDemand(this@ChapterImagesFragment)
         }
     }
@@ -169,10 +162,4 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     override fun seekPrevChapter() {
         initViews()
     }
-    //it's called from ChaptersFragment
-//    override fun onChaptersResponse() {
-//        Timber.e("----------------onChaptersResponse--------------")
-//        initViews()
-//    }
-
 }

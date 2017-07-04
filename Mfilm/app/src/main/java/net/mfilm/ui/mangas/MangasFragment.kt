@@ -45,8 +45,8 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         const val KEY_SEARCH = "KEY_SEARCH"
         const val KEY_CATEGORY = "KEY_CATEGORY"
         fun getSearchInstance(): MangasFragment {
-            mSearchInstance?.apply { return this }
-            return newInstance(null, true)
+            return mSearchInstance?.run { this }
+                    ?: newInstance(null, true)
         }
 
         fun newInstance(category: Any? = null, search: Boolean = false): MangasFragment {
@@ -73,9 +73,10 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         get() = tv_des
     override val emptyDesResId: Int
         get() {
-            category?.apply { return R.string.empty_data_category }
-            if (searching) return R.string.empty_data_search
-            return R.string.empty_data_
+            return category?.run { R.string.empty_data_category } ?: let {
+                if (searching) R.string.empty_data_search
+                else R.string.empty_data_
+            }
         }
     private var mEmptyDataView: EmptyDataView? = null
     override var emptyDataView: EmptyDataView?
@@ -172,20 +173,20 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     override fun isDataEmpty(): Boolean {
-        mMangasRvAdapter?.apply {
-            return itemCount == 0
+        mMangasRvAdapter?.run {
+            itemCount == 0
         }
         return true
     }
 
     override fun initRv() {
-        rv.apply {
+        rv.run {
             mMangasRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
             layoutManager = mMangasRvLayoutManagerWrapper
             setupOnLoadMore(this, mCallBackLoadMore)
         }
-        rv_search_history.apply {
+        rv_search_history.run {
             layoutManager = LinearLayoutManagerWrapper(context)
         }
     }
@@ -203,7 +204,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun onSearchHistoryResponse(searchHistoryRealms: List<SearchQueryRealm>?) {
         hideLoading()
         searchHistoryRealms.let { shr ->
-            shr?.apply {
+            shr?.run {
                 if (shr.isNotEmpty()) {
                     buildSearchHistory(shr)
                 } else onSearchHistoryNull()
@@ -217,7 +218,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     override fun buildSearchHistory(searchHistoryRealms: List<SearchQueryRealm>) {
         Timber.e("---------------buildSearchHistory---------------${searchHistoryRealms.size}")
-        mSearchQueryRvAdapter?.apply {
+        mSearchQueryRvAdapter?.run {
             mData?.clear()
             mData?.addAll(searchHistoryRealms)
             notifyDataSetChanged()
@@ -236,7 +237,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         handler({
-            rv.apply {
+            rv.run {
                 mMangasRvLayoutManagerWrapper.spanCount = spanCount
                 requestLayout()
             }
@@ -257,6 +258,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         rv_search_history.show(true)
 
     }
+
     override fun requestMangas() {
         val position = spnFilterTracker.mPosition
         Timber.e("---------------requestMangas------ $position--------------------")
@@ -267,12 +269,12 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         Timber.e("---onMangasResponse---------${mangasResponse?.mangasPaging?.mangas?.size}------------------------------------")
         showErrorView(false)
         mangasResponse.let { mr ->
-            mr?.apply {
+            mr?.run {
                 mr.mangasPaging.let { mp ->
-                    mp?.apply {
+                    mp?.run {
                         isDataEnd = TextUtils.isEmpty(nextPageUrl)
                         mp.mangas.let { mgs ->
-                            mgs?.apply {
+                            mgs?.run {
                                 if (mgs.isNotEmpty()) {
                                     buildMangas(mgs)
                                 } else onMangasNull()
@@ -286,7 +288,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     override fun onMangasNull() {
         Timber.e("----------------onMangasNull-----------------")
-        mMangasRvAdapter?.apply {
+        mMangasRvAdapter?.run {
             if (itemCount == 0) {
                 adapterEmpty(true)
             } else {
@@ -303,7 +305,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         page++
         spn_filter.show(true)
         emptyDataView?.showEmptyDataView(false)
-        mMangasRvAdapter?.apply {
+        mMangasRvAdapter?.run {
             onAdapterLoadMoreFinished {
                 setRefreshed(false, { mMangasRvAdapter?.reset() })
                 mData?.addAll(mangas)
@@ -323,7 +325,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun adapterEmpty(empty: Boolean) {
         super.adapterEmpty(empty)
         if (empty) {
-            emptyDataView?.apply {
+            emptyDataView?.run {
                 hideSomething()
                 showEmptyDataView(true)
             }
@@ -340,15 +342,15 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         Timber.e("---------------------onClick--------------------$position")
         when (event) {
             TYPE_ITEM -> {
-                query?.apply {
+                query?.run {
                     mSearchHistoryPresenter.saveQuery(this)
                 }
-                mMangasRvAdapter?.mData?.apply {
+                mMangasRvAdapter?.mData?.run {
                     screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position])
                 }
             }
             TYPE_ITEM_SEARCH_HISTORY -> {
-                mSearchQueryRvAdapter?.mData?.apply {
+                mSearchQueryRvAdapter?.mData?.run {
                     baseActivity?.onSearchHistoryClicked(get(position))
                 }
             }

@@ -27,7 +27,7 @@ class HomePagerFragment : BaseStackFragment() {
         get() = R.menu.main
 
     override fun initViews() {
-        viewpager.apply {
+        viewpager.run {
             adapter = HomePagerAdapter(fragmentManager, SIZE_TABS)
             navigation.setOnNavigationItemSelectedListener { item ->
                 currentItem =
@@ -36,7 +36,7 @@ class HomePagerFragment : BaseStackFragment() {
                             R.id.navigation_categories -> 1
                             else -> 2
                         }
-                return@setOnNavigationItemSelectedListener false
+                false
             }
             addOnPageChangeListener(mPageChangedListener)
         }
@@ -54,8 +54,8 @@ class HomePagerFragment : BaseStackFragment() {
         }
 
         override fun onPageSelected(position: Int) {
-            navigation.apply {
-                prevMenuItem?.apply {
+            navigation.run {
+                prevMenuItem?.run {
                     isChecked = false
                 } ?: let {
                     menu.getItem(0).isChecked = false

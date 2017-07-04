@@ -52,7 +52,7 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
                 .subscribe {
                     onTaps(it.size)
                 }
-        compositeDisposable.apply {
+        compositeDisposable.run {
             add(tapCountConsumer)
             add(tapEventEmitter.connect())
         }
@@ -71,12 +71,12 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
     }
 
     override fun toggleFav(manga: Manga): Boolean {
-        manga.apply {
+        manga.run {
             val mangaFavRealm = dataManager.isFavorite(id!!)
             val x = mangaFavRealm?.fav
             Timber.e("----------toggleFav----------$x---------------")
             var fav = false
-            x?.apply {
+            x?.run {
                 if (this) fav = true
             }
             val newFavRealm = MangaFavoriteRealm(id, name, coverUrl, System.currentTimeMillis(), !fav)
@@ -87,7 +87,7 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
     }
 
     override fun saveHistory(manga: Manga) {
-        manga.apply {
+        manga.run {
             val newHistoryRealm = MangaHistoryRealm(id, name, coverUrl, System.currentTimeMillis(), true)
             dataManager.saveObject(newHistoryRealm)
         }

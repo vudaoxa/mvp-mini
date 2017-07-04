@@ -43,7 +43,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
         //flowable to receive favorite response from mangaInfoPresenter to up date mvpView
         val flowable = iBus.asFlowable().filter { it is Favorite }
         val favEventEmitter = flowable.publish()
-        compositeDisposable.apply {
+        compositeDisposable.run {
             add(favEventEmitter.subscribe { mvpView?.isFavorite((it as? Favorite?)?.fav) })
             add(favEventEmitter.connect())
         }
@@ -73,7 +73,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
     }
 
     override fun onNavMenuCreated() {
-        mvpView?.apply {
+        mvpView?.run {
             updateAppVersion()
         }
     }

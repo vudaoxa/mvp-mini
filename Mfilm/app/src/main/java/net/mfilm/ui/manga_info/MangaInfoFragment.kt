@@ -86,7 +86,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
     }
 
     override fun buildManga() {
-        mManga?.id?.apply {
+        mManga?.id?.run {
             initFields()
             initViews()
         }
@@ -97,7 +97,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
         val id = arguments.getInt(KEY_MANGA_ID)
         Timber.e("------obtainManga------------ $x------$id----")
         val mg = x as? Manga?
-        mg?.apply {
+        mg?.run {
             mManga = this
         } ?: let {
             requestManga(id)
@@ -135,8 +135,8 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
 
     override fun onMangaDetailResponse(mangaDetailResponse: MangaDetailResponse?) {
         hideLoading()
-        mangaDetailResponse?.apply {
-            manga?.apply {
+        mangaDetailResponse?.run {
+            manga?.run {
                 mManga = this
                 buildManga()
                 baseActivity?.onFragmentEntered(this@MangaInfoFragment)
@@ -153,7 +153,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
     }
 
     override fun initMangaInfoHeader() {
-        mManga?.apply {
+        mManga?.run {
             layout_manga_info.show(true)
             btn_read.enable(true)
             img_thumb.setImageURI(coverUrl)
@@ -164,7 +164,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
 //                    setText(context, tv_chaps_count, R.string.title_chaps_count, totalChap?.toString())
             setText(context, tv_view_counts, R.string.title_views_count, views?.toString())
             updatedTime.let { u ->
-                u?.apply {
+                u?.run {
                     setText(context, tv_updated_at, R.string.title_updated_at, TimeUtils.toFbFormatTime(context, u * 1000))
                 }
             }
@@ -179,7 +179,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
     }
 
     override fun toggleFav(): Boolean {
-        mManga?.apply {
+        mManga?.run {
             return mMangaInfoMvpPresenter.toggleFav(this)
         }
         return false
@@ -198,7 +198,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
 
     override fun obtainChaptersFragment(): Fragment? {
 
-        mChaptersFragment?.apply { return this }
+        mChaptersFragment?.run { return this }
         mChaptersFragment = ChaptersFragment.newInstance(mManga)
 //        mChaptersMvpView = mChaptersFragment
         return mChaptersFragment
@@ -213,7 +213,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
     }
 
     override fun saveHistory() {
-        mManga?.apply {
+        mManga?.run {
             mMangaInfoMvpPresenter.saveHistory(this)
         }
     }

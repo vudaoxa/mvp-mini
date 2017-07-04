@@ -57,7 +57,7 @@
     <string name="empty_data_favorite">You have no Favorites here! Add your Favorite from Home or Search and get fun now! </string>
     <string name="empty_data_history">You have no History here! Add your History from Home or Search and get fun now! </string>
     <string name="empty_data">You have no %1$s here! Add your %2$s from Home or Search and get fun now! </string>
-    <string name="empty_data_category">This category has no %1$s here! Try another category and get fun now! </string>
+    <string name="empty_data_category">This category has no Manga here! Try another category  and get fun now! </string>
 
     <string name="title_other_name">Other names: </string>
     <string name="title_author">Authors: </string>

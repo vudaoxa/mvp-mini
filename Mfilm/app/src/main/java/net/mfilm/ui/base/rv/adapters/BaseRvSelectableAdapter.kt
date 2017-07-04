@@ -37,11 +37,9 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
     private var selectedIndices: List<Int>? = null
     override fun selectedItems(): List<IndexedValue<V>>? {
         selectedIndices = mSelectableItems.indices.filter { mSelectableItems[it].selected == true }
-        selectedIndices?.apply {
-            val selectedItems = mData?.withIndex()?.filter { it.index in this }
-            return selectedItems
+        return selectedIndices?.run {
+            mData?.withIndex()?.filter { it.index in this }
         }
-        return null
     }
 
     override fun obtainCountSelected(selected: Boolean) {
@@ -50,7 +48,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
 
     override fun onSelected(position: Int, allSelected: Boolean?): Boolean {
         Timber.e("-----onSelected----------$position---------------$allSelected-----------------------------")
-        allSelected?.apply {
+        allSelected?.run {
             itemsSelectable = this
             notifyDataSetChanged()
         } ?: let {
@@ -62,7 +60,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
                 notifyDataSetChanged()
             } else {
                 val selected = mSelectableItems[position].selected
-                selected?.apply {
+                selected?.run {
                     mSelectableItems[position].toggleSelected(!this, { obtainCountSelected(!this) })
                     notifyItemChanged(position)
                 }
@@ -74,7 +72,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
     override fun addAll(items: List<V>?): Boolean {
         val x = super.addAll(items)
         if (x) {
-            items?.apply {
+            items?.run {
                 addSelectableItems(size)
             }
         }
@@ -84,7 +82,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
     override fun recoverAll(elements: List<V>?): Boolean {
         val x = super.addAll(elements)
         if (x) {
-            selectedItems?.apply {
+            selectedItems?.run {
                 val y = mSelectableItems.addAll(this)
                 if (y) countSelected += this.size
                 return y
@@ -106,9 +104,9 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
     override fun removeAll(elements: List<V>?): Boolean {
         val x = super.removeAll(elements)
         if (x) {
-            selectedIndices?.apply {
+            selectedIndices?.run {
                 selectedItems = mSelectableItems.filterIndexed { index, _ -> index in this }
-                selectedItems?.apply {
+                selectedItems?.run {
                     val y = mSelectableItems.removeAll(this)
                     if (y) countSelected -= this.size
                     return y

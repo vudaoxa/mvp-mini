@@ -86,7 +86,7 @@ abstract class BaseActivity : AppCompatActivity(), MvpView, BaseFragment.Callbac
     }
 
     override fun onError(message: String?) {
-        message?.apply {
+        message?.run {
             showSnackBar(this)
         } ?: let {
             showSnackBar(getString(R.string.some_error))

@@ -25,7 +25,9 @@ import tr.xip.errorview.ErrorView
  * Created by tusi on 5/16/17.
  */
 interface ICallbackRealm<V : RealmObject> {
+    fun deleteAll()
     fun onToggle()
+    fun initRv()
     val rvMain: RecyclerView
     val rvFilter: RecyclerView
     var adapterMain: BaseRvRealmAdapter<V>?

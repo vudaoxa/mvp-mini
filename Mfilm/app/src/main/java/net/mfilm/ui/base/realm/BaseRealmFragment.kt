@@ -1,6 +1,7 @@
 package net.mfilm.ui.base.realm
 
 import android.content.res.Configuration
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -11,6 +12,7 @@ import io.realm.RealmObject
 import net.mfilm.R
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_FILTER
+import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.PassByTime
@@ -33,7 +35,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             if (mAllSelected == true)
                 text = R.string.deselect_all
             btnSelect.setText(text)
-            mAllSelected?.apply {
+            mAllSelected?.run {
                 //start selected
                 bottomFunView.show(true)
                 btnDone.show(true)
@@ -57,8 +59,29 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             }
         }
 
+    override fun initViews() {
+        initRv()
+        initSearch()
+        initSpnFilters()
+        initEmptyDataView()
+        initBottomFun()
+        initBtnDone()
+    }
+
+    override fun initRv() {
+        rvMain.run {
+            layoutManagerMain = StaggeredGridLayoutManagerWrapper(spanCount,
+                    StaggeredGridLayoutManager.VERTICAL)
+            layoutManager = layoutManagerMain
+        }
+        rvFilter.run {
+            layoutManagerFilter = StaggeredGridLayoutManagerWrapper(spanCount,
+                    StaggeredGridLayoutManager.VERTICAL)
+            layoutManager = layoutManagerFilter
+        }
+    }
     fun updateBtnSubmit(adapter: BaseRvRealmAdapter<V>?) {
-        adapter?.apply {
+        adapter?.run {
             btnSubmit.enable(countSelected > 0)
         }
     }
@@ -69,7 +92,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
         Timber.e("-----onOriginal-------------$x-----------------")
         showEmptyDataView(x)
         setScrollToolbarFlag(x)
-        mangaFavoriteRealms?.apply {
+        mangaFavoriteRealms?.run {
             ad.addAll(this)
         }
         ad.notifyDataSetChanged()
@@ -77,7 +100,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
 
     protected var selectedItems: List<V>? = null
     fun doByAllSelected(ad: BaseRvRealmAdapter<V>, mangaFavoriteRealms: List<V>? = null) {
-        allSelected?.apply {
+        allSelected?.run {
             if (!isVisible) return
             val x = mangaFavoriteRealms == null
             showEmptyDataView(x)
@@ -94,13 +117,18 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
                         Timber.e("----------removeAll----------------$z------------------")
                         ad.notifyDataSetChanged()
                         btnSubmit.enable(ad.countSelected > 0)
+                    },
+                    {
+                        Timber.e("---deleteAll-------allSelected--------- $allSelected-----------------")
+                        if (allSelected == true) {
+                            deleteAll()
+                        }
                     }
             )
         } ?: let {
             onOriginal(ad, mangaFavoriteRealms)
         }
     }
-
     override fun initSearch() {
         initSearchPassByTime()
         initImeActionSearch()
@@ -119,7 +147,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     override fun initSpnFilters() {
         val banksAdapter = ArrayAdapter(activity,
                 R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
-        spnFilter.apply {
+        spnFilter.run {
             setAdapter(banksAdapter)
             setOnItemSelectedListener(spnFilterTracker)
         }
@@ -137,11 +165,11 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     override fun toggleSelectAll() {
         Timber.e("-----toggleSelectAll------allSelected------$allSelected------------------------")
         if (rvMain.isVisible()) {
-            adapterMain?.apply {
+            adapterMain?.run {
                 allSelected = onSelected(-1, !allSelected!!)
             }
         } else if (rvFilter.isVisible()) {
-            adapterFilter?.apply {
+            adapterFilter?.run {
                 allSelected = onSelected(-1, !allSelected!!)
             }
         }
@@ -162,7 +190,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 submitSearch()
                 //searchTime to avoid conflict between searching and searching suggestion
-                searchPassByTime?.apply {
+                searchPassByTime?.run {
                     time = System.currentTimeMillis()
                 }
             }
@@ -212,11 +240,11 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             done()
         else {
             if (rvMain.isVisible()) {
-                adapterMain?.apply {
+                adapterMain?.run {
                     allSelected = onSelected(-1)
                 }
             } else if (rvFilter.isVisible()) {
-                adapterFilter?.apply {
+                adapterFilter?.run {
                     allSelected = onSelected(-1)
                 }
             }
@@ -237,11 +265,11 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         handler({
-            rvMain.apply {
+            rvMain.run {
                 layoutManagerMain.spanCount = spanCount
                 requestLayout()
             }
-            rvFilter.apply {
+            rvFilter.run {
                 layoutManagerFilter.spanCount = spanCount
                 requestLayout()
             }
@@ -252,15 +280,15 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
         Timber.e("-----onReceiveOptionsMenuItem-----$isVisible---- ${item.title}----------------")
         if (!isVisible || isDataEmpty()) return
         when (item.itemId) {
-            R.id.action_favorites_search -> {
+            actionSearch -> {
                 mLayoutInputText.show(true)
                 edtSearch.requestFocus()
                 spnFilter.show(false)
                 toggleEdit(false)
             }
-            R.id.action_favorites_sort -> {
+            actionSort -> {
                 if (!rvMain.isVisible()) return
-                adapterMain?.apply {
+                adapterMain?.run {
                     if (itemCount < 2) return
                     mLayoutInputText.show(false)
                     spnFilter.show(true)
@@ -268,7 +296,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
                     toggleEdit(false)
                 }
             }
-            R.id.action_favorites_edit -> {
+            actionEdit -> {
                 if (allSelected != null) return
                 mLayoutInputText.show(false)
                 spnFilter.show(false)
@@ -297,7 +325,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
         } else null
 
         val items = adapter?.selectedItems()?.map { it.value }
-        items?.apply {
+        items?.run {
             Timber.e("------selectedItems--------$indices---------------------")
             if (isNotEmpty()) {
                 selectedItems = this
@@ -312,27 +340,27 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     }
 
     private fun doIt() {
-        undoBtn?.onUndo(false)
         Timber.e("-------doIt--------------------")
+        undoBtn?.onUndo(false)
         onToggle()
     }
 
     override fun undo() {
-        selectedItems?.apply {
+        selectedItems?.run {
             undoBtn?.onUndo(true)
             onToggle()
         }
     }
 
     override fun isDataEmpty(): Boolean {
-        adapterMain?.apply {
+        adapterMain?.run {
             return itemCount == 0
         }
         return true
     }
 
     override fun adapterClicked(ad: BaseRvRealmAdapter<V>, position: Int, f: (() -> Unit)?) {
-        ad.itemsSelectable?.apply {
+        ad.itemsSelectable?.run {
             allSelected = ad.onSelected(position)
         } ?: let {
             f?.invoke()
@@ -343,12 +371,12 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
         Timber.e("---------------------onClick--------------------$position")
         when (event) {
             TYPE_ITEM -> {
-                adapterMain?.apply {
+                adapterMain?.run {
                     adapterClicked(this, position)
                 }
             }
             TYPE_ITEM_FILTER -> {
-                adapterFilter?.apply {
+                adapterFilter?.run {
                     adapterClicked(this, position)
                 }
             }
@@ -359,12 +387,12 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
         Timber.e("---------------------onLongClick--------------------$position")
         when (event) {
             TYPE_ITEM -> {
-                adapterMain?.apply {
+                adapterMain?.run {
                     allSelected = onSelected(position)
                 }
             }
             TYPE_ITEM_FILTER -> {
-                adapterFilter?.apply {
+                adapterFilter?.run {
                     allSelected = onSelected(position)
                 }
             }

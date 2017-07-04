@@ -15,13 +15,13 @@ abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
     }
 
     override fun initErrorView(errorView: ErrorView?, subTitle: Int?) {
-        errorView?.apply {
+        errorView?.run {
             fun retry() {
                 onErrorViewRetry(this, { onErrorViewDemand(this) })
             }
             setOnClickListener { retry() }
             setOnRetryListener { retry() }
-            subTitle?.apply {
+            subTitle?.run {
                 subtitle = getString(this)
             }
         }
@@ -29,7 +29,7 @@ abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
 
     override fun onErrorViewRetry(errorView: ErrorView?, f: () -> Unit) {
         Timber.e("--------------onErrorViewRetry--------------")
-        errorView?.apply {
+        errorView?.run {
             show(false)
             f()
         }

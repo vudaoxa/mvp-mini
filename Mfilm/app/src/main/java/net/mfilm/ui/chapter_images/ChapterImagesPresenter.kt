@@ -43,7 +43,7 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
         imageViewer?.onDismiss()
         val builder = ImageViewer.Builder(context, list)
         val overlayView = ImageOverlayView(context)
-        builder.apply {
+        builder.run {
             setStartPosition(startPosition)
             setImageChangeListener { position ->
                 val text = "${chapter?.name} ${position + 1} / ${list.size}"

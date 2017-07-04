@@ -23,11 +23,12 @@ import net.mfilm.utils.show
 class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
                                mCallbackOnclick: ICallbackOnClick?, mCallbackOnLongClick: ICallbackOnLongClick? = null)
     : BaseSelectableItemViewHolder(mContext, type, itemView, mCallbackOnclick, mCallbackOnLongClick) {
+    //not use
     override fun bindView(obj: Any?, position: Int) {
         when (obj) {
             is MangaFavoriteRealm -> {
-                itemView.apply {
-                    obj.coverUrl?.apply { img_thumb.setImageURI(this) }
+                itemView.run {
+                    obj.coverUrl?.run { img_thumb.setImageURI(this) }
                     tv_name.text = obj.name
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
                     setOnLongClickListener {
@@ -37,8 +38,8 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
                 }
             }
             is MangaHistoryRealm -> {
-                itemView.apply {
-                    obj.coverUrl?.apply { img_thumb.setImageURI(this) }
+                itemView.run {
+                    obj.coverUrl?.run { img_thumb.setImageURI(this) }
                     tv_name.text = obj.name
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
                     setOnLongClickListener {
@@ -48,7 +49,7 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
                 }
             }
             is SearchQueryRealm -> {
-                itemView.apply {
+                itemView.run {
                     tv_query.text = obj.query
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
                 }
@@ -61,28 +62,27 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
 //        Timber.e("------bindView--------------$obj------------$selectableItem----------------------------")
         when (obj) {
             is MangaFavoriteRealm -> {
-                itemView.apply {
-                    obj.coverUrl?.apply { img_thumb.setImageURI(this) }
+                itemView.run {
+                    obj.coverUrl?.run { img_thumb.setImageURI(this) }
                     tv_name.text = obj.name
-                    selectableItem?.apply {
+                    selectableItem?.run {
                         iconSelected(icon_selected, selected)
                     }
                     initOnClicked(this)
                 }
             }
             is MangaHistoryRealm -> {
-                itemView.apply {
-                    obj.coverUrl?.apply { img_thumb.setImageURI(this) }
+                itemView.run {
+                    obj.coverUrl?.run { img_thumb.setImageURI(this) }
                     tv_name.text = obj.name
-                    setOnClickListener { mCallbackOnClick?.onClick(position, type) }
-                    setOnLongClickListener {
-                        mCallbackOnLongClick?.onLongClick(position, type)
-                        true
+                    selectableItem?.run {
+                        iconSelected(icon_selected, selected)
                     }
+                    initOnClicked(this)
                 }
             }
             is SearchQueryRealm -> {
-                itemView.apply {
+                itemView.run {
                     tv_query.text = obj.query
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
                 }
@@ -92,7 +92,7 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
 
     fun iconSelected(iconSelected: IconTextView, selectableItem: Boolean?) {
         iconSelected.show(selectableItem != null)
-        selectableItem?.apply {
+        selectableItem?.run {
             var color = R.color.grey_60
             if (this)
                 color = R.color.orange
@@ -101,7 +101,7 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
     }
 
     fun initOnClicked(itemView: View) {
-        itemView.apply {
+        itemView.run {
             setOnClickListener { mCallbackOnClick?.onClick(position, type) }
             setOnLongClickListener {
                 mCallbackOnLongClick?.onLongClick(position, type)

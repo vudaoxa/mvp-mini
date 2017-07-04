@@ -36,11 +36,11 @@ class FullReadFragment : BaseStackFragment() {
     }
 
     override fun initViews() {
-        manga?.apply {
+        manga?.run {
             tv_Title.text = name
             tv_des.text = summary
         }
-        cross.apply {
+        cross.run {
             setImageDrawable(icon_close)
             setOnClickListener {
                 handler({ baseActivity?.onBackPressed() })

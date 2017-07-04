@@ -7,13 +7,9 @@ import net.mfilm.ui.base.realm.RealmMvpView
  * Created by MRVU on 6/20/2017.
  */
 interface FavoritesMvpView : RealmMvpView<MangaFavoriteRealm> {
-    fun buildFavoritesFilter(mangaFavoriteRealms: List<MangaFavoriteRealm>)
-
-    fun initRv()
-
     fun requestFavorites()
-
     fun onFavoritesResponse(mangaFavoriteRealms: List<MangaFavoriteRealm>?)
     fun onFavoritesNull()
     fun buildFavorites(mangaFavoriteRealms: List<MangaFavoriteRealm>)
+    fun buildFavoritesFilter(mangaFavoriteRealms: List<MangaFavoriteRealm>)
 }

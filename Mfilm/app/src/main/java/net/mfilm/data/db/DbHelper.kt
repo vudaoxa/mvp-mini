@@ -2,6 +2,7 @@ package net.mfilm.data.db
 
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
+import io.realm.RealmModel
 import io.realm.RealmObject
 import io.realm.RealmResults
 import net.mfilm.data.db.models.MangaFavoriteRealm
@@ -25,7 +26,7 @@ interface DbHelper {
 //    fun updateFavoritesRemoval()
 //    fun updateViewHistoryRemoval()
 //    fun updateViewsHistoryRemoval()
-
+fun delete(clazz: Class<out RealmModel>)
     fun saveObject(obj: RealmObject)
     fun saveObjects(objs: List<RealmObject>)
     fun realmClose()

@@ -15,7 +15,6 @@
 
 package net.mfilm.data.db
 
-
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableOnSubscribe
@@ -30,7 +29,6 @@ import net.mfilm.data.db.models.SearchQueryRealm
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 /**
  * Created by janisharali on 08/12/16.
@@ -120,6 +118,11 @@ class AppDbHelper @Inject constructor() : DbHelper {
     override fun saveObjects(objs: List<RealmObject>) {
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction { it.insertOrUpdate(objs) }
+    }
+
+    override fun delete(clazz: Class<out RealmModel>) {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction { it.delete(clazz) }
     }
     override fun realmClose() {
         Realm.getDefaultInstance().close()

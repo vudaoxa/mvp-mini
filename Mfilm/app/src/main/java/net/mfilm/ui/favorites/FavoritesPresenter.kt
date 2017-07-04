@@ -24,7 +24,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
     override fun initIBus() {
         val flowable = iBus.asFlowable().filter { it is MenuItem }
         val favEventEmitter = flowable.publish()
-        compositeDisposable.apply {
+        compositeDisposable.run {
             add(favEventEmitter.subscribe { mvpView?.onReceiveOptionsMenuItem((it as MenuItem)) })
             add(favEventEmitter.connect())
         }
@@ -33,7 +33,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
         mvpView?.showLoading() ?: return
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<MangaFavoriteRealm>>({ mvpView?.onFailure() }) {
             override fun onNext(t: RealmResults<MangaFavoriteRealm>?) {
-                mvpView?.apply {
+                mvpView?.run {
                     onFavoritesResponse(t)
                     t?.addChangeListener { t, _ ->
                         onFavoritesResponse(t)
@@ -41,7 +41,6 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
                 }
             }
         }
-
         val disposable = dataManager.loadFavorites(mRealmDisposableObserver)
         compositeDisposable.add(disposable)
         compositeDisposable.add(mRealmDisposableObserver)
@@ -49,7 +48,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
 
     //with condition non-empty list, all have same fav value
     override fun toggleFav(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
-        mangaFavoriteRealms.apply {
+        mangaFavoriteRealms.run {
             val newMangaFavoriteRealms = map { MangaFavoriteRealm(it.id, it.name, it.coverUrl, System.currentTimeMillis(), !it.fav) }
             dataManager.saveObjects(newMangaFavoriteRealms)
         }

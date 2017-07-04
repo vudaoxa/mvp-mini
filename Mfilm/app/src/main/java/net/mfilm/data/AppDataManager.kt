@@ -3,6 +3,7 @@ package net.mfilm.data
 import android.content.Context
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
+import io.realm.RealmModel
 import io.realm.RealmObject
 import io.realm.RealmResults
 import net.mfilm.data.db.DbHelper
@@ -42,6 +43,9 @@ class AppDataManager @Inject constructor(@AppContext val mContext: Context, val 
         mDbHelper.saveObjects(objs)
     }
 
+    override fun delete(clazz: Class<out RealmModel>) {
+        mDbHelper.delete(clazz)
+    }
     override fun realmClose() {
         mDbHelper.realmClose()
     }

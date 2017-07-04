@@ -65,7 +65,7 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
     private fun notifyCloseRequest() {
         Log.e(TAG, "notifyCloseRequest()")
         mUiHandler.post {
-            mInitializationParams?.screenManager?.apply {
+            mInitializationParams?.screenManager?.run {
                 onCloseRequested()
             }
         }

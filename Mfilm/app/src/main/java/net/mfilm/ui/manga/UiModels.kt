@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import net.mfilm.utils.ICallbackEmptyDataView
 import net.mfilm.utils.ISelectable
+import net.mfilm.utils.isVisible
 import net.mfilm.utils.show
 import org.angmarch.views.NiceSpinner
 import timber.log.Timber
@@ -60,7 +61,11 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
         }
     }
 
-    fun reset() {
+    fun reset(f: (() -> Unit)? = null) {
+        Timber.e("----reset--------${btnUndo.isVisible()}---------$f---------------")
+        if (btnUndo.isVisible()) {
+            f?.invoke()
+        }
         undo = null
         btnUndo.show(false)
     }
@@ -70,7 +75,7 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
     }
 
     fun onSelected(fTrue: (() -> Unit)? = null, fFalse: (() -> Unit)? = null,
-                   fNull: (() -> Unit)? = null) {
+                   fFalseFinal: (() -> Unit)? = null, fNull: (() -> Unit)? = null) {
         Timber.e("-----undo: $undo---------------------------------")
         when (undo) {
             true -> {
@@ -81,13 +86,14 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
             }
             false -> {
                 //after delete selected items
-                btnUndo.show(true, 5000, { reset() })
+                btnUndo.show(true, 5000, {
+                    reset({ fFalseFinal })
+                })
                 fFalse?.invoke()
             }
             null -> {
                 fNull?.invoke()
             }
-
         }
     }
 }

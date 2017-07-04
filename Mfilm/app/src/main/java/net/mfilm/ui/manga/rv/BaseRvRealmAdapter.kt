@@ -14,7 +14,6 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
 import net.mfilm.ui.manga.SelectableItem
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackOnLongClick
-import net.mfilm.utils.handler
 import timber.log.Timber
 
 /**
@@ -27,7 +26,7 @@ class BaseRvRealmAdapter<V : RealmObject>(mContext: Context, mData: MutableList<
     : BaseRvSelectableAdapter<V>(mContext, mData, mCallbackOnClick, mCallbackOnLongClick) {
     //do not use this method in abstract class
     init {
-        mData?.apply {
+        mData?.run {
             mSelectableItems = MutableList(size) { _ -> SelectableItem() }
             Timber.e("------BaseRvSelectableAdapter--------- $size----------${mSelectableItems.size}----------------------------")
         }
@@ -45,21 +44,21 @@ class BaseRvRealmAdapter<V : RealmObject>(mContext: Context, mData: MutableList<
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        handler({
-            if (holder is MangaRealmItemViewHolder) {
-                mData?.getOrNull(position)?.apply {
-                    val x = mSelectableItems.getOrNull(position)
-                    holder.bindViewSelectable(this, position, x)
-                }
-            }
-        })
-
-//        if (holder is MangaRealmItemViewHolder) {
-//            mData?.getOrNull(position)?.apply {
-//                val x = mSelectableItems.getOrNull(position)
-//                holder.bindViewSelectable(this, position, x)
+//        handler({
+//            if (holder is MangaRealmItemViewHolder) {
+//                mData?.getOrNull(position)?.run {
+//                    val x = mSelectableItems.getOrNull(position)
+//                    holder.bindViewSelectable(this, position, x)
+//                }
 //            }
-//        }
+//        })
+
+        if (holder is MangaRealmItemViewHolder) {
+            mData?.getOrNull(position)?.run {
+                val x = mSelectableItems.getOrNull(position)
+                holder.bindViewSelectable(this, position, x)
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {

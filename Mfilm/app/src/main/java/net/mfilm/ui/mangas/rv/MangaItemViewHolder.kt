@@ -15,9 +15,9 @@ class MangaItemViewHolder(mContext: Context, type: Int, itemView: View, mCallbac
     : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick) {
     override fun bindView(obj: Any?, position: Int) {
         if (obj is Manga) {
-            obj.apply {
-                itemView.apply {
-                    coverUrl?.apply { img_thumb.setImageURI(this) }
+            obj.run {
+                itemView.run {
+                    coverUrl?.run { img_thumb.setImageURI(this) }
                     tv_name.text = name
 //                    setText(context, tv_other_name, R.string.title_other_name, otherName)
 //                    setText(context, tv_author, R.string.title_author, author)

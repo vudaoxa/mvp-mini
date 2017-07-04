@@ -15,7 +15,7 @@ abstract class BasePullRefreshFragment : BaseErrorViewFragment(), ICallbackRefre
     }
 
     override fun initSwipe() {
-        swipeContainer?.apply {
+        swipeContainer?.run {
             if (pullToRefreshEnabled()) {
                 setOnRefreshListener { onRefresh() }
                 setColorSchemeResources(*pullToRefreshColorResources)
@@ -40,7 +40,7 @@ abstract class BasePullRefreshFragment : BaseErrorViewFragment(), ICallbackRefre
     }
 
     override fun setRefreshing(refreshing: Boolean) {
-        swipeContainer?.apply {
+        swipeContainer?.run {
             isRefreshing = refreshing
         }
     }

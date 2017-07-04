@@ -14,6 +14,7 @@ abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: Mutable
 
     var mCallbackOnClick: ICallbackOnClick? = null
     var mCallbackOnLongClick: ICallbackOnLongClick? = null
+
     constructor(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick? = null) : this(mContext, mData) {
         this.mCallbackOnClick = mCallbackOnClick
     }
@@ -22,6 +23,7 @@ abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: Mutable
                 mCallbackOnLongClick: ICallbackOnLongClick? = null) : this(mContext, mData, mCallbackOnClick) {
         this.mCallbackOnLongClick = mCallbackOnLongClick
     }
+
     override fun getItemCount() = mData?.size ?: 0
     override fun clear(): Boolean {
         mData?.clear() ?: return false
@@ -29,28 +31,20 @@ abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: Mutable
     }
 
     override fun removeAll(elements: List<V>?): Boolean {
-        elements?.apply {
-            return mData?.removeAll(this) ?: return false
-        }
-        return false
+        return elements?.run {
+            mData?.removeAll(this) ?: false
+        } ?: false
     }
 
     override fun recoverAll(elements: List<V>?): Boolean {
-        elements?.apply {
-            return mData?.addAll(this) ?: return false
-        }
-        return false
+        return elements?.run {
+            mData?.addAll(this) ?: false
+        } ?: false
     }
 
-    //not use
-//    override fun add(item: V?) {
-//
-//    }
-
     override fun addAll(items: List<V>?): Boolean {
-        items?.apply {
-            return mData?.addAll(this) ?: return false
-        }
-        return false
+        return items?.run {
+            mData?.addAll(this) ?: false
+        } ?: false
     }
 }

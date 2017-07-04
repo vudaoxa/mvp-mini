@@ -54,7 +54,6 @@ class ImageOverlayView : RelativeLayout {
         val view = View.inflate(context, R.layout.view_image_overlay, this)
         net.mfilm.utils.handler({
             tvDescription = view.findViewById(R.id.tv_des) as TextView
-            view.findViewById(R.id.btn_share).setOnClickListener { sendShareIntent() }
             btn_share.setOnClickListener { sendShareIntent() }
         })
     }

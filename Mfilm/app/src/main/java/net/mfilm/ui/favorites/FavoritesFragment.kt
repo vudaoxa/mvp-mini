@@ -2,7 +2,6 @@ package net.mfilm.ui.favorites
 
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import android.widget.TextView
 import com.joanzapata.iconify.widget.IconTextView
 import kotlinx.android.synthetic.main.bottom_fun_view.*
 import kotlinx.android.synthetic.main.empty_data_view.*
-import kotlinx.android.synthetic.main.fragment_favorites.*
+import kotlinx.android.synthetic.main.fragment_realm.*
 import kotlinx.android.synthetic.main.layout_input_text.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaFavoriteRealm
@@ -95,6 +94,12 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
     override val imgClear: IconTextView
         get() = img_clear
 
+    override val actionSearch: Int
+        get() = R.id.action_favorites_search
+    override val actionSort: Int
+        get() = R.id.action_favorites_sort
+    override val actionEdit: Int
+        get() = R.id.action_favorites_edit
     override val optionsMenuId: Int
         get() = R.menu.favorites
     override val layoutEmptyData: View?
@@ -124,7 +129,7 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
     var mMangasRvAdapter: BaseRvRealmAdapter<MangaFavoriteRealm>? = null
     var mMangasFilterRvAdapter: BaseRvRealmAdapter<MangaFavoriteRealm>? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_favorites, container, false)
+        return inflater!!.inflate(R.layout.fragment_realm, container, false)
     }
 
     override fun onDestroy() {
@@ -140,26 +145,8 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
     }
 
     override fun initViews() {
-        initSearch()
-        initSpnFilters()
-        initEmptyDataView()
-        initRv()
-        initBottomFun()
-        initBtnDone()
+        super.initViews()
         requestFavorites()
-    }
-
-    override fun initRv() {
-        rvMain.apply {
-            layoutManagerMain = StaggeredGridLayoutManagerWrapper(spanCount,
-                    StaggeredGridLayoutManager.VERTICAL)
-            layoutManager = layoutManagerMain
-        }
-        rvFilter.apply {
-            layoutManagerFilter = StaggeredGridLayoutManagerWrapper(spanCount,
-                    StaggeredGridLayoutManager.VERTICAL)
-            layoutManager = layoutManagerFilter
-        }
     }
 
     override fun done() {
@@ -170,7 +157,7 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
     override fun search(query: String) {
         val favoritesFilter = adapterMain?.mData?.filter { it.name!!.contains(query, true) }
         favoritesFilter.let { ff ->
-            ff?.apply {
+            ff?.run {
                 if (ff.isNotEmpty()) {
                     buildFavoritesFilter(ff)
                 } else onRealmFilterNull()
@@ -184,13 +171,13 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
         val filter = mFilters[spnFilterTracker.mPosition]
         when (filter.content) {
             TYPE_FILTER_AZ -> {
-                adapterMain?.apply {
+                adapterMain?.run {
                     mData?.sortBy { it.name }
                     notifyDataSetChanged()
                 }
             }
             TYPE_FILTER_TIME -> {
-                adapterMain?.apply {
+                adapterMain?.run {
                     mData?.sortByDescending { it.time }
                     notifyDataSetChanged()
                 }
@@ -203,26 +190,27 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
     }
 
     override fun onToggle() {
-        selectedItems?.apply {
+        selectedItems?.run {
             mFavoritesPresenter.toggleFav(this)
         }
     }
 
+    override fun deleteAll() {
+        mFavoritesPresenter.delete(MangaFavoriteRealm::class.java)
+    }
     override fun onFavoritesResponse(mangaFavoriteRealms: List<MangaFavoriteRealm>?) {
 //        Timber.e("------onFavoritesResponse-----------$mangaFavoriteRealms---------------------")
         hideLoading()
-        mangaFavoriteRealms.let { mr ->
-            mr?.apply {
-                if (mr.isNotEmpty()) {
-                    buildFavorites(mr)
-                } else onFavoritesNull()
-            } ?: let { onFavoritesNull() }
-        }
+        mangaFavoriteRealms?.run {
+            if (isNotEmpty()) {
+                buildFavorites(this)
+            } else onFavoritesNull()
+        } ?: let { onFavoritesNull() }
     }
 
     override fun onFavoritesNull() {
         Timber.e("----------------onFavoritesNull------------------")
-        adapterMain?.apply {
+        adapterMain?.run {
             doByAllSelected(this)
         } ?: let {
             //set it after onFragmentEntered
@@ -235,7 +223,7 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
 
     override fun buildFavoritesFilter(mangaFavoriteRealms: List<MangaFavoriteRealm>) {
         Timber.e("----------buildFavoritesFilter-------- ${mangaFavoriteRealms.size}----------------------------")
-        adapterFilter?.apply {
+        adapterFilter?.run {
             doByAllSelected(this, mangaFavoriteRealms)
         } ?: let {
             adapterFilter = BaseRvRealmAdapter(context, mangaFavoriteRealms.toMutableList(), this, this, true)
@@ -253,7 +241,7 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
         Timber.e("---------------buildFavorites--------$context-------${mangaFavoriteRealms.size}")
         context ?: return
         setScrollToolbarFlag(false)
-        adapterMain?.apply {
+        adapterMain?.run {
             doByAllSelected(this, mangaFavoriteRealms)
         } ?: let {
             //the first build
@@ -265,7 +253,7 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
 
     override fun adapterClicked(ad: BaseRvRealmAdapter<MangaFavoriteRealm>, position: Int, f: (() -> Unit)?) {
         super.adapterClicked(ad, position, {
-            ad.mData?.apply {
+            ad.mData?.run {
                 screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
                         typeContent = null, obj = this[position].id)
             }

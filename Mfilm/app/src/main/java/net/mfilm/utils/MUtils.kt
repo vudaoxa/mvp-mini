@@ -39,7 +39,7 @@ import java.util.*
 fun Fragment.isVisOk() = isVisible && isAdded && isInLayout
 
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
-    text?.apply {
+    text?.run {
         if (!TextUtils.isEmpty(this)) {
             tv.show(true)
             when (titleResId) {
@@ -62,7 +62,7 @@ fun getTitledText(context: Context, @StringRes headerResId: Int, content: String
     val header = context.getString(headerResId)
     val r = header + " " + content
     val res = SpannableString(r)
-    res.apply {
+    res.run {
         val start = header.length + 1
         val end = start + content.length
         setSpan(StyleSpan(Typeface.BOLD), start,
@@ -73,7 +73,7 @@ fun getTitledText(context: Context, @StringRes headerResId: Int, content: String
 
 fun getTitledText(content: String): SpannableString {
     val res = SpannableString(content)
-    res.apply {
+    res.run {
         val end = content.length
         setSpan(StyleSpan(Typeface.BOLD), 0,
                 end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -115,7 +115,7 @@ fun initAnimations(context: Context) {
         return
     }
     anim = AnimationUtils.loadAnimation(context, R.anim.fade_in)
-    anim?.apply {
+    anim?.run {
         duration = ANIM_DURATION_SHORT
     }
 
@@ -123,10 +123,10 @@ fun initAnimations(context: Context) {
             android.R.anim.fade_in)
     animOut = AnimationUtils.loadAnimation(context,
             android.R.anim.fade_out)
-    animIn?.apply {
+    animIn?.run {
         duration = ANIM_DURATION
     }
-    animOut?.apply {
+    animOut?.run {
         duration = ANIM_DURATION
     }
 }
@@ -156,18 +156,18 @@ fun initIcons(context: Context) {
 }
 
 fun View?.enable(enable: Boolean) {
-    this?.apply {
+    this?.run {
         isEnabled = enable
     }
 }
 
 fun View?.show(show: Boolean, duration: Long? = null, f: (() -> Unit)? = null) {
-    this?.apply {
+    this?.run {
         if (show) {
             if (isVisible()) return
             startAnimation(anim)
             postOnAnimationDelayed({ visibility = visible }, 250)
-            duration?.apply {
+            duration?.run {
                 schedule(this, {
                     f?.invoke()
                 })
@@ -193,15 +193,14 @@ fun schedule(duration: Long, f: (() -> Unit)? = null) {
 
 fun Int.isEven() = this % 2 == 0
 fun View?.isVisible(): Boolean {
-    this?.apply {
-        return visibility == visible
-    }
-    return false
+    return this?.run {
+        visibility == visible
+    } ?: false
 }
 
 fun showLoadingDialog(context: Context): ProgressDialog {
     val progressDialog = ProgressDialog(context)
-    progressDialog.apply {
+    progressDialog.run {
         show()
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         setContentView(R.layout.progress_dialog)

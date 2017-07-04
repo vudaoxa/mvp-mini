@@ -20,7 +20,7 @@ class ValveUtil {
     private var valveOpened = false
     private var d: Disposable? = null
     fun toggle(d: Disposable?, on: Boolean) {
-        d?.apply {
+        d?.run {
             if (isDisposed) {
                 return
             }
@@ -102,7 +102,7 @@ class RxBus @Inject constructor() : IBus {
     val mBus = PublishRelay.create<Any?>().toSerialized()
     override fun send(obj: Any?) {
         Timber.e("-------------send---- $obj --------------------------")
-        mBus.apply {
+        mBus.run {
             if (hasObservers())
                 accept(obj)
         }

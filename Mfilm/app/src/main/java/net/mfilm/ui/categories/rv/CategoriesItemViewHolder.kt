@@ -14,8 +14,8 @@ class CategoriesItemViewHolder(mContext: Context, type: Int, itemView: View, mCa
     : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick) {
     override fun bindView(obj: Any?, position: Int) {
         if (obj is Category) {
-            obj.apply {
-                itemView.apply {
+            obj.run {
+                itemView.run {
                     tv_name.text = name
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
                 }

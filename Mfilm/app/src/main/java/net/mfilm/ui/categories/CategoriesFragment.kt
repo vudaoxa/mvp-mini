@@ -65,7 +65,7 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
     }
 
     fun initRv() {
-        rv.apply {
+        rv.run {
             mCategoriesRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)
             layoutManager = mCategoriesRvLayoutManagerWrapper
@@ -74,7 +74,7 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        rv.apply {
+        rv.run {
             mCategoriesRvLayoutManagerWrapper.spanCount = spanCount
             requestLayout()
         }
@@ -88,9 +88,9 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
     override fun onCategoriesResponse(categoriesResponse: CategoriesResponse?) {
         hideLoading()
         categoriesResponse.let { cr ->
-            cr?.apply {
+            cr?.run {
                 cr.data.let { dt ->
-                    dt?.apply {
+                    dt?.run {
                         if (dt.isNotEmpty()) {
                             buildCategories(dt)
                         } else onCategoriesNull()
@@ -119,15 +119,14 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
     }
 
     override fun isDataEmpty(): Boolean {
-        mCategoriesRvAdapter?.apply {
-            return itemCount == 0
-        }
-        return true
+        return mCategoriesRvAdapter?.run {
+            itemCount == 0
+        } ?: true
     }
 
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
-        mCategoriesRvAdapter?.mData?.apply {
+        mCategoriesRvAdapter?.mData?.run {
             screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CATEGORY, typeContent = null, obj = get(position))
         }
     }

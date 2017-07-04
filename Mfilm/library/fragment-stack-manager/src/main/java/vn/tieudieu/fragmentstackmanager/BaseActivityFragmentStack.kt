@@ -24,7 +24,7 @@ abstract class BaseActivityFragmentStack : BaseActivity(), ScreenManager {
 
     private fun initializeFragmentSwapper(savedInstanceState: Bundle?) {
         val builder = InitializationParams.Builder()
-        builder.apply {
+        builder.run {
             screenManager(this@BaseActivityFragmentStack)
             contentFrame(contentFrameId)
             fragmentManager(supportFragmentManager)
@@ -32,7 +32,7 @@ abstract class BaseActivityFragmentStack : BaseActivity(), ScreenManager {
             setHomeClass(homeClass)
         }
         mFragmentStackManager = FragmentStackManager()
-        mFragmentStackManager?.apply {
+        mFragmentStackManager?.run {
             initialize(builder.build())
             onRestoreInstanceState(savedInstanceState)
         }
@@ -56,7 +56,7 @@ abstract class BaseActivityFragmentStack : BaseActivity(), ScreenManager {
 
     protected val fragmentStackManager: FragmentStackManager<Fragment>
         get() {
-            mFragmentStackManager?.apply { return this }
+            mFragmentStackManager?.run { return this }
             throw IllegalArgumentException()
         }
 

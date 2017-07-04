@@ -115,7 +115,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun isFavorite(fav: Boolean?) {
         Timber.e("------------isFavorite-------$fav-----------------")
         var icon = icon_star
-        fav?.apply {
+        fav?.run {
             if (this) icon = icon_star_blue
         }
         mBtnFollow.setImageDrawable(icon)
@@ -135,7 +135,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun initScreenRequestPassByTime() {
-        screenRequestPassByTime = PassByTime(AUTO_LOAD_DURATION)
+        screenRequestPassByTime = PassByTime(SCREEN_DURATION)
     }
 
     override fun showConfirmExit() {
