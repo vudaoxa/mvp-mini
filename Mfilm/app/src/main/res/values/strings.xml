@@ -100,7 +100,8 @@
     <string name="close_description">close description</string>
     <string name="chapters">Chapters</string>
     <string name="share">Share</string>
-    <!--<string name=""></string>-->
+    <string name="fav_failed">Add Favorites failure</string>
+    <string name="fav_success">Add Favorites successful</string>
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->
     <!--<string name=""></string>-->
@@ -114,4 +115,9 @@
     <string name="select_all">Select All</string>
     <string name="deselect_all">Deselect All</string>
     <string name="undo">Undo</string>
+    <string-array name="bottom_dialog">
+        <item>Share with my friends</item>
+        <item>Add to favorites</item>
+    </string-array>
+
 </resources>

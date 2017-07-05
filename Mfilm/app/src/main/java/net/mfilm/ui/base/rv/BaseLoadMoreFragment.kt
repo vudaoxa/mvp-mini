@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import net.mfilm.ui.base.error_view.BasePullRefreshFragment
-import net.mfilm.utils.ALoadMore
+import net.mfilm.ui.manga.ALoadMore
 import net.mfilm.utils.ICallbackLoadMore
 import net.mfilm.utils.PAGE_START
 import net.mfilm.utils.show

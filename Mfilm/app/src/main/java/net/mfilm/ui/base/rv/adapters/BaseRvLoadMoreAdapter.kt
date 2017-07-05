@@ -5,14 +5,17 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_LOADING
 import net.mfilm.utils.IAdapterLoadMore
 import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.ICallbackOnLongClick
 import net.mfilm.utils.handler
 import timber.log.Timber
 
 /**
  * Created by tusi on 5/28/17.
  */
-abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick)
-    : BaseRvAdapter<V>(mContext, mData, mCallbackOnClick), IAdapterLoadMore {
+abstract class BaseRvLoadMoreAdapter<V : Any?>(mContext: Context, mData: MutableList<V>?,
+                                               mCallbackOnClick: ICallbackOnClick,
+                                               mCallbackOnLongClick: ICallbackOnLongClick? = null)
+    : BaseRvAdapter<V>(mContext, mData, mCallbackOnClick, mCallbackOnLongClick), IAdapterLoadMore {
     var isMoreLoading = false
     override fun getItemViewType(position: Int): Int {
         return mData?.run {

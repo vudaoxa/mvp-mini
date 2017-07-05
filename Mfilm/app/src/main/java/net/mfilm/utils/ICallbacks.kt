@@ -13,8 +13,10 @@ import io.reactivex.Flowable
 import io.realm.RealmObject
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
+import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.custom.SimpleViewAnimator
+import net.mfilm.ui.dialog_menus.DialogMenuAdapter
 import net.mfilm.ui.manga.*
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
@@ -24,6 +26,24 @@ import tr.xip.errorview.ErrorView
 /**
  * Created by tusi on 5/16/17.
  */
+interface ICallbackToggleFav {
+    fun toggleFav(manga: Manga): Boolean
+}
+
+interface ICallbackFavInput : ICallbackToggleFav {
+    fun onToggleFavResponse(success: Boolean)
+}
+
+interface ICallbackDialogPlus {
+    var dialogItems: Array<DialogMenusItem>
+    var longClickItem: CallbackLongClickItem?
+    var menusAdapter: DialogMenuAdapter
+    fun initDialogPlus()
+}
+
+interface ICallbackDialogItemClicked {
+    fun onDialogItemClicked(dataItemPosition: Int, menuPosition: Int, event: Any?)
+}
 interface ICallbackRealm<V : RealmObject> {
     fun deleteAll(f: (() -> Unit)? = null)
     fun onToggle()
@@ -80,15 +100,6 @@ interface ICallbackOnClick {
 
 interface ICallbackOnLongClick {
     fun onLongClick(position: Int, event: Int)
-}
-abstract class ALoadMore(val f: () -> Unit) {
-    protected var countLoadMore: Int = 0
-    //    abstract fun onLoadMore(f: ()->Unit)
-    abstract fun onLoadMore()
-
-    fun reset() {
-        countLoadMore = 0
-    }
 }
 
 interface ICallbackLoadMore {
@@ -241,7 +252,6 @@ interface ICallbackErrorView : ICallbackDataEmpty {
     val subTitle: Int?
     fun initErrorView(errorView: ErrorView?, subTitle: Int?)
     fun showErrorView(show: Boolean, f: (() -> Unit)? = null): Boolean
-    //    fun showErrorView(show: Boolean, status_code: Int)
     fun onErrorViewDemand(errorView: ErrorView?)
     fun onErrorViewRetry(errorView: ErrorView?, f: () -> Unit)
     fun loadInterrupted()

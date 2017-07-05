@@ -25,6 +25,7 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.joanzapata.iconify.fonts.IoniconsIcons
 import com.joanzapata.iconify.fonts.IoniconsModule
+import net.mfilm.MApplication
 import net.mfilm.R
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.NavItem
@@ -35,7 +36,9 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
-
+fun showMessage(@AppConstants.TypeToast typeToast: Int, msg: Any?) {
+    MApplication.instance.showMessage(typeToast, msg)
+}
 fun Fragment.isVisOk() = isVisible && isAdded && isInLayout
 
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {

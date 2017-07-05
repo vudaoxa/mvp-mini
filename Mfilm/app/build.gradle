@@ -91,7 +91,7 @@ android {
 
         //Toast
         compile "com.github.GrenderG:Toasty:$rootProject.toastyVersion"
-
+        compile "com.orhanobut:dialogplus:$rootProject.dialogPlusVersion"
         //iconify
         compile "com.joanzapata.iconify:android-iconify-fontawesome:$rootProject.iconifyVersion"
         compile "com.joanzapata.iconify:android-iconify-ionicons:$rootProject.iconifyVersion"

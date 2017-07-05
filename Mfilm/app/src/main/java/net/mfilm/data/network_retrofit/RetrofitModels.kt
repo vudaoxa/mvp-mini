@@ -125,6 +125,22 @@ class Manga : Serializable {
     @SerializedName("category")
     @Expose
     var categories: List<Category>? = null
+
+    private var longClicked = false
+    fun onLongClicked(longClicked: Boolean, fLongClicked: (() -> Unit)? = null) {
+        this.longClicked = longClicked
+        if (longClicked) {
+            fLongClicked?.invoke()
+        }
+    }
+
+    fun onClicked(f: (() -> Unit)? = null) {
+        if (!longClicked) {
+            f?.invoke()
+        } else {
+            longClicked = false
+        }
+    }
 }
 
 class MangasResponse : MResponse() {

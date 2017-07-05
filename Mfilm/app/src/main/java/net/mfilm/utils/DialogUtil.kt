@@ -3,9 +3,7 @@ package net.mfilm.utils
 import android.app.ProgressDialog
 import android.content.Context
 import android.support.annotation.StringRes
-
 import com.afollestad.materialdialogs.MaterialDialog
-
 import net.mfilm.R
 
 /**

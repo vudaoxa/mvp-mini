@@ -70,13 +70,22 @@ class MApplication : Application() {
     }
     fun showMessage(@AppConstants.TypeToast typeToast: Int, @NotNull message: String) {
         mAppToast.showMessageByType(typeToast, message)
-
     }
 
     fun showMessage(@AppConstants.TypeToast typeToast: Int, @StringRes resIdString: Int) {
         mAppToast.showMessageByType(typeToast, resIdString)
     }
 
+    fun showMessage(@AppConstants.TypeToast typeToast: Int, @NotNull message: Any?) {
+        when (message) {
+            is Int -> {
+                showMessage(typeToast, message)
+            }
+            is String -> {
+                showMessage(typeToast, message)
+            }
+        }
+    }
     fun useExtensionRenderers(): Boolean {
         return BuildConfig.FLAVOR == WITH_EXT
     }

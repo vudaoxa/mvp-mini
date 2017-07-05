@@ -7,12 +7,14 @@ import kotlinx.android.synthetic.main.layout_manga_thumb.view.*
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.base.rv.holders.BaseItemViewHolder
 import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.ICallbackOnLongClick
 
 /**
  * Created by tusi on 5/16/17.
  */
-class MangaItemViewHolder(mContext: Context, type: Int, itemView: View, mCallbackOnclick: ICallbackOnClick?)
-    : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick) {
+class MangaItemViewHolder(mContext: Context, type: Int, itemView: View,
+                          mCallbackOnclick: ICallbackOnClick?, mCallbackOnLongClick: ICallbackOnLongClick? = null)
+    : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick, mCallbackOnLongClick) {
     override fun bindView(obj: Any?, position: Int) {
         if (obj is Manga) {
             obj.run {
@@ -25,6 +27,10 @@ class MangaItemViewHolder(mContext: Context, type: Int, itemView: View, mCallbac
 //                    setText(context, tv_chaps_count, R.string.title_chaps_count, totalChap?.toString())
 //                    setText(context, tv_updated_at, R.string.title_updated_at, TimeUtils.toFbFormatTime(mContext, updatedTime))
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
+                    setOnLongClickListener {
+                        mCallbackOnLongClick?.onLongClick(position, type)
+                        false
+                    }
                 }
             }
         }

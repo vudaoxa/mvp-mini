@@ -24,12 +24,13 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
-import net.mfilm.ui.manga.AdapterTracker
-import net.mfilm.ui.manga.EmptyDataView
+import net.mfilm.ui.dialog_menus.DialogMenuAdapter
+import net.mfilm.ui.manga.*
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
 import net.mfilm.utils.*
+import org.angmarch.views.NiceSpinner
 import timber.log.Timber
 import tr.xip.errorview.ErrorView
 import java.io.Serializable
@@ -60,10 +61,37 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         }
     }
 
+    private var mDialogItems = arrayOf<DialogMenusItem>()
+    override var dialogItems: Array<DialogMenusItem>
+        get() = mDialogItems
+        set(value) {
+            mDialogItems = value
+        }
+    private var mMenusAdapter: DialogMenuAdapter? = null
+    override var menusAdapter: DialogMenuAdapter
+        get() = mMenusAdapter!!
+        set(value) {
+            mMenusAdapter = value
+        }
+    private var mLongClickItem: CallbackLongClickItem? = null
+    override var longClickItem: CallbackLongClickItem?
+        get() = mLongClickItem
+        set(value) {
+            mLongClickItem = value
+        }
+    override val mFilters: List<Filter>
+        get() = filters
+    override val spnFilter: NiceSpinner
+        get() = spn_filter
     override val spnFilterTracker = AdapterTracker({
+        sort()
+    })
+
+    override fun sort() {
         mMangasRvAdapter?.reset()
         onErrorViewDemand(errorView)
-    })
+    }
+
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
 
@@ -131,6 +159,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     var mMangasRvAdapter: MangasRvAdapter<Manga>? = null
     var mSearchQueryRvAdapter: BaseRvRealmAdapter<SearchQueryRealm>? = null
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_mangas, container, false)
     }
@@ -153,14 +182,41 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     override fun initViews() {
         super.initViews()
+        initRv()
         initSpnFilters()
         initEmptyDataView()
-        initRv()
         initSwipe()
+        initDialogPlus()
         if (searching) {
             requestSearchHistory()
         } else {
             requestMangas()
+        }
+
+    }
+
+    override fun initDialogPlus() {
+        val dialogItemsTitle = context.resources.getStringArray(R.array.bottom_dialog)
+        dialogItems = arrayOf(DialogMenusItem(dialogItemsTitle[0], DialogMenus.SHARE),
+                DialogMenusItem(dialogItemsTitle[1], DialogMenus.FAVORITES))
+        menusAdapter = DialogMenuAdapter(context, R.layout.item_dialog_menu, dialogItems)
+        longClickItem = CallbackLongClickItem({ x: Int, y: Int, z: Any? -> onDialogItemClicked(x, y, z) })
+    }
+
+    override fun onDialogItemClicked(dataItemPosition: Int, menuPosition: Int, event: Any?) {
+        Timber.e("-------onDialogItemClicked----------$dataItemPosition-----------$menuPosition-------$event---")
+        mMangasRvAdapter?.mData?.run {
+            val manga = this[dataItemPosition]
+            when (event) {
+                DialogMenus.FAVORITES -> {
+                    toggleFav(manga)
+                }
+                DialogMenus.SHARE -> {
+
+                }
+                else -> {
+                }
+            }
         }
     }
 
@@ -192,7 +248,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     override fun initSpnFilters() {
-        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, filters.map { getString(it.resId) })
+        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
         spn_filter.setAdapter(banksAdapter)
         spn_filter.setOnItemSelectedListener(spnFilterTracker)
     }
@@ -228,11 +284,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         }
     }
 
-    //use when refresh(by filter, or reload)
-//    override fun reset() {
-//        super.reset()
-//        mMangasRvAdapter?.reset()
-//    }
+    override fun toggleFav(manga: Manga): Boolean {
+        return mMangasPresenter.toggleFav(manga)
+    }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
@@ -262,7 +316,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun requestMangas() {
         val position = spnFilterTracker.mPosition
         Timber.e("---------------requestMangas------ $position--------------------")
-        mMangasPresenter.requestMangas(category?.id, LIMIT, page, filters[position].content, query)
+        mMangasPresenter.requestMangas(category?.id, LIMIT, page, mFilters[position].content, query)
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
@@ -312,7 +366,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
                 notifyDataSetChanged()
             }
         } ?: let {
-            mMangasRvAdapter = MangasRvAdapter(context, mangas.toMutableList(), this)
+            mMangasRvAdapter = MangasRvAdapter(context, mangas.toMutableList(), this, this)
             rv.adapter = mMangasRvAdapter
         }
     }
@@ -338,6 +392,17 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         emptyDataView?.hideSomething()
     }
 
+    override fun onToggleFavResponse(success: Boolean) {
+        when (success) {
+            true -> {
+                showMessage(AppConstants.TYPE_TOAST_SUCCESS, R.string.fav_success)
+            }
+            else -> {
+                showMessage(AppConstants.TYPE_TOAST_ERROR, R.string.fav_failed)
+            }
+        }
+    }
+
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         when (event) {
@@ -346,7 +411,11 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
                     mSearchHistoryPresenter.saveQuery(this)
                 }
                 mMangasRvAdapter?.mData?.run {
-                    screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO, typeContent = null, obj = this[position])
+                    val manga = this[position]
+                    manga.onClicked {
+                        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
+                                typeContent = null, obj = manga)
+                    }
                 }
             }
             TYPE_ITEM_SEARCH_HISTORY -> {
@@ -354,6 +423,16 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
                     baseActivity?.onSearchHistoryClicked(get(position))
                 }
             }
+        }
+    }
+
+    override fun onLongClick(position: Int, event: Int) {
+        Timber.e("---------------------onLongClick--------------------$position")
+        mMangasRvAdapter?.mData?.run {
+            val manga = this[position]
+            manga.onLongClicked(true, {
+                DialogUtils.showBottomDialog(context, menusAdapter, position, longClickItem)
+            })
         }
     }
 

@@ -5,10 +5,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
-import net.mfilm.utils.ICallbackEmptyDataView
-import net.mfilm.utils.ISelectable
-import net.mfilm.utils.isVisible
-import net.mfilm.utils.show
+import net.mfilm.utils.*
 import org.angmarch.views.NiceSpinner
 import timber.log.Timber
 
@@ -18,7 +15,14 @@ import timber.log.Timber
 class Filter(val resId: Int, val content: String)
 
 class NavItem(val id: Int, val indexTag: Any?)
+abstract class ALoadMore(val f: () -> Unit) {
+    protected var countLoadMore: Int = 0
+    abstract fun onLoadMore()
 
+    fun reset() {
+        countLoadMore = 0
+    }
+}
 class AdapterTracker(val f: (() -> Unit)? = null) : AdapterView.OnItemSelectedListener {
     var mPosition = 0
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -110,3 +114,11 @@ class PassByTime(private var duration: Long = -1L, var time: Long = -1L) {
         f?.invoke()
     }
 }
+
+class CallbackLongClickItem(private val f: ((Int, Int, Any?) -> Unit)?) : ICallbackDialogItemClicked {
+    override fun onDialogItemClicked(dataItemPosition: Int, menuPosition: Int, event: Any?) {
+        f?.invoke(dataItemPosition, menuPosition, event)
+    }
+}
+
+class DialogMenusItem(val title: String, val event: Any?)

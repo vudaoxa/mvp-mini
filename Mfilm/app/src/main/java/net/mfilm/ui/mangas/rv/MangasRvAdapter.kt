@@ -10,12 +10,15 @@ import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.base.rv.adapters.BaseRvLoadMoreAdapter
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.ICallbackOnLongClick
 
+@Suppress("UNCHECKED_CAST")
 /**
  * Created by tusi on 5/16/17.
  */
-class MangasRvAdapter<V : Manga>(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick)
-    : BaseRvLoadMoreAdapter<V>(mContext, mData, mCallbackOnClick) {
+class MangasRvAdapter<V : Manga>(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick,
+                                 mCallbackOnLongClick: ICallbackOnLongClick? = null)
+    : BaseRvLoadMoreAdapter<V>(mContext, mData, mCallbackOnClick, mCallbackOnLongClick) {
     override fun isMainItem(item: V): Boolean {
         return item.id != null
     }
@@ -27,7 +30,7 @@ class MangasRvAdapter<V : Manga>(mContext: Context, mData: MutableList<V>?, mCal
         when (viewType) {
             TYPE_ITEM -> {
                 val view = LayoutInflater.from(mContext).inflate(R.layout.item_manga, parent, false)
-                return MangaItemViewHolder(mContext, viewType, view, mCallbackOnClick)
+                return MangaItemViewHolder(mContext, viewType, view, mCallbackOnClick, mCallbackOnLongClick)
             }
             else -> {
                 val view = LayoutInflater.from(mContext).inflate(R.layout.layout_progress_view_small, parent, false)
