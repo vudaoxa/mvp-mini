@@ -59,7 +59,4 @@ abstract class BaseActivityFragmentStack : BaseActivity(), ScreenManager {
             mFragmentStackManager?.run { return this }
             throw IllegalArgumentException()
         }
-
-    protected val currentFragment: Fragment
-        get() = mFragmentStackManager?.currentFragment!!
 }

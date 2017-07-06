@@ -372,7 +372,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     }
 
     override fun onBackPressed() {
-        Timber.e("----------------dismiss-----------------")
+        Timber.e("----------------onBackPressed-----------------")
         if (mLayoutInputText.isVisible()) {
             mCallbackSearchView?.onBackPressed {
                 onSearch(false)
@@ -383,9 +383,11 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
             if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mDrawerLayout.closeDrawer(GravityCompat.START)
             } else {
-                if (fragmentStackManager.currentFragment.javaClass == homeClass) {
-                    showConfirmExit()
-                } else super.onBackPressed()
+                fragmentStackManager.currentFragment?.run {
+                    if (javaClass == homeClass) {
+                        showConfirmExit()
+                    } else super.onBackPressed()
+                } ?: System.exit(0)
             }
         }
     }

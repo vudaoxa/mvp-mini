@@ -10,6 +10,7 @@ import net.mfilm.utils.ICallbackOnLongClick
 /**
  * Created by tusi on 4/5/17.
  */
+@Suppress("DEPRECATION")
 abstract class BaseItemViewHolder(protected val mContext: Context, val type: Int = -1,
                                   itemView: View) : RecyclerView.ViewHolder(itemView) {
     var mCallbackOnClick: ICallbackOnClick? = null
@@ -25,6 +26,15 @@ abstract class BaseItemViewHolder(protected val mContext: Context, val type: Int
         this.mCallbackOnLongClick = mCallbackOnLongClick
     }
 
+    fun initOnClicked(itemView: View) {
+        itemView.run {
+            setOnClickListener { mCallbackOnClick?.onClick(position, type) }
+            setOnLongClickListener {
+                mCallbackOnLongClick?.onLongClick(position, type)
+                true
+            }
+        }
+    }
     abstract fun bindView(obj: Any?, position: Int)
 }
 

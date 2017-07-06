@@ -5,14 +5,14 @@ import io.realm.RealmResults
 import net.mfilm.data.DataManager
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.ui.base.realm.BaseRealmPresenter
-import net.mfilm.ui.mangas.MangasMvpView
+import net.mfilm.ui.search_history.SearchHistoryMvpView
 import net.mfilm.utils.MRealmDisposableObserver
 import javax.inject.Inject
 
 /**
  * Created by tusi on 6/25/17.
  */
-class SearchHistoryPresenter<V : MangasMvpView> @Inject
+class SearchHistoryPresenter<V : SearchHistoryMvpView> @Inject
 constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BaseRealmPresenter<V>(dataManager, compositeDisposable), SearchHistoryMvpPresenter<V> {
     override fun saveQuery(query: String) {

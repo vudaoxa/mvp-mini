@@ -5,6 +5,7 @@ import android.view.View
 /**
  * Created by tusi on 3/29/17.
  */
+const val PENDING_REMOVAL_TIMEOUT = 3000L
 const val AUTO_LOAD_DURATION = 2000L
 const val SCREEN_DURATION = 1000L
 //const val LIMIT = 3

@@ -36,7 +36,10 @@
 
     </LinearLayout>
 
-    <include layout="@layout/item_history_clear" />
+    <include
+        android:id="@+id/container_search_history"
+        layout="@layout/layout_container" />
+
     <include layout="@layout/error_view" />
 
     <include layout="@layout/empty_data_view" />

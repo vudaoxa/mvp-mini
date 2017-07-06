@@ -1,4 +1,4 @@
-package net.mfilm.ui.base.adapter
+package net.mfilm.ui.base.adapters
 
 import android.view.View
 import android.widget.BaseAdapter

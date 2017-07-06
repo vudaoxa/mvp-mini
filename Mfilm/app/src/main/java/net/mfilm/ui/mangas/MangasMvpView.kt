@@ -1,9 +1,10 @@
 package net.mfilm.ui.mangas
 
-import net.mfilm.data.db.models.SearchQueryRealm
+import android.view.View
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.MvpView
+import net.mfilm.ui.search_history.SearchHistoryMvpView
 import net.mfilm.utils.*
 
 /**
@@ -12,14 +13,17 @@ import net.mfilm.utils.*
 
 interface MangasMvpView : MvpView, ICallbackOnClick, ICallbackOnLongClick,
         ICallbackRefresh, ICallbackSpanCount, ICallbackSort, ICallbackDialogPlus,
-        ICallbackDialogItemClicked, ICallbackFavInput {
+        ICallbackDialogItemClicked, ICallbackFavInput, ICallbackSearchView, ICallbackSearchHistoryContainer {
+    val mSearchHistoryView: SearchHistoryMvpView
     fun initRv()
-    fun requestSearchHistory()
-    fun onSearchHistoryResponse(searchHistoryRealms: List<SearchQueryRealm>?)
-    fun onSearchHistoryNull()
-    fun buildSearchHistory(searchHistoryRealms: List<SearchQueryRealm>)
     fun requestMangas()
     fun onMangasResponse(mangasResponse: MangasResponse?)
     fun onMangasNull()
     fun buildMangas(mangas: List<Manga>)
+}
+
+interface ICallbackSearchHistoryContainer {
+    fun attachSearchHistoryFragment()
+    val searchHistoryContainerView: View
+    val searchHistoryContainerId: Int
 }

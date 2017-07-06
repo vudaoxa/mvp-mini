@@ -1,5 +1,6 @@
 package net.mfilm.ui.mangas
 
+//import kotlinx.android.synthetic.main.item_history_clear.*
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
@@ -13,22 +14,18 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_mangas.*
-import kotlinx.android.synthetic.main.item_history_clear.*
 import net.mfilm.R
-import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.rv.BaseLoadMoreFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
-import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
-import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.dialog_menus.DialogMenuAdapter
 import net.mfilm.ui.manga.*
-import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
-import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
+import net.mfilm.ui.search_history.SearchHistoryFragment
+import net.mfilm.ui.search_history.SearchHistoryMvpView
 import net.mfilm.utils.*
 import org.angmarch.views.NiceSpinner
 import timber.log.Timber
@@ -39,7 +36,7 @@ import javax.inject.Inject
 /**
  * Created by tusi on 4/2/17.
  */
-class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchView {
+class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     companion object {
         //to assign it to BaseStackActivity
         private var mSearchInstance: MangasFragment? = null
@@ -61,6 +58,12 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         }
     }
 
+    override val mSearchHistoryView: SearchHistoryMvpView
+        get() = SearchHistoryFragment.getInstance()
+    override val searchHistoryContainerId: Int
+        get() = R.id.container_search_history
+    override val searchHistoryContainerView: View
+        get() = container_search_history
     private var mDialogItems = arrayOf<DialogMenusItem>()
     override var dialogItems: Array<DialogMenusItem>
         get() = mDialogItems
@@ -154,10 +157,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
 
     @Inject
     lateinit var mMangasPresenter: MangasMvpPresenter<MangasMvpView>
-    @Inject
-    lateinit var mSearchHistoryPresenter: SearchHistoryMvpPresenter<MangasMvpView>
+
     var mMangasRvAdapter: MangasRvAdapter<Manga>? = null
-    var mSearchQueryRvAdapter: BaseRvRealmAdapter<SearchQueryRealm>? = null
+
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -167,13 +169,13 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun onDestroy() {
         super.onDestroy()
         mMangasPresenter.onDetach()
-        mSearchHistoryPresenter.onDetach()
+
     }
 
     override fun initFields() {
         activityComponent.inject(this)
         mMangasPresenter.onAttach(this)
-        mSearchHistoryPresenter.onAttach(this)
+
         searching = arguments.getBoolean(KEY_SEARCH)
         category = arguments.getSerializable(KEY_CATEGORY) as? Category?
         back = searching || category != null
@@ -188,11 +190,10 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         initSwipe()
         initDialogPlus()
         if (searching) {
-            requestSearchHistory()
+            attachSearchHistoryFragment()
         } else {
             requestMangas()
         }
-
     }
 
     override fun initDialogPlus() {
@@ -242,46 +243,12 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
             layoutManager = mMangasRvLayoutManagerWrapper
             setupOnLoadMore(this, mCallBackLoadMore)
         }
-        rv_search_history.run {
-            layoutManager = LinearLayoutManagerWrapper(context)
-        }
     }
 
     override fun initSpnFilters() {
         val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
         spn_filter.setAdapter(banksAdapter)
         spn_filter.setOnItemSelectedListener(spnFilterTracker)
-    }
-
-    override fun requestSearchHistory() {
-        mSearchHistoryPresenter.requestSearchHistory()
-    }
-
-    override fun onSearchHistoryResponse(searchHistoryRealms: List<SearchQueryRealm>?) {
-        hideLoading()
-        searchHistoryRealms.let { shr ->
-            shr?.run {
-                if (shr.isNotEmpty()) {
-                    buildSearchHistory(shr)
-                } else onSearchHistoryNull()
-            } ?: let { onSearchHistoryNull() }
-        }
-    }
-
-    override fun onSearchHistoryNull() {
-        Timber.e("----------------onSearchHistoryNull------------------")
-    }
-
-    override fun buildSearchHistory(searchHistoryRealms: List<SearchQueryRealm>) {
-        Timber.e("---------------buildSearchHistory---------------${searchHistoryRealms.size}")
-        mSearchQueryRvAdapter?.run {
-            mData?.clear()
-            mData?.addAll(searchHistoryRealms)
-            notifyDataSetChanged()
-        } ?: let {
-            mSearchQueryRvAdapter = BaseRvRealmAdapter(context, searchHistoryRealms.toMutableList(), this)
-            rv_search_history.adapter = mSearchQueryRvAdapter
-        }
     }
 
     override fun toggleFav(manga: Manga): Boolean {
@@ -299,7 +266,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     }
 
     override fun onBackPressed(f: (() -> Unit)?) {
-        if (rv_search_history.isVisible()) {
+        if (mSearchHistoryView.isHistoryVisible()) {
             f?.invoke()
         } else showSearchHistory()
     }
@@ -309,10 +276,13 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         errorView?.show(false)
         errorViewLoadMore?.show(false)
         emptyDataView?.showEmptyDataView(false)
-        rv_search_history.show(true)
+        mSearchHistoryView.show(true)
 
     }
 
+    override fun attachSearchHistoryFragment() {
+        attachChildFragment(searchHistoryContainerView, searchHistoryContainerId, SearchHistoryFragment.newInstance())
+    }
     override fun requestMangas() {
         val position = spnFilterTracker.mPosition
         Timber.e("---------------requestMangas------ $position--------------------")
@@ -408,7 +378,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
         when (event) {
             TYPE_ITEM -> {
                 query?.run {
-                    mSearchHistoryPresenter.saveQuery(this)
+                    mSearchHistoryView.saveQuery(this)
                 }
                 mMangasRvAdapter?.mData?.run {
                     val manga = this[position]
@@ -416,11 +386,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
                         screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
                                 typeContent = null, obj = manga)
                     }
-                }
-            }
-            TYPE_ITEM_SEARCH_HISTORY -> {
-                mSearchQueryRvAdapter?.mData?.run {
-                    baseActivity?.onSearchHistoryClicked(get(position))
                 }
             }
         }
@@ -439,7 +404,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView, ICallbackSearchVie
     override fun onSearch(query: String) {
         this.query = query
         layout_mangas.show(true)
-        rv_search_history.show(false)
+        mSearchHistoryView.show(false)
         reset { mMangasRvAdapter?.reset(true) }
         requestMangas()
     }

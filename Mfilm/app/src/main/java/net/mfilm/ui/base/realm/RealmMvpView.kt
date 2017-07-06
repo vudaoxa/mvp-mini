@@ -14,5 +14,7 @@ interface RealmMvpView<V : RealmObject> : MvpView, ICallbackOnClick,
     val actionSearch: Int
     val actionSort: Int
     val actionEdit: Int
-//    fun delete(clazz: Class<out RealmModel>)
 }
+
+interface RealmMiniMvpView<V : RealmObject> : MvpView, ICallbackOnClick,
+        ICallbackEdit, ICallbackOnLongClick, ICallbackBottomFun, ICallbackMiniRealm<V>

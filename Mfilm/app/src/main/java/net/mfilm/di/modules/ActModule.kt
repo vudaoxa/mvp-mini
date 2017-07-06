@@ -51,6 +51,7 @@ import net.mfilm.ui.mangas.MangasMvpView
 import net.mfilm.ui.mangas.MangasPresenter
 import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
 import net.mfilm.ui.mangas.search.SearchHistoryPresenter
+import net.mfilm.ui.search_history.SearchHistoryMvpView
 import net.mfilm.ui.splash.SplashMvpPresenter
 import net.mfilm.ui.splash.SplashMvpView
 import net.mfilm.ui.splash.SplashPresenter
@@ -132,7 +133,7 @@ class ActModule(val mActivity: Activity) {
     }
 
     @Provides
-    fun provideSearchHistoryPresenter(presenter: SearchHistoryPresenter<MangasMvpView>): SearchHistoryMvpPresenter<MangasMvpView> {
+    fun provideSearchHistoryPresenter(presenter: SearchHistoryPresenter<SearchHistoryMvpView>): SearchHistoryMvpPresenter<SearchHistoryMvpView> {
         return presenter
     }
     @Provides

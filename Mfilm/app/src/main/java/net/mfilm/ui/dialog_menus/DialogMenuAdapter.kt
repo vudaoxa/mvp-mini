@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_dialog_menu.view.*
-import net.mfilm.ui.base.adapter.MBaseAdapter
+import net.mfilm.ui.base.adapters.MBaseAdapter
 import net.mfilm.ui.manga.DialogMenusItem
 
 /**

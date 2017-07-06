@@ -1,5 +1,6 @@
 package net.mfilm.utils
 
+import android.graphics.drawable.Drawable
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
@@ -26,6 +27,23 @@ import tr.xip.errorview.ErrorView
 /**
  * Created by tusi on 5/16/17.
  */
+interface ICallbackItemTouch {
+    val background: Drawable
+    val xMark: Drawable
+    val xMarkMargin: Int
+
+}
+
+interface ICallbackRvItemDecoration {
+    val mBackground: Drawable
+}
+
+interface ICallbackRvSwipe {
+    fun onUndo(position: Int)
+    fun isPendingRemoval(position: Int): Boolean
+    fun pendingRemoval(position: Int)
+    fun remove(position: Int)
+}
 interface ICallbackToggleFav {
     fun toggleFav(manga: Manga): Boolean
 }
@@ -54,6 +72,16 @@ interface ICallbackRealm<V : RealmObject> {
     var adapterFilter: BaseRvRealmAdapter<V>?
     var layoutManagerMain: StaggeredGridLayoutManagerWrapper
     var layoutManagerFilter: StaggeredGridLayoutManagerWrapper
+    fun adapterClicked(ad: BaseRvRealmAdapter<V>, position: Int, f: (() -> Unit)? = null)
+}
+
+interface ICallbackMiniRealm<V : RealmObject> {
+    fun deleteAll(f: (() -> Unit)? = null)
+    fun onToggle()
+    fun initRv()
+    val rvMain: RecyclerView
+    var adapterMain: BaseRvRealmAdapter<V>?
+    var layoutManagerMain: RecyclerView.LayoutManager
     fun adapterClicked(ad: BaseRvRealmAdapter<V>, position: Int, f: (() -> Unit)? = null)
 }
 interface ICallbackBottomFun {

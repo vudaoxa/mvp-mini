@@ -19,6 +19,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
     protected var mSelectableItems = mutableListOf<SelectableItem>()
     var countSelected = 0
     private var mItemsSelectable: Boolean? = null
+    private var selectedIndices: List<Int>? = null
     //use for select/deselect all, done
     override var itemsSelectable: Boolean?
         get() = mItemsSelectable
@@ -34,7 +35,7 @@ abstract class BaseRvSelectableAdapter<V : Any?>(mContext: Context, mData: Mutab
         itemsSelectable = null
         notifyDataSetChanged()
     }
-    private var selectedIndices: List<Int>? = null
+
     override fun selectedItems(): List<IndexedValue<V>>? {
         selectedIndices = mSelectableItems.indices.filter { mSelectableItems[it].selected == true }
         return selectedIndices?.run {

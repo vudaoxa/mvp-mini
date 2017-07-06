@@ -6,8 +6,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_search_history"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/Layout_match_wrap"
         android:layout_margin="8dp"
         android:visibility="visible" />
 

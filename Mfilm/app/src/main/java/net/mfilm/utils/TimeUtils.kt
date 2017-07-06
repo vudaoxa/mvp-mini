@@ -47,7 +47,7 @@ object TimeUtils {
 
     fun toFbFormatTime(context: Context, dt: String): String {
         val now = Date()
-        val dateFormat = SimpleDateFormat("hh:mm dd/MM/yyyy")
+        val dateFormat = SimpleDateFormat("hh:mm dd/MM/yyyy", Locale.US)
 
         val timeFactors = dt.split(" ")
         val h = timeFactors[1].split(":")
@@ -108,7 +108,7 @@ object TimeUtils {
     fun toFbFormatTime(context: Context, dt: Long?): String? {
         if (dt == null) return null
         val now = Date()
-        val dateFormat = SimpleDateFormat("hh:mm dd/MM/yyyy")
+        val dateFormat = SimpleDateFormat("hh:mm dd/MM/yyyy", Locale.US)
 
         val cal = Calendar.getInstance()
         cal.timeInMillis = dt
@@ -150,11 +150,11 @@ object TimeUtils {
                         val countHours = TimeUnit.HOURS.convert(now.time - mDate.time, TimeUnit.MILLISECONDS)
                         if (countHours < 24) {
                             if (countHours < 1) {
-                                val countMinute = TimeUnit.MINUTES.convert(now.time - mDate.time, TimeUnit.MILLISECONDS)
-                                if (countMinute < 1) {
+                                val countMinutes = TimeUnit.MINUTES.convert(now.time - mDate.time, TimeUnit.MILLISECONDS)
+                                if (countMinutes < 1) {
                                     res = context.getString(R.string.just_now)
                                 } else {
-                                    res = context.getString(R.string.mins_ago, countMinute)
+                                    res = context.getString(R.string.mins_ago, countMinutes)
                                 }
                             } else {
                                 res = context.getString(R.string.hours_ago, countHours)
