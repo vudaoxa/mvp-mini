@@ -154,20 +154,6 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
             mSearchHistoryPresenter.delete(SearchQueryRealm::class.java)
         })
     }
-//    override fun onClick(position: Int, event: Int) {
-//        Timber.e("---------------------onClick--------------------$position")
-//        when (event) {
-//            TYPE_ITEM_SEARCH_HISTORY -> {
-//                mSearchQueryRvAdapter?.mData?.run {
-//                    baseActivity?.onSearchHistoryClicked(get(position))
-//                }
-//            }
-//        }
-//    }
-//
-//    override fun onLongClick(position: Int, event: Int) {
-//        Timber.e("---------------------onLongClick--------------------$position")
-//    }
 
     override fun adapterClicked(ad: BaseRvRealmAdapter<SearchQueryRealm>, position: Int, f: (() -> Unit)?) {
         super.adapterClicked(ad, position, {
