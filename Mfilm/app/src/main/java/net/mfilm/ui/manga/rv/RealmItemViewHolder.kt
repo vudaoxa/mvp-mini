@@ -16,8 +16,8 @@ import net.mfilm.utils.ICallbackOnLongClick
 /**
  * Created by tusi on 5/16/17.
  */
-class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
-                               mCallbackOnclick: ICallbackOnClick?, mCallbackOnLongClick: ICallbackOnLongClick? = null)
+class RealmItemViewHolder(mContext: Context, type: Int, itemView: View,
+                          mCallbackOnclick: ICallbackOnClick?, mCallbackOnLongClick: ICallbackOnLongClick? = null)
     : BaseSelectableItemViewHolder(mContext, type, itemView, mCallbackOnclick, mCallbackOnLongClick) {
     //not use
     override fun bindView(obj: Any?, position: Int) {
@@ -50,7 +50,10 @@ class MangaRealmItemViewHolder(mContext: Context, type: Int, itemView: View,
             is SearchQueryRealm -> {
                 itemView.run {
                     tv_query.text = obj.query
-                    setOnClickListener { mCallbackOnClick?.onClick(position, type) }
+                    selectableItem?.run {
+                        iconSelected(icon_query_selected, selected)
+                    }
+                    initOnClicked(this)
                 }
             }
         }

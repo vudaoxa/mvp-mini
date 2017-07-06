@@ -60,6 +60,7 @@ class AppDbHelper @Inject constructor() : DbHelper {
         val realm = Realm.getDefaultInstance()
         //it will be added to presenter, and will be cleared on onDetach
         return find<SearchQueryRealm>(realm.where(SearchQueryRealm::class.java)
+                .equalTo("status", true)
                 .findAllSortedAsync("time", Sort.DESCENDING))
                 .subscribe({
                     Timber.e("loadSearchHistory------------isLoaded")

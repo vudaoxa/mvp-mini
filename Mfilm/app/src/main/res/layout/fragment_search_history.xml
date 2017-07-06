@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/default_background"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout_match_wrap">
 
-    <include layout="@layout/item_history_clear" />
-</LinearLayout>
+    <RelativeLayout style="@style/Layout_match_wrap">
+
+        <LinearLayout
+            style="@style/LinearLayout_center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottom_fun"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_done"
+                style="@style/PrimaryFlatButton"
+                android:text="@string/done"
+                android:theme="@style/PrimaryFlatButton"
+                android:visibility="gone" />
+
+            <include layout="@layout/item_history_clear" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/bottom_fun_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
+</FrameLayout>

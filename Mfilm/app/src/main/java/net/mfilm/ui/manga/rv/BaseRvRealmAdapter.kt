@@ -40,12 +40,12 @@ class BaseRvRealmAdapter<V : RealmObject>(mContext: Context, mData: MutableList<
             }
         }
         val view = LayoutInflater.from(mContext).inflate(layoutId, parent, false)
-        return MangaRealmItemViewHolder(mContext, viewType, view, mCallbackOnClick, mCallbackOnLongClick)
+        return RealmItemViewHolder(mContext, viewType, view, mCallbackOnClick, mCallbackOnLongClick)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
 //        handler({
-//            if (holder is MangaRealmItemViewHolder) {
+//            if (holder is RealmItemViewHolder) {
 //                mData?.getOrNull(position)?.run {
 //                    val x = mSelectableItems.getOrNull(position)
 //                    holder.bindViewSelectable(this, position, x)
@@ -53,7 +53,7 @@ class BaseRvRealmAdapter<V : RealmObject>(mContext: Context, mData: MutableList<
 //            }
 //        })
 
-        if (holder is MangaRealmItemViewHolder) {
+        if (holder is RealmItemViewHolder) {
             mData?.getOrNull(position)?.run {
                 val x = mSelectableItems.getOrNull(position)
                 holder.bindViewSelectable(this, position, x)

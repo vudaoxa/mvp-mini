@@ -4,7 +4,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import io.realm.RealmObject
 import net.mfilm.R
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
-import net.mfilm.ui.base.rv.holders.TYPE_ITEM_FILTER
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.manga.UndoBtn
@@ -40,9 +40,6 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
 
     override fun initViews() {
         initRv()
-        initSearch()
-        initSpnFilters()
-        initEmptyDataView()
         initBottomFun()
         initBtnDone()
     }
@@ -64,7 +61,6 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
         ad.clear()
         val x = mangaFavoriteRealms == null
         Timber.e("-----onOriginal-------------$x-----------------")
-        showEmptyDataView(x)
         setScrollToolbarFlag(x)
         mangaFavoriteRealms?.run {
             ad.addAll(this)
@@ -77,7 +73,6 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
         allSelected?.run {
             if (!isVisible) return
             val x = mangaFavoriteRealms == null
-            showEmptyDataView(x)
             setScrollToolbarFlag(x)
             undoBtn?.onSelected(
                     {
@@ -146,20 +141,22 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
 
     override fun submit() {
         Timber.e("-------submit------------------------------------")
-
-        val items = adapterMain?.selectedItems()?.map { it.value }
-        items?.run {
-            Timber.e("------selectedItems--------$indices---------------------")
-            if (isNotEmpty()) {
-                selectedItems = this
-                DialogUtil.showMessageConfirm(context, R.string.notifications, R.string.confirm_delete,
-                        MaterialDialog.SingleButtonCallback { _, _ -> doIt() })
-            } else {
-                updateBtnSubmit(adapter)
+        adapterMain?.run {
+            val items = selectedItems()?.map { it.value }
+            items?.run {
+                Timber.e("------selectedItems--------$indices---------------------")
+                if (isNotEmpty()) {
+                    selectedItems = this
+                    DialogUtil.showMessageConfirm(context, R.string.notifications, R.string.confirm_delete,
+                            MaterialDialog.SingleButtonCallback { _, _ -> doIt() })
+                } else {
+                    updateBtnSubmit(adapterMain)
+                }
+            } ?: let {
+                updateBtnSubmit(adapterMain)
             }
-        } ?: let {
-            updateBtnSubmit(adapter)
         }
+
     }
 
     private fun doIt() {
@@ -175,13 +172,6 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
         }
     }
 
-    override fun isDataEmpty(): Boolean {
-        adapterMain?.run {
-            return itemCount == 0
-        }
-        return true
-    }
-
     override fun adapterClicked(ad: BaseRvRealmAdapter<V>, position: Int, f: (() -> Unit)?) {
         ad.itemsSelectable?.run {
             allSelected = ad.onSelected(position)
@@ -193,13 +183,8 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
         when (event) {
-            TYPE_ITEM -> {
+            TYPE_ITEM, TYPE_ITEM_SEARCH_HISTORY -> {
                 adapterMain?.run {
-                    adapterClicked(this, position)
-                }
-            }
-            TYPE_ITEM_FILTER -> {
-                adapterFilter?.run {
                     adapterClicked(this, position)
                 }
             }
@@ -209,13 +194,8 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
     override fun onLongClick(position: Int, event: Int) {
         Timber.e("---------------------onLongClick--------------------$position")
         when (event) {
-            TYPE_ITEM -> {
+            TYPE_ITEM, TYPE_ITEM_SEARCH_HISTORY -> {
                 adapterMain?.run {
-                    allSelected = onSelected(position)
-                }
-            }
-            TYPE_ITEM_FILTER -> {
-                adapterFilter?.run {
                     allSelected = onSelected(position)
                 }
             }

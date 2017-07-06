@@ -17,4 +17,5 @@ interface RealmMvpView<V : RealmObject> : MvpView, ICallbackOnClick,
 }
 
 interface RealmMiniMvpView<V : RealmObject> : MvpView, ICallbackOnClick,
-        ICallbackEdit, ICallbackOnLongClick, ICallbackBottomFun, ICallbackMiniRealm<V>
+        ICallbackEdit, ICallbackOnLongClick, ICallbackBottomFun,
+        ICallbackDataEmpty, ICallbackMiniRealm<V>

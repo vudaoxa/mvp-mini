@@ -16,7 +16,7 @@ class SearchHistoryPresenter<V : SearchHistoryMvpView> @Inject
 constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BaseRealmPresenter<V>(dataManager, compositeDisposable), SearchHistoryMvpPresenter<V> {
     override fun saveQuery(query: String) {
-        dataManager.saveObject(SearchQueryRealm(query, System.currentTimeMillis()))
+        dataManager.saveObject(SearchQueryRealm(query, System.currentTimeMillis(), true))
     }
 
     override fun requestSearchHistory() {
@@ -34,5 +34,12 @@ constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) 
         val disposable = dataManager.loadSearchHistory(mRealmDisposableObserver)
         compositeDisposable.add(disposable)
         compositeDisposable.add(mRealmDisposableObserver)
+    }
+
+    override fun toggleSearchHistory(searchQueryRealms: List<SearchQueryRealm>) {
+        searchQueryRealms.run {
+            val newSearchQueryRealms = map { SearchQueryRealm(it.query, it.time, !it.status) }
+            dataManager.saveObjects(newSearchQueryRealms)
+        }
     }
 }

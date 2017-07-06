@@ -25,7 +25,7 @@ open class MangaHistoryRealm(
 ) : RealmObject()
 
 open class SearchQueryRealm(@PrimaryKey var query: String? = null,
-                            var time: Long? = 0) : RealmObject() {
+                            var time: Long? = 0, var status: Boolean = false) : RealmObject() {
     override fun toString(): String {
         return query!!
     }

@@ -71,7 +71,7 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
         get() = bottom_fun
     override val btnSelect: Button
         get() = btn_toggle_select
-    var mUndoBtn: UndoBtn? = null
+    private var mUndoBtn: UndoBtn? = null
     override var undoBtn: UndoBtn?
         get() = mUndoBtn
         set(value) {

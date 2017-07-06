@@ -5,11 +5,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import kotlinx.android.synthetic.main.bottom_fun_view.*
+import kotlinx.android.synthetic.main.fragment_search_history.*
 import kotlinx.android.synthetic.main.item_history_clear.*
 import net.mfilm.R
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.ui.base.realm.BaseMiniRealmFragment
-import net.mfilm.ui.base.rv.holders.TYPE_ITEM_SEARCH_HISTORY
+import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
+import net.mfilm.ui.custom.SimpleViewAnimator
+import net.mfilm.ui.manga.UndoBtn
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
 import net.mfilm.utils.isVisible
@@ -34,16 +39,50 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
         }
     }
 
-    override val mRecyclerView: RecyclerView?
+    override fun onToggle() {
+        selectedItems?.run {
+            mSearchHistoryPresenter.toggleSearchHistory(this)
+        }
+    }
+
+    override val rvMain: RecyclerView
         get() = rv_search_history
+    override var adapterMain: BaseRvRealmAdapter<SearchQueryRealm>?
+        get() = mSearchQueryRvAdapter
+        set(value) {
+            mSearchQueryRvAdapter = value
+        }
+    lateinit var mSearchHistoryLayoutManager: LinearLayoutManagerWrapper
+    override var layoutManagerMain: RecyclerView.LayoutManager
+        get() = mSearchHistoryLayoutManager
+        set(value) {
+            mSearchHistoryLayoutManager = value as LinearLayoutManagerWrapper
+        }
+    override val bottomFunView: SimpleViewAnimator
+        get() = bottom_fun
+    var mUndoBtn: UndoBtn? = null
+    override var undoBtn: UndoBtn?
+        get() = mUndoBtn
+        set(value) {
+            mUndoBtn = value
+        }
+    override val btnSelect: Button
+        get() = btn_toggle_select
+    override val btnUndo: Button
+        get() = btn_undo
+    override val btnSubmit: Button
+        get() = btn_delete
+    override val btnDone: Button
+        get() = btn_done
+
 
     override fun isHistoryVisible(): Boolean {
-        Timber.e("----isHistoryVisible--------mRecyclerView--------$mRecyclerView-----------------------")
-        return mRecyclerView.isVisible()
+        Timber.e("----isHistoryVisible--------rvMain--------$rvMain-----------------------")
+        return rvMain.isVisible()
     }
 
     override fun show(show: Boolean) {
-        mRecyclerView.show(show)
+        rvMain.show(show)
     }
 
     @Inject
@@ -73,6 +112,10 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
         mSearchHistoryPresenter.requestSearchHistory()
     }
 
+    override fun done() {
+        super.done()
+        requestSearchHistory()
+    }
     override fun onSearchHistoryResponse(searchHistoryRealms: List<SearchQueryRealm>?) {
         hideLoading()
         searchHistoryRealms.let { shr ->
@@ -85,10 +128,12 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
     }
 
     override fun onSearchHistoryNull() {
+        xx
         Timber.e("----------------onSearchHistoryNull------------------")
     }
 
     override fun buildSearchHistory(searchHistoryRealms: List<SearchQueryRealm>) {
+        xx
         Timber.e("---------------buildSearchHistory---------------${searchHistoryRealms.size}")
         mSearchQueryRvAdapter?.run {
             clear()
@@ -96,7 +141,7 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
             notifyDataSetChanged()
         } ?: let {
             mSearchQueryRvAdapter = BaseRvRealmAdapter(context, searchHistoryRealms.toMutableList(), this, this)
-            mRecyclerView?.adapter = mSearchQueryRvAdapter
+            rvMain.adapter = mSearchQueryRvAdapter
         }
     }
 
@@ -104,18 +149,31 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
         mSearchHistoryPresenter.saveQuery(query)
     }
 
-    override fun onClick(position: Int, event: Int) {
-        Timber.e("---------------------onClick--------------------$position")
-        when (event) {
-            TYPE_ITEM_SEARCH_HISTORY -> {
-                mSearchQueryRvAdapter?.mData?.run {
-                    baseActivity?.onSearchHistoryClicked(get(position))
-                }
-            }
-        }
+    override fun deleteAll(f: (() -> Unit)?) {
+        super.deleteAll({
+            mSearchHistoryPresenter.delete(SearchQueryRealm::class.java)
+        })
     }
+//    override fun onClick(position: Int, event: Int) {
+//        Timber.e("---------------------onClick--------------------$position")
+//        when (event) {
+//            TYPE_ITEM_SEARCH_HISTORY -> {
+//                mSearchQueryRvAdapter?.mData?.run {
+//                    baseActivity?.onSearchHistoryClicked(get(position))
+//                }
+//            }
+//        }
+//    }
+//
+//    override fun onLongClick(position: Int, event: Int) {
+//        Timber.e("---------------------onLongClick--------------------$position")
+//    }
 
-    override fun onLongClick(position: Int, event: Int) {
-        Timber.e("---------------------onLongClick--------------------$position")
+    override fun adapterClicked(ad: BaseRvRealmAdapter<SearchQueryRealm>, position: Int, f: (() -> Unit)?) {
+        super.adapterClicked(ad, position, {
+            ad.mData?.run {
+                baseActivity?.onSearchHistoryClicked(get(position))
+            }
+        })
     }
 }

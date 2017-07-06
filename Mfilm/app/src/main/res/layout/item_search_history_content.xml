@@ -1,29 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_content"
-    style="@style/LinearLayout_center_vertical"
-    android:layout_width="match_parent"
-    android:orientation="horizontal">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout_match_wrap">
 
+    <LinearLayout
+        android:id="@+id/layout_content"
+        style="@style/LinearLayout_center_vertical"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            style="@style/Layout_wrap"
+            android:background="@color/transparent"
+            android:gravity="center"
+            android:padding="@dimen/dimen5"
+            android:shadowColor="@color/shadow"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:text="@string/fa_history"
+            android:textColor="@color/grey_10"
+            android:textSize="13sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_query"
+            style="@style/TextStyle.Sans.Regular.16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="tokyo hot"
+            android:textColor="@color/white" />
+    </LinearLayout>
     <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/icon_query_selected"
         style="@style/Layout_wrap"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:background="@color/transparent"
-        android:gravity="center"
         android:padding="@dimen/dimen5"
         android:shadowColor="@color/shadow"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="1"
-        android:text="@string/fa_history"
-        android:textColor="@color/grey_10"
-        android:textSize="13sp"
-        android:visibility="visible" />
-
-    <TextView
-        android:id="@+id/tv_query"
-        style="@style/TextStyle.Sans.Regular.16"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="tokyo hot"
-        android:textColor="@color/white" />
-</LinearLayout>
+        android:text="@string/ion_checkmark"
+        android:textColor="@color/grey_60"
+        android:textSize="18sp"
+        android:visibility="gone" />
+</RelativeLayout>
