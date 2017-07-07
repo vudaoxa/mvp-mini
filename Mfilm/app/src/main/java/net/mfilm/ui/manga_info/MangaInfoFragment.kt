@@ -67,8 +67,10 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent.inject(this)
-        mMangaInfoMvpPresenter.onAttach(this)
+        tryIt {
+            activityComponent?.inject(this)
+            mMangaInfoMvpPresenter.onAttach(this)
+        }
         obtainManga()
     }
 
@@ -162,7 +164,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
             setText(context, tv_author, R.string.title_author, author)
             setText(context, tv_categories, R.string.title_categories, categories?.map { it.name }?.joinToString())
 //                    setText(context, tv_chaps_count, R.string.title_chaps_count, totalChap?.toString())
-            setText(context, tv_view_counts, R.string.title_views_count, views?.toString())
+            setText(context, tv_view_counts, R.string.title_views_count, views?.run { numberFormat.format(this) })
             updatedTime.let { u ->
                 u?.run {
                     setText(context, tv_updated_at, R.string.title_updated_at, TimeUtils.toFbFormatTime(context, u * 1000))

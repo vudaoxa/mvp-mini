@@ -30,4 +30,5 @@ abstract class BaseFragmentStack : BaseFragment() {
         get() = 0
 
     abstract fun setScrollToolbarFlag(info: Boolean)
+//    abstract fun tryIt(f: (() -> Unit)? = null)
 }

@@ -22,6 +22,7 @@ import net.mfilm.ui.main.MainActivity
 import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.ui.mangas.MangasFragment
 import net.mfilm.ui.search_history.SearchHistoryFragment
+import net.mfilm.ui.settings.SettingsFragment
 import net.mfilm.ui.splash.SplashActivity
 import net.mfilm.utils.IBus
 import javax.inject.Singleton
@@ -65,4 +66,5 @@ interface ActComponent {
     fun inject(fragment: ChapterImagesFragment)
     fun inject(fragment: FavoritesFragment)
     fun inject(fragment: HistoryFragment)
+    fun inject(fragment: SettingsFragment)
 }

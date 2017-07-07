@@ -20,6 +20,21 @@ import javax.inject.Inject
  */
 class AppDataManager @Inject constructor(@AppContext val mContext: Context, val mDbHelper: DbHelper,
                                          val mPrefsHelper: PrefsHelper, val mRetrofitService: RetrofitService) : DataManager {
+    override var mangaSourceIndex: Int
+        get() = mPrefsHelper.mangaSourceIndex
+        set(value) {
+            mPrefsHelper.mangaSourceIndex = value
+        }
+    override var historyEnabled: Boolean
+        get() = mPrefsHelper.historyEnabled
+        set(value) {
+            mPrefsHelper.historyEnabled = value
+        }
+    override var searchHistoryEnabled: Boolean
+        get() = mPrefsHelper.searchHistoryEnabled
+        set(value) {
+            mPrefsHelper.searchHistoryEnabled = value
+        }
     override fun loadSearchHistory(observer: DisposableObserver<RealmResults<SearchQueryRealm>>?): Disposable {
         return mDbHelper.loadSearchHistory(observer)
     }

@@ -6,10 +6,10 @@
     <string name="action_filter">Filter</string>
     <string name="action_sort">Sort</string>
     <string name="action_edit">Edit</string>
-    <!--<string name=""></string>-->
-    <!--<string name=""></string>-->
-    <!--<string name=""></string>-->
-    <!--<string name=""></string>-->
+    <string name="title_vn">Tiếng Việt</string>
+    <string name="title_en">English</string>
+    <string name="vn">vn</string>
+    <string name="en">en</string>
     <!--<string name=""></string>-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -24,7 +24,7 @@
     <string name="categories">Categories</string>
     <string name="favorites">Favorites</string>
     <string name="history">History</string>
-    <string name="az">A-Z</string>
+    <string name="az">All</string>
     <string name="hottest">Hottest</string>
     <string name="newest">Newest</string>
     <string name="search">Search</string>
@@ -116,8 +116,8 @@
     <string name="deselect_all">Deselect All</string>
     <string name="undo">Undo</string>
     <string-array name="bottom_dialog">
-        <item>Share with my friends</item>
-        <item>Add to favorites</item>
+        <item>{ion-share} \u0020 Share with my friends</item>
+        <item>{ion-ios-star} \u0020 Add to favorites</item>
     </string-array>
 
 </resources>

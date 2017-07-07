@@ -17,6 +17,7 @@ import net.mfilm.ui.custom.SimpleViewAnimator
 import net.mfilm.ui.manga.UndoBtn
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
+import net.mfilm.utils.handler
 import net.mfilm.utils.isVisible
 import net.mfilm.utils.show
 import timber.log.Timber
@@ -45,6 +46,8 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
         }
     }
 
+    override val btnEdit: Button
+        get() = btn_edit
     override val rvMain: RecyclerView
         get() = rv_search_history
     override var adapterMain: BaseRvRealmAdapter<SearchQueryRealm>?
@@ -77,12 +80,11 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
 
 
     override fun isHistoryVisible(): Boolean {
-        Timber.e("----isHistoryVisible--------rvMain--------$rvMain-----------------------")
-        return rvMain.isVisible()
+        return root.isVisible()
     }
 
     override fun show(show: Boolean) {
-        rvMain.show(show)
+        root.show(show)
     }
 
     @Inject
@@ -93,8 +95,10 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
     }
 
     override fun initFields() {
-        activityComponent.inject(this)
-        mSearchHistoryPresenter.onAttach(this)
+        tryIt {
+            activityComponent?.inject(this)
+            mSearchHistoryPresenter.onAttach(this)
+        }
     }
 
     override fun initViews() {
@@ -116,6 +120,7 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
         super.done()
         requestSearchHistory()
     }
+
     override fun onSearchHistoryResponse(searchHistoryRealms: List<SearchQueryRealm>?) {
         hideLoading()
         searchHistoryRealms.let { shr ->
@@ -128,20 +133,28 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
     }
 
     override fun onSearchHistoryNull() {
-        xx
         Timber.e("----------------onSearchHistoryNull------------------")
+        adapterMain?.run {
+            doByAllSelected(this)
+        } ?: let {
+            //set it after onFragmentEntered
+            handler({
+                setScrollToolbarFlag(true)
+            })
+        }
     }
 
     override fun buildSearchHistory(searchHistoryRealms: List<SearchQueryRealm>) {
-        xx
         Timber.e("---------------buildSearchHistory---------------${searchHistoryRealms.size}")
-        mSearchQueryRvAdapter?.run {
-            clear()
-            addAll(searchHistoryRealms)
-            notifyDataSetChanged()
+        context ?: return
+        setScrollToolbarFlag(false)
+        adapterMain?.run {
+            doByAllSelected(this, searchHistoryRealms)
         } ?: let {
-            mSearchQueryRvAdapter = BaseRvRealmAdapter(context, searchHistoryRealms.toMutableList(), this, this)
-            rvMain.adapter = mSearchQueryRvAdapter
+            //the first build
+            adapterMain = BaseRvRealmAdapter(context, searchHistoryRealms.toMutableList(), this, this)
+            rvMain.adapter = adapterMain
+            btnEdit.show(true)
         }
     }
 

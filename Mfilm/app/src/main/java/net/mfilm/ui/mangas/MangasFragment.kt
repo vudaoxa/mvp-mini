@@ -1,6 +1,5 @@
 package net.mfilm.ui.mangas
 
-//import kotlinx.android.synthetic.main.item_history_clear.*
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
@@ -128,6 +127,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         get() = R.string.failed_to_load_more
 
     override fun onErrorViewDemand(errorView: ErrorView?) {
+        if (mSearchHistoryView.isHistoryVisible()) return
         when (errorView) {
             this.errorView -> {
                 reset()
@@ -173,8 +173,10 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     }
 
     override fun initFields() {
-        activityComponent.inject(this)
-        mMangasPresenter.onAttach(this)
+        tryIt {
+            activityComponent?.inject(this)
+            mMangasPresenter.onAttach(this)
+        }
 
         searching = arguments.getBoolean(KEY_SEARCH)
         category = arguments.getSerializable(KEY_CATEGORY) as? Category?
@@ -198,8 +200,8 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
 
     override fun initDialogPlus() {
         val dialogItemsTitle = context.resources.getStringArray(R.array.bottom_dialog)
-        dialogItems = arrayOf(DialogMenusItem(dialogItemsTitle[0], DialogMenus.SHARE),
-                DialogMenusItem(dialogItemsTitle[1], DialogMenus.FAVORITES))
+        dialogItems = arrayOf(DialogMenusItem(icon_share_grey, dialogItemsTitle[0], DialogMenus.SHARE),
+                DialogMenusItem(icon_star_grey, dialogItemsTitle[1], DialogMenus.FAVORITES))
         menusAdapter = DialogMenuAdapter(context, R.layout.item_dialog_menu, dialogItems)
         longClickItem = CallbackLongClickItem({ x: Int, y: Int, z: Any? -> onDialogItemClicked(x, y, z) })
     }

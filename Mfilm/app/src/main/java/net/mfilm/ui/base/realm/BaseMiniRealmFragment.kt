@@ -29,8 +29,7 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
             btnSelect.setText(text)
             mAllSelected?.run {
                 //start selected
-                bottomFunView.show(true)
-                btnDone.show(true)
+                showBottomFunView(true)
                 updateBtnSubmit(adapterMain)
             } ?: let {
                 //no selection
@@ -40,10 +39,14 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
 
     override fun initViews() {
         initRv()
+        initBtnEdit()
         initBottomFun()
         initBtnDone()
     }
 
+    override fun initBtnEdit() {
+        btnEdit.setOnClickListener { toggleEdit(true) }
+    }
     override fun initRv() {
         rvMain.run {
             layoutManagerMain = LinearLayoutManagerWrapper(context)
@@ -57,6 +60,18 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
         }
     }
 
+    override fun showBottomFunView(show: Boolean) {
+        btnEdit.show(!show && !isDataEmpty())
+        bottomFunView.show(show)
+        btnDone.show(show)
+    }
+
+    override fun isDataEmpty(): Boolean {
+        adapterMain?.run {
+            return itemCount == 0
+        }
+        return true
+    }
     fun onOriginal(ad: BaseRvRealmAdapter<V>, mangaFavoriteRealms: List<V>? = null) {
         ad.clear()
         val x = mangaFavoriteRealms == null
@@ -66,6 +81,7 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
             ad.addAll(this)
         }
         ad.notifyDataSetChanged()
+        btnEdit.show(!isDataEmpty())
     }
 
     protected var selectedItems: List<V>? = null
@@ -110,8 +126,7 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
     override fun done() {
         allSelected = null
         undoBtn?.reset({ deleteAll() })
-        btnDone.show(false)
-        bottomFunView.show(false)
+        showBottomFunView(false)
     }
 
     override fun toggleSelectAll() {

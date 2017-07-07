@@ -11,57 +11,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="@integer/max_line_item_header"
-        android:text="tokyo hot\n xxxfdfdfdd"
         android:textColor="@color/red" />
 
     <TextView
         android:id="@+id/tv_other_name"
         style="@style/TextStyle.Sans.Regular.14.manga_intro"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ten khac: xyz" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tv_author"
         style="@style/TextStyle.Sans.Regular.14.manga_intro"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="tac gia: xxx" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tv_categories"
         style="@style/TextStyle.Sans.Regular.14.manga_intro"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="the loai: xxx" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tv_chaps_count"
         style="@style/TextStyle.Sans.Regular.14.manga_intro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="so chap: 20"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_updated_at"
         style="@style/TextStyle.Sans.Regular.14.manga_intro"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="cap nhat: 18:45 15/05" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tv_view_counts"
         style="@style/TextStyle.Sans.Regular.14.manga_intro"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="luot xem: 149" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tv_des"
         style="@style/TextStyle.Sans.Regular.14.manga_intro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="@integer/max_line_item_des"
-        android:text="mo ta: djdkdjkfdfjdkjdk" />
+        android:maxLines="@integer/max_line_item_des" />
 </LinearLayout>

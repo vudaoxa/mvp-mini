@@ -38,7 +38,12 @@ class DialogMenuAdapter(private val mContext: Context, private val layoutResId: 
                 convertView?.tag = viewHolder
             }
         }
-        viewHolder?.view?.tv_name?.text = getItem(position)?.title
+        viewHolder?.view?.run {
+            val x = getItem(position)
+//            icon.setImageDrawable(x?.icon)
+            tv_name.text = x?.title
+        }
+
         return cv
     }
 }

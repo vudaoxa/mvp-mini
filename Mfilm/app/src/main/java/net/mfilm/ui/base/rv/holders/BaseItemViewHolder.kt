@@ -39,6 +39,7 @@ abstract class BaseItemViewHolder(protected val mContext: Context, val type: Int
 }
 
 const val TYPE_ITEM = 0
+const val TYPE_ITEM_HEADER = 2
 const val TYPE_ITEM_SEARCH_HISTORY = 1
 const val TYPE_ITEM_LOADING = -1
 const val TYPE_ITEM_FILTER = -2

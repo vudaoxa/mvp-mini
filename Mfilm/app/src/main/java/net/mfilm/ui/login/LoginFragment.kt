@@ -27,7 +27,7 @@
 //            inflater?.inflate(R.layout.activity_login, container, false)
 //
 //    override fun initField() {
-//        activityComponent.inject(this)
+//        activityComponent?.inject(this)
 //        mPresenter.onAttach(this)
 //    }
 //

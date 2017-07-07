@@ -30,12 +30,14 @@ import net.mfilm.R
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.NavItem
 import timber.log.Timber
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by tusi on 4/2/17.
  */
+val numberFormat = NumberFormat.getNumberInstance(Locale.US)
 fun showMessage(@AppConstants.TypeToast typeToast: Int, msg: Any?) {
     MApplication.instance.showMessage(typeToast, msg)
 }
@@ -99,8 +101,8 @@ fun initFilters() {
     val filterAz = Filter(R.string.az, TYPE_FILTER_AZ)
     val filterViews = Filter(R.string.hottest, TYPE_FILTER_VIEWS)
     val filterTime = Filter(R.string.newest, TYPE_FILTER_TIME)
-    filters = listOf(filterAz, filterViews, filterTime)
-    filtersFavorites = listOf(filterAz, filterTime)
+    filters = listOf(filterViews, filterTime, filterAz)
+    filtersFavorites = listOf(filterTime, filterAz)
 }
 
 fun initAwesome() {
@@ -136,7 +138,9 @@ fun initAnimations(context: Context) {
 
 var icon_search: IconDrawable? = null
 var icon_share: IconDrawable? = null
+var icon_share_grey: IconDrawable? = null
 var icon_star: IconDrawable? = null
+var icon_star_grey: IconDrawable? = null
 var icon_star_blue: IconDrawable? = null
 var icon_send: IconDrawable? = null
 var icon_del: IconDrawable? = null
@@ -146,10 +150,14 @@ fun initIcons(context: Context) {
             IoniconsIcons.ion_ios_search_strong).colorRes(R.color.white).actionBarSize()
     icon_share = IconDrawable(context,
             IoniconsIcons.ion_share).colorRes(R.color.white).actionBarSize()
+    icon_share_grey = IconDrawable(context,
+            IoniconsIcons.ion_share).colorRes(R.color.grey_60).actionBarSize()
     icon_star = IconDrawable(context,
             IoniconsIcons.ion_ios_star).colorRes(R.color.white).actionBarSize()
     icon_star_blue = IconDrawable(context,
             IoniconsIcons.ion_ios_star).colorRes(R.color.blue).actionBarSize()
+    icon_star_grey = IconDrawable(context,
+            IoniconsIcons.ion_ios_star).colorRes(R.color.grey_60).actionBarSize()
     icon_send = IconDrawable(context,
             IoniconsIcons.ion_android_send).colorRes(R.color.white).actionBarSize()
     icon_del = IconDrawable(context,
@@ -164,14 +172,14 @@ fun View?.enable(enable: Boolean) {
     }
 }
 
-fun View?.show(show: Boolean, duration: Long? = null, f: (() -> Unit)? = null) {
+fun View?.show(show: Boolean, duration: Long? = null, f: (() -> Unit)? = null): CountDownTimer? {
     this?.run {
         if (show) {
-            if (isVisible()) return
+            if (isVisible()) return null
             startAnimation(anim)
             postOnAnimationDelayed({ visibility = visible }, 250)
             duration?.run {
-                schedule(this, {
+                return schedule(this, {
                     f?.invoke()
                 })
             }
@@ -179,9 +187,10 @@ fun View?.show(show: Boolean, duration: Long? = null, f: (() -> Unit)? = null) {
             visibility = gone
         }
     }
+    return null
 }
 
-fun schedule(duration: Long, f: (() -> Unit)? = null) {
+fun schedule(duration: Long, f: (() -> Unit)? = null): CountDownTimer {
     val timer = object : CountDownTimer(duration, 1000) {
         override fun onTick(p0: Long) {
             Timber.d("------------------- ------ onTick---- $p0")
@@ -192,6 +201,7 @@ fun schedule(duration: Long, f: (() -> Unit)? = null) {
         }
     }
     timer.start()
+    return timer
 }
 
 fun Int.isEven() = this % 2 == 0

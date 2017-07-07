@@ -182,9 +182,11 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
 
     override fun initFields() {
         searchable = true
-        activityComponent.inject(this)
-        mHistoryPresenter.onAttach(this)
         title = getString(R.string.history)
+        tryIt {
+            activityComponent?.inject(this)
+            mHistoryPresenter.onAttach(this)
+        }
     }
 
     override fun initViews() {

@@ -139,9 +139,11 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
 
     override fun initFields() {
         searchable = true
-        activityComponent.inject(this)
-        mFavoritesPresenter.onAttach(this)
         title = getString(R.string.favorites)
+        tryIt {
+            activityComponent?.inject(this)
+            mFavoritesPresenter.onAttach(this)
+        }
     }
 
     override fun initViews() {

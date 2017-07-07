@@ -52,6 +52,9 @@ import net.mfilm.ui.mangas.MangasPresenter
 import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
 import net.mfilm.ui.mangas.search.SearchHistoryPresenter
 import net.mfilm.ui.search_history.SearchHistoryMvpView
+import net.mfilm.ui.settings.SettingsMvpPresenter
+import net.mfilm.ui.settings.SettingsMvpView
+import net.mfilm.ui.settings.SettingsPresenter
 import net.mfilm.ui.splash.SplashMvpPresenter
 import net.mfilm.ui.splash.SplashMvpView
 import net.mfilm.ui.splash.SplashPresenter
@@ -138,6 +141,11 @@ class ActModule(val mActivity: Activity) {
     }
     @Provides
     fun provideMangaInfoPresenter(presenter: MangaInfoPresenter<MangaInfoMvpView>): MangaInfoMvpPresenter<MangaInfoMvpView> {
+        return presenter
+    }
+
+    @Provides
+    fun provideSettingsPresenter(presenter: SettingsPresenter<SettingsMvpView>): SettingsMvpPresenter<SettingsMvpView> {
         return presenter
     }
 }

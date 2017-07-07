@@ -41,6 +41,7 @@
                 <Button
                     android:id="@+id/btn_read"
                     style="@style/PrimaryFlatButton"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:text="@string/read"
                     android:theme="@style/PrimaryFlatButton" />

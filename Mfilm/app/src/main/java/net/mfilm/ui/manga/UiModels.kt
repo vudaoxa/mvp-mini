@@ -1,10 +1,12 @@
 package net.mfilm.ui.manga
 
 import android.content.Context
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
+import com.joanzapata.iconify.IconDrawable
 import net.mfilm.utils.*
 import org.angmarch.views.NiceSpinner
 import timber.log.Timber
@@ -62,9 +64,11 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
         btnUndo.setOnClickListener {
             undo = true
             f?.invoke()
+            timer?.cancel()
         }
     }
 
+    private var timer: CountDownTimer? = null
     fun reset(f: (() -> Unit)? = null) {
         Timber.e("--UndoBtn--reset-----btnUndo.isVisible---------${btnUndo.isVisible()}---------$f---------------")
         if (btnUndo.isVisible()) {
@@ -90,7 +94,7 @@ class UndoBtn(private var undo: Boolean? = null, private var btnUndo: Button, va
             }
             false -> {
                 //after toggled selected items
-                btnUndo.show(true, 5000, {
+                timer = btnUndo.show(true, 5000, {
                     reset(fFalseFinal)
                 })
                 fFalse?.invoke()
@@ -121,4 +125,4 @@ class CallbackLongClickItem(private val f: ((Int, Int, Any?) -> Unit)?) : ICallb
     }
 }
 
-class DialogMenusItem(val title: String, val event: Any?)
+class DialogMenusItem(val icon: IconDrawable? = null, val title: String, val event: Any?)

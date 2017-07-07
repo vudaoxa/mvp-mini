@@ -79,6 +79,8 @@ interface ICallbackMiniRealm<V : RealmObject> {
     fun deleteAll(f: (() -> Unit)? = null)
     fun onToggle()
     fun initRv()
+    fun initBtnEdit()
+    val btnEdit: Button
     val rvMain: RecyclerView
     var adapterMain: BaseRvRealmAdapter<V>?
     var layoutManagerMain: RecyclerView.LayoutManager
@@ -196,6 +198,7 @@ interface ICallbackFragmentOptionMenu {
 
 interface ICallbackEdit {
     fun initBtnDone()
+    fun showBottomFunView(show: Boolean)
     val btnDone: Button
     fun toggleEdit(edit: Boolean)
     fun done()

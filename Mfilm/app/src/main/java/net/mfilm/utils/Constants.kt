@@ -1,11 +1,13 @@
 package net.mfilm.utils
 
 import android.view.View
+import net.mfilm.R
 
 /**
  * Created by tusi on 3/29/17.
  */
-const val PENDING_REMOVAL_TIMEOUT = 3000L
+val mangaSourceTitles = listOf<Int>(R.string.title_vn, R.string.title_en)
+val mangaSourceCodes = listOf<Int>(R.string.vn, R.string.en)
 const val AUTO_LOAD_DURATION = 2000L
 const val SCREEN_DURATION = 1000L
 //const val LIMIT = 3

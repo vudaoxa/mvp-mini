@@ -5,12 +5,4 @@
     android:background="@drawable/main_background">
 
     <include layout="@layout/item_search_history_content" />
-
-    <Button
-        android:id="@+id/btn_undo"
-        style="@style/PrimaryFlatButton"
-        android:layout_gravity="end|center_vertical"
-        android:text="@string/undo"
-        android:theme="@style/PrimaryFlatButton"
-        android:visibility="gone" />
 </FrameLayout>

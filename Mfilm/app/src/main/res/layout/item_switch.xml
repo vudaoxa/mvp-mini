@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout_match">
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/TextStyle.Sans.Regular.16"
+        android:layout_weight="1" />
+
+    <Switch
+        android:id="@+id/sw_checked"
+        style="@style/Layout_wrap"
+        android:layout_marginLeft="@dimen/dimen10" />
+</LinearLayout>

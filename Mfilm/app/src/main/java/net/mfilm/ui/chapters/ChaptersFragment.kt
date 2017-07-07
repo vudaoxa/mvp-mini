@@ -21,7 +21,6 @@ import net.mfilm.ui.manga_info.MangaInfoMvpView
 import net.mfilm.utils.AppConstants
 import net.mfilm.utils.LIMIT
 import net.mfilm.utils.handler
-import net.mfilm.utils.show
 import timber.log.Timber
 import tr.xip.errorview.ErrorView
 import java.io.Serializable
@@ -156,8 +155,10 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun initFields() {
         manga = arguments.getSerializable(AppConstants.EXTRA_DATA) as Manga
-        activityComponent.inject(this)
-        mChaptersPresenter.onAttach(this)
+        tryIt {
+            activityComponent?.inject(this)
+            mChaptersPresenter.onAttach(this)
+        }
     }
 
     override fun initViews() {
@@ -212,8 +213,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun buildChapters(chapters: List<Chapter>) {
         Timber.e("----------------buildChapters-----------------${chapters.size}-------")
-//        if (!isVisOk()) return
-        root_view?.show(true) ?: return
         page++
         mChaptersRvAdapter?.run {
             onAdapterLoadMoreFinished {

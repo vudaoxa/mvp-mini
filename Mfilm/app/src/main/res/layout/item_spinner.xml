@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout_match">
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/TextStyle.Sans.Regular.16"
+        android:layout_weight="1" />
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/spn_source"
+        style="@style/Layout_wrap" />
+</LinearLayout>

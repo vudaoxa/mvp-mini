@@ -4,6 +4,19 @@
     style="@style/Layout_match_wrap"
     android:orientation="vertical">
 
+    <RelativeLayout
+        style="@style/Layout_match_wrap"
+        android:padding="@dimen/dimen0">
+
+        <Button
+            android:id="@+id/btn_edit"
+            style="@style/PrimaryFlatButton"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/action_edit"
+            android:theme="@style/PrimaryFlatButton"
+            android:visibility="gone" />
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_search_history"
         style="@style/Layout_match_wrap"

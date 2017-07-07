@@ -123,8 +123,10 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent.inject(this)
-        mMainPresenter.onAttach(this)
+        tryIt {
+            activityComponent?.inject(this)
+            mMainPresenter.onAttach(this)
+        }
         initFilters()
     }
 

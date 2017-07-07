@@ -37,10 +37,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             btnSelect.setText(text)
             mAllSelected?.run {
                 //start selected
-                bottomFunView.show(true)
-                btnDone.show(true)
-                edtSearch.enable(false)
-                imgClear.enable(false)
+                showBottomFunView(true)
                 spnFilter.show(false)
                 if (rvMain.isVisible()) {
                     updateBtnSubmit(adapterMain)
@@ -80,6 +77,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             layoutManager = layoutManagerFilter
         }
     }
+
     fun updateBtnSubmit(adapter: BaseRvRealmAdapter<V>?) {
         adapter?.run {
             btnSubmit.enable(countSelected > 0)
@@ -133,6 +131,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             f?.invoke()
         }
     }
+
     override fun initSearch() {
         initSearchPassByTime()
         initImeActionSearch()
@@ -160,10 +159,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     override fun done() {
         allSelected = null
         undoBtn?.reset({ deleteAll() })
-        edtSearch.enable(true)
-        imgClear.enable(true)
-        btnDone.show(false)
-        bottomFunView.show(false)
+        showBottomFunView(false)
     }
 
     override fun toggleSelectAll() {
@@ -237,6 +233,13 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             rvFilter.show(false)
             showEmptyDataView(false)
         })
+    }
+
+    override fun showBottomFunView(show: Boolean) {
+        edtSearch.enable(!show)
+        imgClear.enable(!show)
+        btnDone.show(show)
+        bottomFunView.show(show)
     }
 
     override fun toggleEdit(edit: Boolean) {

@@ -27,7 +27,6 @@
             style="@style/TextStyle.Sans.Regular.16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="tokyo hot"
             android:textColor="@color/white" />
     </LinearLayout>
     <com.joanzapata.iconify.widget.IconTextView

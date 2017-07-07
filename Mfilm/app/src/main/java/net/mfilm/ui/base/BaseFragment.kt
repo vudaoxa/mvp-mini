@@ -45,6 +45,9 @@ abstract class BaseFragment : Fragment(), MvpView {
         }
     }
 
+    override fun tryIt(f: (() -> Unit)?) {
+        baseActivity?.tryIt { f?.invoke() }
+    }
     override fun showLoading() {
         baseActivity?.showLoading()
     }
@@ -63,10 +66,7 @@ abstract class BaseFragment : Fragment(), MvpView {
 
     override val isNetworkConnected: Boolean
         get() {
-            if (baseActivity != null) {
-                return baseActivity!!.isNetworkConnected
-            }
-            return false
+            return baseActivity?.isNetworkConnected ?: false
         }
 
     override fun onDetach() {

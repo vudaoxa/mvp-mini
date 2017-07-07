@@ -44,6 +44,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(false)
+
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -62,6 +63,10 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
 
     override fun setScrollToolbarFlag(info: Boolean) {
         baseActivity?.setScrollToolbarFlag(info)
+    }
+
+    override fun tryIt(f: (() -> Unit)?) {
+        baseActivity?.tryIt { f?.invoke() }
     }
     override fun showLoading() {
         baseActivity?.showLoading()
@@ -87,7 +92,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
     }
 
     override val isNetworkConnected: Boolean
-        get() = baseActivity!!.isNetworkConnected
+        get() = baseActivity?.isNetworkConnected ?: false
 
     override fun onDetach() {
         baseActivity = null
@@ -102,8 +107,8 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
         baseActivity?.openActivityOnTokenExpire()
     }
 
-    val activityComponent: ActComponent
-        get() = baseActivity!!.activityComponent
+    val activityComponent: ActComponent?
+        get() = baseActivity?.activityComponent
 
     fun attachChildFragment(view: View, @IdRes containerId: Int, fragment: Fragment?) {
         if (fragment == null || fragment.isVisOk()) {

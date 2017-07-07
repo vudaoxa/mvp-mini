@@ -54,8 +54,10 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
     }
 
     override fun initFields() {
-        activityComponent.inject(this)
-        mCategoriesPresenter.onAttach(this)
+        tryIt {
+            activityComponent?.inject(this)
+            mCategoriesPresenter.onAttach(this)
+        }
     }
 
     override fun initViews() {

@@ -94,8 +94,10 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         fullScreen = true
 //        chapter = arguments.getSerializable(AppConstants.EXTRA_DATA) as? Chapter?
 //        mChaptersFragment = arguments.getSerializable(AppConstants.EXTRA_DATA) as? ChaptersFragment?
-        activityComponent.inject(this)
-        mChapterImagesPresenter.onAttach(this)
+        tryIt {
+            activityComponent?.inject(this)
+            mChapterImagesPresenter.onAttach(this)
+        }
     }
 
     override fun initViews() {

@@ -58,6 +58,13 @@ abstract class BaseActivity : AppCompatActivity(), MvpView, BaseFragment.Callbac
 
     }
 
+    override fun tryIt(f: (() -> Unit)?) {
+        try {
+            f?.invoke()
+        } catch (e: UninitializedPropertyAccessException) {
+            System.exit(0)
+        }
+    }
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
