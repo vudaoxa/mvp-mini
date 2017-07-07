@@ -30,6 +30,7 @@ import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.ui.manga.PassByTime
 import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.ui.mangas.MangasFragment
+import net.mfilm.ui.settings.SettingsFragment
 import net.mfilm.utils.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -86,7 +87,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         get() = HomePagerFragment::class.java
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        onNewScreenRequested(navs.filter { it.id == item.itemId }[0].indexTag, typeContent = null, obj = null)
+        onNewScreenRequested(navs.filter { it.id == item.itemId }[0].indexTag)
         mDrawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -97,6 +98,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onSettings() {
         Timber.e("---------------onSettings-----------")
+        onNewScreenRequested(IndexTags.FRAGMENT_SETTINGS)
     }
 
     override fun onAbout() {
@@ -124,10 +126,11 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tryIt {
-            activityComponent?.inject(this)
+            activityComponent.inject(this)
             mMainPresenter.onAttach(this)
         }
         initFilters()
+        initMangaSources(this)
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
@@ -175,11 +178,17 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
                 IndexTags.FRAGMENT_HISTORY -> {
                     fragmentStackManager.swapFragment(HistoryFragment.newInstance())
                 }
+                IndexTags.FRAGMENT_SETTINGS -> {
+                    fragmentStackManager.swapFragment(SettingsFragment.newInstance())
+                }
+                IndexTags.FRAGMENT_ABOUT -> {
+
+                }
             }
         }
     }
 
-    override fun onNewScreenRequested(indexTag: Any?, fragment: Fragment?, obj: Any?) {
+    override fun onNewFragmentRequested(indexTag: Any?, fragment: Fragment?, obj: Any?) {
         screenRequestPassByTime?.passByTime {
             when (indexTag) {
                 IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
@@ -191,7 +200,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onSearchScreenRequested() {
         Timber.e("----onSearchScreenRequested------------------------------------")
-        onNewScreenRequested(IndexTags.FRAGMENT_SEARCH, typeContent = null, obj = null)
+        onNewScreenRequested(IndexTags.FRAGMENT_SEARCH)
     }
 
     override fun onMainScreenRequested() = fragmentStackManager.run {

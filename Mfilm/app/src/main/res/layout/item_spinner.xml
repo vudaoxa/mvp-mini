@@ -5,7 +5,8 @@
     <TextView
         android:id="@+id/tv_name"
         style="@style/TextStyle.Sans.Regular.16"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textColor="@color/white" />
 
     <org.angmarch.views.NiceSpinner
         android:id="@+id/spn_source"

@@ -9,21 +9,22 @@ import net.mfilm.data.prefs.MangaSources
 import net.mfilm.ui.base.rv.holders.BaseItemViewHolder
 import net.mfilm.ui.manga.AdapterTracker
 import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.ICallbackSpnTracker
 
 /**
  * Created by MRVU on 7/7/2017.
  */
 class SpinnerItemViewHolder(mContext: Context, type: Int, itemView: View, mCallbackOnclick: ICallbackOnClick?)
-    : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick) {
-    val spnFilterTracker = AdapterTracker({
+    : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick), ICallbackSpnTracker {
+    override val spnFilterTracker = AdapterTracker({
         sort()
     })
 
     override fun bindView(obj: Any?, position: Int) {
         if (obj is MangaSources) {
             itemView.run {
-                var titles = obj.mangaSources.map { mContext.getString(it.titleResId) }
-                if (obj.selectedIndex != 0) titles = titles.reversed() xx
+                tv_name.setText(obj.titleResId)
+                val titles = obj.sources.map { it.title }
                 val banksAdapter = ArrayAdapter(mContext,
                         R.layout.item_spn_filter, titles)
                 spn_source.run {

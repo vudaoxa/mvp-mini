@@ -66,7 +66,7 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
         requestCategories()
     }
 
-    fun initRv() {
+    override fun initRv() {
         rv.run {
             mCategoriesRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
                     StaggeredGridLayoutManager.VERTICAL)

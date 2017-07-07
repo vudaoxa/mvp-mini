@@ -222,7 +222,6 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
 
     override fun onReadBtnClicked() {
         saveHistory()
-        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = mChaptersFragment,
-                obj = null)
+        screenManager?.onNewFragmentRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = mChaptersFragment)
     }
 }

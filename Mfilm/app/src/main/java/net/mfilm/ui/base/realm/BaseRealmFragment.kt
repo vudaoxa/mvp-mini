@@ -288,10 +288,13 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
         if (!isVisible || isDataEmpty()) return
         when (item.itemId) {
             actionSearch -> {
-                mLayoutInputText.show(true)
-                edtSearch.requestFocus()
-                spnFilter.show(false)
-                toggleEdit(false)
+                adapterMain?.run {
+                    if (itemCount < 2) return
+                    mLayoutInputText.show(true)
+                    edtSearch.requestFocus()
+                    spnFilter.show(false)
+                    toggleEdit(false)
+                }
             }
             actionSort -> {
                 if (!rvMain.isVisible()) return

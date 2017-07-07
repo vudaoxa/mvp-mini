@@ -26,7 +26,7 @@ import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.ICallbackFragmentOptionMenu
 import net.mfilm.utils.anim
 import net.mfilm.utils.handler
-import net.mfilm.utils.isVisOk
+import net.mfilm.utils.isVisiOk
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 
 /**
@@ -111,7 +111,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
         get() = baseActivity?.activityComponent
 
     fun attachChildFragment(view: View, @IdRes containerId: Int, fragment: Fragment?) {
-        if (fragment == null || fragment.isVisOk()) {
+        if (fragment == null || fragment.isVisiOk()) {
             return
         }
         val fm = childFragmentManager

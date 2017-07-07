@@ -253,7 +253,7 @@
     </style>
 
     <style name="default_background" parent="Layout_match">
-        <item name="android:background">?android:windowBackground</item>
+        <!--<item name="android:background">?android:windowBackground</item>-->
     </style>
 
     <style name="Layout_default_margin">

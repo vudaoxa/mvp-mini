@@ -167,7 +167,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         requestChapters()
     }
 
-    fun initRv() {
+    override fun initRv() {
         rv.run {
             layoutManager = LinearLayoutManagerWrapper(context)
             setupOnLoadMore(this, mCallBackLoadMore)

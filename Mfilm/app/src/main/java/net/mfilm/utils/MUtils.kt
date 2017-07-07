@@ -27,6 +27,8 @@ import com.joanzapata.iconify.fonts.IoniconsIcons
 import com.joanzapata.iconify.fonts.IoniconsModule
 import net.mfilm.MApplication
 import net.mfilm.R
+import net.mfilm.data.prefs.MangaSource
+import net.mfilm.data.prefs.MangaSources
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.NavItem
 import timber.log.Timber
@@ -37,11 +39,22 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
+var mangaSources: MangaSources? = null
+
+fun initMangaSources(mContext: Context) {
+    val titles = mContext.resources.getStringArray(R.array.manga_sources_title)
+    val codes = mContext.resources.getStringArray(R.array.manga_sources_code)
+    var i = 0
+    val sources = titles.zip(codes, { t, c -> MangaSource(i++, t, c) })
+    mangaSources = MangaSources(R.string.manga_source, sources)
+}
+
 val numberFormat = NumberFormat.getNumberInstance(Locale.US)
 fun showMessage(@AppConstants.TypeToast typeToast: Int, msg: Any?) {
     MApplication.instance.showMessage(typeToast, msg)
 }
-fun Fragment.isVisOk() = isVisible && isAdded && isInLayout
+
+fun Fragment.isVisiOk() = isVisible && isAdded && isInLayout
 
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
     text?.run {

@@ -6,6 +6,16 @@
     <string name="action_filter">Filter</string>
     <string name="action_sort">Sort</string>
     <string name="action_edit">Edit</string>
+
+    <string name="manga_source">Manga source</string>
+    <string-array name="manga_sources_title">
+        <item>Tiếng Việt</item>
+        <item>English</item>
+    </string-array>
+    <string-array name="manga_sources_code">
+        <item>vn</item>
+        <item>en</item>
+    </string-array>
     <string name="title_vn">Tiếng Việt</string>
     <string name="title_en">English</string>
     <string name="vn">vn</string>

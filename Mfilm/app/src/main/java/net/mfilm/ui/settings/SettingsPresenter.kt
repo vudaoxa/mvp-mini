@@ -1,11 +1,10 @@
 package net.mfilm.ui.settings
 
 import io.reactivex.disposables.CompositeDisposable
-import net.mfilm.R
 import net.mfilm.data.DataManager
-import net.mfilm.data.prefs.MangaSource
 import net.mfilm.data.prefs.MangaSources
 import net.mfilm.ui.base.BasePresenter
+import net.mfilm.utils.mangaSources
 import javax.inject.Inject
 
 /**
@@ -14,15 +13,19 @@ import javax.inject.Inject
 class SettingsPresenter<V : SettingsMvpView> @Inject
 constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable)
     : BasePresenter<V>(dataManager, compositeDisposable), SettingsMvpPresenter<V> {
+    override val mMangaSources: MangaSources?
+        get() = mangaSources
     override fun requestSettings() {
-
+        initMangaSources()
     }
 
     override fun initMangaSources() {
-        val vn = MangaSource(R.string.title_vn)
-        val en = MangaSource(R.string.title_en)
-        mvpView?.onMangaSourcesResponse(MangaSources(listOf(vn, en), dataManager.mangaSourceIndex))
+        mMangaSources?.run {
+            arrange(dataManager.mangaSourceIndex)
+            mvpView?.onMangaSourcesResponse(this)
+        }
     }
+
 
     override fun onMangaSourceSelected(position: Int) {
 

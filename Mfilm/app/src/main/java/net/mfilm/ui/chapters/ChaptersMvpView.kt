@@ -5,11 +5,12 @@ import net.mfilm.data.network_retrofit.ChaptersResponse
 import net.mfilm.ui.base.MvpView
 import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.ICallbackRv
 
 /**
  * Created by tusi on 5/27/17.
  */
-interface ChaptersMvpView : MvpView, ICallbackOnClick {
+interface ChaptersMvpView : MvpView, ICallbackOnClick, ICallbackRv {
     fun requestChapters()
     fun onChaptersResponse(chaptersResponse: ChaptersResponse?)
     fun onChaptersNull()
