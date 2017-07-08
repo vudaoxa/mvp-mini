@@ -1,6 +1,7 @@
 package net.mfilm.ui.custom
 
 import android.view.View
+import net.mfilm.ui.manga.Filter
 import net.mfilm.utils.ISwitch
 
 /**
@@ -42,7 +43,7 @@ class SwitchButtons(private val switchButtonItems: List<SwitchButtonItem>, f: (I
     }
 }
 
-class SwitchButtonItem(val i: Int, val btn: View, val enabled: Boolean) {
+class SwitchButtonItem(val i: Int, val btn: View, val filter: Filter, val enabled: Boolean) {
     init {
         if (i == 0) {
             btn.isSelected = enabled
@@ -52,7 +53,7 @@ class SwitchButtonItem(val i: Int, val btn: View, val enabled: Boolean) {
     fun setOnClickListener(f: () -> Unit) {
         btn.setOnClickListener {
             if (enabled) {
-                f()
+                f.invoke()
                 onClick(true)
             }
         }

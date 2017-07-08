@@ -30,6 +30,10 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
         }
     }
     override fun requestHistory() {
+        if (!dataManager.historyEnabled) {
+            mvpView?.onHistoryEnabled(false)
+            return
+        }
         mvpView?.showLoading() ?: return
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<MangaHistoryRealm>>({ mvpView?.onFailure() }) {
             override fun onNext(t: RealmResults<MangaHistoryRealm>?) {

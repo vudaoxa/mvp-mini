@@ -13,7 +13,8 @@ import net.mfilm.utils.*
 
 interface MangasMvpView : MvpView, ICallbackOnClick, ICallbackOnLongClick,
         ICallbackRefresh, ICallbackSpanCount, ICallbackSort, ICallbackDialogPlus,
-        ICallbackDialogItemClicked, ICallbackFavInput, ICallbackSearchView, ICallbackSearchHistoryContainer {
+        ICallbackDialogItemClicked, ICallbackFavInput, ICallbackSearchView,
+        ICallbackSearchHistoryContainer {
     val mSearchHistoryView: SearchHistoryMvpView
     fun initRv()
     fun requestMangas()

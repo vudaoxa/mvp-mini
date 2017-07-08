@@ -22,6 +22,10 @@ package net.mfilm.ui.base
 
 import io.reactivex.disposables.CompositeDisposable
 import net.mfilm.data.DataManager
+import net.mfilm.data.prefs.MangaSources
+import net.mfilm.utils.ICallbackMangaSources
+import net.mfilm.utils.PAGE_START
+import net.mfilm.utils.mangaSources
 import javax.inject.Inject
 
 /**
@@ -30,11 +34,18 @@ import javax.inject.Inject
  * can be accessed from the children classes by calling getMvpView().
  */
 open class BasePresenter<V : MvpView> @Inject
-constructor(val dataManager: DataManager, val compositeDisposable: CompositeDisposable) : MvpPresenter<V> {
-
+constructor(val dataManager: DataManager, val compositeDisposable: CompositeDisposable) : MvpPresenter<V>, ICallbackMangaSources {
+    override val mMangaSources: MangaSources?
+        get() = mangaSources
     var mvpView: V? = null
         private set
 
+    protected var hl: String? = null
+    fun obtainHl(page: Int) {
+        if (page == PAGE_START) {
+            hl = mMangaSources?.sources?.get(dataManager.mangaSourceIndex)?.code
+        }
+    }
     override fun onAttach(mvpView: V) {
         this.mvpView = mvpView
     }

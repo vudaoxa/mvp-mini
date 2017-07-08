@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.TextView
 import com.joanzapata.iconify.IconDrawable
 import net.mfilm.utils.*
-import org.angmarch.views.NiceSpinner
 import timber.log.Timber
 
 /**
@@ -25,6 +24,7 @@ abstract class ALoadMore(val f: () -> Unit) {
         countLoadMore = 0
     }
 }
+
 class AdapterTracker(val f: (() -> Unit)? = null) : AdapterView.OnItemSelectedListener {
     var mPosition = 0
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -38,17 +38,16 @@ class AdapterTracker(val f: (() -> Unit)? = null) : AdapterView.OnItemSelectedLi
     }
 }
 
-class EmptyDataView(val context: Context, val spnFilter: NiceSpinner?, val layoutEmptyData: View?,
+class EmptyDataView(val context: Context, val smt: View?, val layoutEmptyData: View?,
                     val tvDesEmptyData: TextView?, val emptyDesResId: Int)
     : ICallbackEmptyDataView {
     override fun hideSomething() {
-        spnFilter.show(false)
+        smt.show(false)
     }
 
-    override fun showEmptyDataView(show: Boolean) {
+    override fun showEmptyDataView(show: Boolean, emptyResId: Int?) {
         layoutEmptyData?.show(show)
-        if (show)
-            tvDesEmptyData?.text = context.getText(emptyDesResId)
+        if (show) tvDesEmptyData?.text = context.getText(emptyResId ?: emptyDesResId)
     }
 }
 

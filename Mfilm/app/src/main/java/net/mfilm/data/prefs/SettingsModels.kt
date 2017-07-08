@@ -21,5 +21,5 @@ class MangaSources(titleResId: Int, var sources: List<MangaSource>,
         sources = res
     }
 }
-xx
-class SwitchItem(titleResId: Int, var enabled: Boolean)
+
+class SwitchItem(titleResId: Int, var enabled: Boolean) : SettingModel(titleResId)

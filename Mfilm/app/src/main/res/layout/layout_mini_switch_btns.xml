@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_pager_btns"
+    style="@style/Layout_wrap.white_border"
+    android:padding="@dimen/dimen1">
+
+    <FrameLayout
+        android:id="@+id/btn_newest"
+        style="@style/FrameLayout_clickable"
+        android:layout_weight="1">
+
+        <Button
+            style="@style/Button.Switch"
+            android:text="@string/newest"
+            android:theme="@style/Button.Primary.Medium" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_all"
+        style="@style/FrameLayout_clickable"
+        android:layout_weight="1">
+
+        <Button
+            style="@style/Button.Switch"
+            android:text="@string/az"
+            android:theme="@style/Button.Primary.Medium" />
+    </FrameLayout>
+</LinearLayout>

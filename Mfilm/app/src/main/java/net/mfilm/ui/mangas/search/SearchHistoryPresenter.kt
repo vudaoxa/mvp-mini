@@ -20,6 +20,7 @@ constructor(dataManager: DataManager, compositeDisposable: CompositeDisposable) 
     }
 
     override fun requestSearchHistory() {
+        if (!dataManager.searchHistoryEnabled) return
         mvpView?.showLoading() ?: return
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmResults<SearchQueryRealm>>({ mvpView?.onFailure() }) {
             override fun onNext(t: RealmResults<SearchQueryRealm>?) {

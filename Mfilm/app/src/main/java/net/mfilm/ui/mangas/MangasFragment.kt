@@ -8,11 +8,11 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.TextView
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_mangas.*
+import kotlinx.android.synthetic.main.layout_switch_btns.*
 import net.mfilm.R
 import net.mfilm.data.network_retrofit.Category
 import net.mfilm.data.network_retrofit.Manga
@@ -20,13 +20,17 @@ import net.mfilm.data.network_retrofit.MangasResponse
 import net.mfilm.ui.base.rv.BaseLoadMoreFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
+import net.mfilm.ui.custom.SwitchButtonItem
+import net.mfilm.ui.custom.SwitchButtons
 import net.mfilm.ui.dialog_menus.DialogMenuAdapter
-import net.mfilm.ui.manga.*
+import net.mfilm.ui.manga.CallbackLongClickItem
+import net.mfilm.ui.manga.DialogMenusItem
+import net.mfilm.ui.manga.EmptyDataView
+import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.mangas.rv.MangasRvAdapter
 import net.mfilm.ui.search_history.SearchHistoryFragment
 import net.mfilm.ui.search_history.SearchHistoryMvpView
 import net.mfilm.utils.*
-import org.angmarch.views.NiceSpinner
 import timber.log.Timber
 import tr.xip.errorview.ErrorView
 import java.io.Serializable
@@ -57,6 +61,22 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         }
     }
 
+    private var mPagerPosition = 0
+    override var pagerPosition: Int
+        get() = mPagerPosition
+        set(value) {
+            mPagerPosition = value
+        }
+    override val btns: List<View>
+        get() = listOf(btn_hottest, btn_newest, btn_all)
+    override val layoutPagerBtns: View
+        get() = layout_pager_btns
+    private var mPagerBtns: SwitchButtons? = null
+    override var pagerBtns: SwitchButtons?
+        get() = mPagerBtns
+        set(value) {
+            mPagerBtns = value
+        }
     override val mSearchHistoryView: SearchHistoryMvpView
         get() = SearchHistoryFragment.getInstance()
     override val searchHistoryContainerId: Int
@@ -83,11 +103,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         }
     override val mFilters: List<Filter>
         get() = filters
-    override val spnFilter: NiceSpinner
-        get() = spn_filter
-    override val spnFilterTracker = AdapterTracker({
-        sort()
-    })
 
     override fun sort() {
         mMangasRvAdapter?.reset()
@@ -187,7 +202,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     override fun initViews() {
         super.initViews()
         initRv()
-        initSpnFilters()
+        initPagerBtns()
         initEmptyDataView()
         initSwipe()
         initDialogPlus()
@@ -223,11 +238,24 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         }
     }
 
-    override fun initEmptyDataView() {
-        emptyDataView = EmptyDataView(context, spn_filter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
+    override fun initPagerBtns() {
+        var i = 0
+        val btnItems = btns.zip(mFilters, { b, f -> SwitchButtonItem(i++, b, f, true) })
+        pagerBtns = SwitchButtons(btnItems, { i -> onPagerSelected(i) })
     }
 
-    override fun showEmptyDataView(show: Boolean) {
+    override fun onPagerSelected(i: Int) {
+        Timber.e("currentItem----------------$i")
+        if (pagerPosition == i) return
+        pagerPosition = i
+        sort()
+    }
+
+    override fun initEmptyDataView() {
+        emptyDataView = EmptyDataView(context, layoutPagerBtns, layoutEmptyData, tvDesEmptyData, emptyDesResId)
+    }
+
+    override fun showEmptyDataView(show: Boolean, emptyResId: Int?) {
         emptyDataView?.showEmptyDataView(show)
     }
 
@@ -247,11 +275,11 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         }
     }
 
-    override fun initSpnFilters() {
-        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
-        spn_filter.setAdapter(banksAdapter)
-        spn_filter.setOnItemSelectedListener(spnFilterTracker)
-    }
+//    override fun initSpnFilters() {
+//        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
+//        spn_filter.setAdapter(banksAdapter)
+//        spn_filter.setOnItemSelectedListener(spnFilterTracker)
+//    }
 
     override fun toggleFav(manga: Manga): Boolean {
         return mMangasPresenter.toggleFav(manga)
@@ -285,10 +313,11 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     override fun attachSearchHistoryFragment() {
         attachChildFragment(searchHistoryContainerView, searchHistoryContainerId, SearchHistoryFragment.newInstance())
     }
+
+
     override fun requestMangas() {
-        val position = spnFilterTracker.mPosition
-        Timber.e("---------------requestMangas------ $position--------------------")
-        mMangasPresenter.requestMangas(category?.id, LIMIT, page, mFilters[position].content, query)
+        Timber.e("---------------requestMangas------ $pagerPosition--------------------")
+        mMangasPresenter.requestMangas(category?.id, LIMIT, page, mFilters[pagerPosition].content, query)
     }
 
     override fun onMangasResponse(mangasResponse: MangasResponse?) {
@@ -329,7 +358,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     override fun buildMangas(mangas: List<Manga>) {
         Timber.e("---------------buildMangas---------------${mangas.size}")
         page++
-        spn_filter.show(true)
+        layoutPagerBtns.show(true)
         emptyDataView?.showEmptyDataView(false)
         mMangasRvAdapter?.run {
             onAdapterLoadMoreFinished {

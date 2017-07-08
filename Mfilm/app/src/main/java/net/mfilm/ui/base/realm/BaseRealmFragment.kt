@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import com.afollestad.materialdialogs.MaterialDialog
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,6 +13,8 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_FILTER
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.custom.SwitchButtonItem
+import net.mfilm.ui.custom.SwitchButtons
 import net.mfilm.ui.manga.EmptyDataView
 import net.mfilm.ui.manga.PassByTime
 import net.mfilm.ui.manga.UndoBtn
@@ -26,6 +27,32 @@ import java.util.concurrent.TimeUnit
  * Created by MRVU on 7/3/2017.
  */
 abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMvpView<V> {
+    private var mPagerBtns: SwitchButtons? = null
+    override var pagerBtns: SwitchButtons?
+        get() = mPagerBtns
+        set(value) {
+            mPagerBtns = value
+        }
+
+    override fun initPagerBtns() {
+        var i = 0
+        val btnItems = btns.zip(mFilters, { b, f -> SwitchButtonItem(i++, b, f, true) })
+        pagerBtns = SwitchButtons(btnItems, { i -> onPagerSelected(i) })
+    }
+
+    override fun onPagerSelected(i: Int) {
+        Timber.e("currentItem----------------$i")
+        if (pagerPosition == i) return
+        pagerPosition = i
+        sort()
+    }
+
+    private var mPagerPosition = 0
+    override var pagerPosition: Int
+        get() = mPagerPosition
+        set(value) {
+            mPagerPosition = value
+        }
     private var mAllSelected: Boolean? = null
     override var allSelected: Boolean?
         get() = mAllSelected
@@ -38,7 +65,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             mAllSelected?.run {
                 //start selected
                 showBottomFunView(true)
-                spnFilter.show(false)
+                layoutPagerBtns.show(false)
                 if (rvMain.isVisible()) {
                     updateBtnSubmit(adapterMain)
                 } else if (rvFilter.isVisible()) {
@@ -59,7 +86,8 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     override fun initViews() {
         initRv()
         initSearch()
-        initSpnFilters()
+        initPagerBtns()
+//        initSpnFilters()
         initEmptyDataView()
         initBottomFun()
         initBtnDone()
@@ -140,21 +168,21 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     }
 
     override fun initEmptyDataView() {
-        emptyDataView = EmptyDataView(context, spnFilter, layoutEmptyData, tvDesEmptyData, emptyDesResId)
+        emptyDataView = EmptyDataView(context, layoutPagerBtns, layoutEmptyData, tvDesEmptyData, emptyDesResId)
     }
 
     override fun initBtnDone() {
         btnDone.setOnClickListener { done() }
     }
 
-    override fun initSpnFilters() {
-        val banksAdapter = ArrayAdapter(activity,
-                R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
-        spnFilter.run {
-            setAdapter(banksAdapter)
-            setOnItemSelectedListener(spnFilterTracker)
-        }
-    }
+//    override fun initSpnFilters() {
+//        val banksAdapter = ArrayAdapter(activity,
+//                R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
+//        layoutPagerBtns.run {
+//            setAdapter(banksAdapter)
+//            setOnItemSelectedListener(layoutPagerBtnsTracker)
+//        }
+//    }
 
     override fun done() {
         allSelected = null
@@ -265,8 +293,8 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
         showEmptyDataView(true)
     }
 
-    override fun showEmptyDataView(show: Boolean) {
-        emptyDataView?.showEmptyDataView(show)
+    override fun showEmptyDataView(show: Boolean, emptyResId: Int?) {
+        emptyDataView?.showEmptyDataView(show, emptyResId)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -292,7 +320,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
                     if (itemCount < 2) return
                     mLayoutInputText.show(true)
                     edtSearch.requestFocus()
-                    spnFilter.show(false)
+                    layoutPagerBtns.show(false)
                     toggleEdit(false)
                 }
             }
@@ -301,7 +329,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
                 adapterMain?.run {
                     if (itemCount < 2) return
                     mLayoutInputText.show(false)
-                    spnFilter.show(true)
+                    layoutPagerBtns.show(true)
                     sort()
                     toggleEdit(false)
                 }
@@ -309,7 +337,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
             actionEdit -> {
                 if (allSelected != null) return
                 mLayoutInputText.show(false)
-                spnFilter.show(false)
+                layoutPagerBtns.show(false)
                 toggleEdit(true)
             }
         }

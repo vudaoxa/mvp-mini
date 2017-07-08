@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Layout_match">
+    style="@style/Layout_match_wrap"
+    android:layout_marginBottom="@dimen/dimen10">
 
     <TextView
         android:id="@+id/tv_name"
-        style="@style/TextStyle.Sans.Regular.16"
+        style="@style/TextStyle.Sans.Regular.14"
         android:layout_weight="1"
         android:textColor="@color/white" />
 
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/spn_source"
-        style="@style/Layout_wrap" />
+    <LinearLayout
+        android:layout_width="@dimen/dimen150"
+        android:layout_height="match_parent">
+
+        <org.angmarch.views.NiceSpinner
+            android:id="@+id/spn_source"
+            style="@style/Layout_match_wrap" />
+    </LinearLayout>
+
 </LinearLayout>

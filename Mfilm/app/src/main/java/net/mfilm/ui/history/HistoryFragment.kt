@@ -14,15 +14,18 @@ import kotlinx.android.synthetic.main.bottom_fun_view.*
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_realm.*
 import kotlinx.android.synthetic.main.layout_input_text.*
+import kotlinx.android.synthetic.main.layout_mini_switch_btns.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.ui.base.realm.BaseRealmFragment
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.custom.SimpleViewAnimator
-import net.mfilm.ui.manga.*
+import net.mfilm.ui.manga.EmptyDataView
+import net.mfilm.ui.manga.Filter
+import net.mfilm.ui.manga.PassByTime
+import net.mfilm.ui.manga.UndoBtn
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.utils.*
-import org.angmarch.views.NiceSpinner
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,6 +39,12 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
             return fragment
         }
     }
+
+    override val layoutPagerBtns: View
+        get() = layout_pager_btns
+
+    override val btns: List<View>
+        get() = listOf(btn_newest, btn_all)
 
     private var mSearchPassByTime: PassByTime? = null
     override var searchPassByTime: PassByTime?
@@ -70,9 +79,9 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
     override val btnDone: Button
         get() = btn_done
     override val mFilters: List<Filter>
-        get() = filtersFavorites
-    override val spnFilter: NiceSpinner
-        get() = spn_filter
+        get() = filtersRealm
+    //    override val spnFilter: NiceSpinner
+//        get() = spn_filter
     override val mLayoutInputText: LinearLayout
         get() = layout_input_text
     override val edtSearch: EditText
@@ -121,7 +130,7 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
 
     override fun sort() {
         Timber.e("------------sort---------------------------")
-        val filter = mFilters[spnFilterTracker.mPosition]
+        val filter = mFilters[pagerPosition]
         when (filter.content) {
             TYPE_FILTER_AZ -> {
                 adapterMain?.run {
@@ -162,9 +171,9 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
         }
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
-    override val spnFilterTracker = AdapterTracker({
-        sort()
-    })
+    //    override val spnFilterTracker = AdapterTracker({
+//        sort()
+//    })
     @Inject
     lateinit var mHistoryPresenter: HistoryMvpPresenter<HistoryMvpView>
     lateinit var mMangasRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
@@ -199,6 +208,14 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
         requestHistory()
     }
 
+    override fun onHistoryEnabled(enabled: Boolean) {
+        if (!enabled) {
+            handler({
+                showEmptyDataView(true, R.string.history_disabled)
+                setScrollToolbarFlag(true)
+            })
+        }
+    }
     override fun requestHistory() {
         mHistoryPresenter.requestHistory()
     }

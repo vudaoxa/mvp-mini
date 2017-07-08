@@ -3,6 +3,7 @@ package org.angmarch.views;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -27,7 +28,7 @@ public abstract class NiceSpinnerBaseAdapter<T> extends BaseAdapter {
         TextView textView;
 
         if (cv == null) {
-            cv = View.inflate(mContext, R.layout.spinner_list_item, null);
+            cv = LayoutInflater.from(mContext).inflate(R.layout.spinner_list_item, parent, false);
             textView = (TextView) cv.findViewById(R.id.tv_tinted_spinner);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

@@ -7,6 +7,7 @@ import net.mfilm.ui.base.realm.RealmMvpView
  * Created by tusi on 6/25/17.
  */
 interface HistoryMvpView : RealmMvpView<MangaHistoryRealm> {
+    fun onHistoryEnabled(enabled: Boolean)
     fun requestHistory()
     fun onHistoryResponse(mangaHistoryRealms: List<MangaHistoryRealm>?)
     fun onHistoryNull()

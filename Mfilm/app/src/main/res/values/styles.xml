@@ -240,6 +240,17 @@
     <style name="Button.Primary.Wrap" parent="Button.Primary">
         <item name="android:minWidth">@dimen/dimen100</item>
     </style>
+
+    <style name="Button.Primary.Medium.Unable_click" parent="Button.Primary.Medium">
+        <item name="android:clickable">false</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="Button.Switch" parent="Button.Primary.Medium.Unable_click">
+        <item name="android:textColor">@color/text_switch</item>
+        <item name="android:background">@drawable/bg_red_selected</item>
+    </style>
     <!--==========================end button styles=======================-->
 
     <style name="ToolBar_Btn">
@@ -289,6 +300,9 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="Layout_wrap.white_border">
+        <item name="android:background">@drawable/bg_white_border</item>
+    </style>
     <style name="LinearLayout_center_vertical" parent="Layout_wrap">
         <item name="android:gravity">center_vertical</item>
     </style>

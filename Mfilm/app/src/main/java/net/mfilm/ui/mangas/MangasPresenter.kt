@@ -21,6 +21,7 @@ class MangasPresenter<V : MangasMvpView> @Inject
 constructor(val retrofitService: RetrofitService,
             dataManager: DataManager, compositeDisposable: CompositeDisposable) :
         BasePresenter<V>(dataManager, compositeDisposable), MangasMvpPresenter<V> {
+
     override fun requestMangas(category: Int?, limit: Int, page: Int
                                , sort: String, search: String?) {
         mvpView?.showLoading() ?: return
@@ -30,7 +31,8 @@ constructor(val retrofitService: RetrofitService,
                     mvpView?.onMangasResponse(t)
             }
         }
-        retrofitService.mApisService.requestMangas(category, limit, page, sort, search)
+        obtainHl(page)
+        retrofitService.mApisService.requestMangas(category, limit, page, sort, search, hl)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(d)

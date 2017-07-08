@@ -14,18 +14,35 @@ import io.realm.RealmObject
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
 import net.mfilm.data.network_retrofit.Manga
+import net.mfilm.data.prefs.MangaSources
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.custom.SimpleViewAnimator
+import net.mfilm.ui.custom.SwitchButtons
 import net.mfilm.ui.dialog_menus.DialogMenuAdapter
 import net.mfilm.ui.manga.*
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
-import org.angmarch.views.NiceSpinner
 import tr.xip.errorview.ErrorView
 
 /**
  * Created by tusi on 5/16/17.
  */
+interface ICallbackPagerBtns {
+    val layoutPagerBtns: View
+    var pagerBtns: SwitchButtons?
+    var pagerPosition: Int
+    val btns: List<View>
+    fun initPagerBtns()
+    fun onPagerSelected(i: Int)
+}
+
+interface ICallbackMangaSources {
+    val mMangaSources: MangaSources?
+}
+
+interface ICallbackMangaSourcesHolder {
+    var mMangaSources: MangaSources?
+}
 interface ISwitch {
     val size: Int
     fun onSwitch(i: Int)
@@ -164,13 +181,13 @@ interface ICallbackEmptyDataViewHolder : ICallbackDataEmpty {
     val tvDesEmptyData: TextView?
     val emptyDesResId: Int
     fun initEmptyDataView()
-    fun showEmptyDataView(show: Boolean)
+    fun showEmptyDataView(show: Boolean, emptyResId: Int? = null)
     var emptyDataView: EmptyDataView?
 }
 
 interface ICallbackEmptyDataView {
     fun hideSomething()
-    fun showEmptyDataView(show: Boolean)
+    fun showEmptyDataView(show: Boolean, emptyResId: Int? = null)
 }
 
 interface ICallbackSearch {
@@ -199,9 +216,9 @@ interface ICallbackSpnTracker {
     val spnFilterTracker: AdapterTracker
 }
 
-interface ICallbackSort : ICallbackSpnTracker {
-    fun initSpnFilters()
-    val spnFilter: NiceSpinner
+interface ICallbackSort : ICallbackPagerBtns {
+    //    fun initSpnFilters()
+//    val spnFilter: NiceSpinner
     val mFilters: List<Filter>
     fun sort()
 }

@@ -15,7 +15,8 @@ interface ApisService {
 
     @GET(NetConstants.API_MANGA)
     fun requestMangas(@Query("category") category: Int?, @Query("limit") limit: Int, @Query("page") page: Int
-                      , @Query("sort") sort: String, @Query("search") search: String?): Observable<MangasResponse>
+                      , @Query("sort") sort: String,
+                      @Query("search") search: String?, @Query("lang") lang: String? = null): Observable<MangasResponse>
 
     //not use
     @GET(NetConstants.API_MANGA_DETAIL)

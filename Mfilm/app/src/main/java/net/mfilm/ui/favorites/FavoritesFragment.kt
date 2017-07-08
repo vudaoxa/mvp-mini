@@ -14,15 +14,18 @@ import kotlinx.android.synthetic.main.bottom_fun_view.*
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_realm.*
 import kotlinx.android.synthetic.main.layout_input_text.*
+import kotlinx.android.synthetic.main.layout_mini_switch_btns.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaFavoriteRealm
 import net.mfilm.ui.base.realm.BaseRealmFragment
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.custom.SimpleViewAnimator
-import net.mfilm.ui.manga.*
+import net.mfilm.ui.manga.EmptyDataView
+import net.mfilm.ui.manga.Filter
+import net.mfilm.ui.manga.PassByTime
+import net.mfilm.ui.manga.UndoBtn
 import net.mfilm.ui.manga.rv.BaseRvRealmAdapter
 import net.mfilm.utils.*
-import org.angmarch.views.NiceSpinner
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,6 +39,12 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
             return fragment
         }
     }
+
+    override val layoutPagerBtns: View
+        get() = layout_pager_btns
+
+    override val btns: List<View>
+        get() = listOf(btn_newest, btn_all)
 
     override val rvMain: RecyclerView
         get() = rv
@@ -84,9 +93,9 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
     override val btnDone: Button
         get() = btn_done
     override val mFilters: List<Filter>
-        get() = filtersFavorites
-    override val spnFilter: NiceSpinner
-        get() = spn_filter
+        get() = filtersRealm
+    //    override val spnFilter: NiceSpinner
+//        get() = spn_filter
     override val mLayoutInputText: LinearLayout
         get() = layout_input_text
     override val edtSearch: EditText
@@ -118,9 +127,9 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
         }
     override val spanCount: Int
         get() = resources.getInteger(R.integer.mangas_span_count)
-    override val spnFilterTracker = AdapterTracker({
-        sort()
-    })
+//    override val spnFilterTracker = AdapterTracker({
+//        sort()
+//    })
 
     @Inject
     lateinit var mFavoritesPresenter: FavoritesMvpPresenter<FavoritesMvpView>
@@ -170,7 +179,7 @@ class FavoritesFragment : BaseRealmFragment<MangaFavoriteRealm>(), FavoritesMvpV
     //100% NOT MOVE, BECAUSE GENERIC CAN'T BE SORTED
     override fun sort() {
         Timber.e("------------sort---------------------------")
-        val filter = mFilters[spnFilterTracker.mPosition]
+        val filter = mFilters[pagerPosition]
         when (filter.content) {
             TYPE_FILTER_AZ -> {
                 adapterMain?.run {

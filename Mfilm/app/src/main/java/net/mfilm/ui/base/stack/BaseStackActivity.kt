@@ -103,6 +103,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         try {
             f?.invoke()
         } catch (e: UninitializedPropertyAccessException) {
+            e.printStackTrace()
             System.exit(0)
         }
     }

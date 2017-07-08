@@ -5,14 +5,14 @@
 
     <LinearLayout
         android:id="@+id/layout_mangas"
-        style="@style/Layout_match"
+        style="@style/LinearLayout_center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <org.angmarch.views.NiceSpinner
-            android:id="@+id/spn_filter"
-            style="@style/Layout_match_wrap"
+        <include
+            layout="@layout/layout_switch_btns"
             android:visibility="gone" />
-
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe"
             style="@style/Layout_match_wrap"

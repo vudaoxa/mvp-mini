@@ -109,13 +109,13 @@ fun initNavs() {
 }
 
 var filters = listOf<Filter>()
-var filtersFavorites = listOf<Filter>()
+var filtersRealm = listOf<Filter>()
 fun initFilters() {
     val filterAz = Filter(R.string.az, TYPE_FILTER_AZ)
     val filterViews = Filter(R.string.hottest, TYPE_FILTER_VIEWS)
     val filterTime = Filter(R.string.newest, TYPE_FILTER_TIME)
     filters = listOf(filterViews, filterTime, filterAz)
-    filtersFavorites = listOf(filterTime, filterAz)
+    filtersRealm = listOf(filterTime, filterAz)
 }
 
 fun initAwesome() {

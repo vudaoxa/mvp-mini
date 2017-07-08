@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_settings.*
 import net.mfilm.R
 import net.mfilm.data.prefs.MangaSources
+import net.mfilm.data.prefs.SwitchItem
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM_HEADER
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.settings.rv.adapters.SettingsRvAdapter
@@ -62,7 +65,26 @@ class SettingsFragment : BaseStackFragment(), SettingsMvpView {
         }
     }
 
+    override fun onSwitchItemsResponse(switchItems: List<SwitchItem>) {
+        mSettingRvAdapter?.run {
+            addAll(switchItems)
+            notifyDataSetChanged()
+        } ?: let {
+
+        }
+    }
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
+        when (event) {
+            TYPE_ITEM_HEADER -> {
+                mSettingsPresenter.onMangaSourceSelected(position)
+            }
+            TYPE_ITEM -> {
+                when (position) {
+                    1 -> mSettingsPresenter.onToggleHistoryEnabled()
+                    2 -> mSettingsPresenter.onToggleSearchHistoryEnabled()
+                }
+            }
+        }
     }
 }

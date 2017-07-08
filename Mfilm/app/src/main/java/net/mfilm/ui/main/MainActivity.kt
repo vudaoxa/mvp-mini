@@ -125,12 +125,12 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initFilters()
+        initMangaSources(this)
         tryIt {
             activityComponent.inject(this)
             mMainPresenter.onAttach(this)
         }
-        initFilters()
-        initMangaSources(this)
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
