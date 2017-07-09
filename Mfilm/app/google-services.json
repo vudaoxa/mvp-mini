@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "1079722055994",
+    "project_id": "firebase-komik"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079722055994:android:86f6ab5cd9529da1",
+        "android_client_info": {
+          "package_name": "net.komik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079722055994-ksib0dqm504oea9so03gnls55davp7ea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhhoNOpPbMiZWEPBxnkosL1-aLVuMdqJ4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-92549620-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

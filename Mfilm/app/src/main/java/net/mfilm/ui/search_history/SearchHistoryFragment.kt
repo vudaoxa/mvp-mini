@@ -95,7 +95,7 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
     }
 
     override fun initFields() {
-        tryIt {
+        tryOrExit {
             activityComponent?.inject(this)
             mSearchHistoryPresenter.onAttach(this)
         }

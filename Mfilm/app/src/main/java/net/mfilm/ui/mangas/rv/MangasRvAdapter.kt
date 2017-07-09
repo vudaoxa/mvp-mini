@@ -33,7 +33,7 @@ class MangasRvAdapter<V : Manga>(mContext: Context, mData: MutableList<V>?, mCal
                 return MangaItemViewHolder(mContext, viewType, view, mCallbackOnClick, mCallbackOnLongClick)
             }
             else -> {
-                val view = LayoutInflater.from(mContext).inflate(R.layout.layout_progress_view_small, parent, false)
+                val view = LayoutInflater.from(mContext).inflate(R.layout.progress_view_small, parent, false)
                 return LoadingViewHolder(view)
             }
         }

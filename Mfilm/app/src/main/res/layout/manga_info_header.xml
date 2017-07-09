@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/layout_manga_thumb" />
+        <include layout="@layout/manga_thumb" />
 
-        <include layout="@layout/layout_manga_info_text" />
+        <include layout="@layout/manga_info_text" />
     </LinearLayout>
 </FrameLayout>

@@ -34,7 +34,7 @@ class SettingsFragment : BaseStackFragment(), SettingsMvpView {
         return inflater!!.inflate(R.layout.fragment_settings, container, false)
     }
     override fun initFields() {
-        tryIt {
+        tryOrExit {
             activityComponent?.inject(this)
             mSettingsPresenter.onAttach(this)
         }

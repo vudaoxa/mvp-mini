@@ -11,7 +11,7 @@
             android:layout_above="@id/bottom_fun"
             android:orientation="vertical">
 
-            <include layout="@layout/layout_input_text" />
+            <include layout="@layout/input_text" />
 
             <Button
                 android:id="@+id/btn_done"
@@ -21,7 +21,7 @@
                 android:visibility="gone" />
 
             <include
-                layout="@layout/layout_mini_switch_btns"
+                layout="@layout/mini_switch_btns"
                 android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView

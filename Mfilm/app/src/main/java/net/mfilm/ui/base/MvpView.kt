@@ -36,5 +36,5 @@ interface MvpView {
     fun onNoInternetConnections()
     fun onFailure()
     fun hideKeyboard()
-    fun tryIt(f: (() -> Unit)? = null)
+    fun tryOrExit(f: (() -> Unit)? = null)
 }

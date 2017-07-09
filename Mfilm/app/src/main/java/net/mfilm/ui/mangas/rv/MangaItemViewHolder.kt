@@ -3,7 +3,7 @@ package net.mfilm.ui.mangas.rv
 import android.content.Context
 import android.view.View
 import kotlinx.android.synthetic.main.item_manga.view.*
-import kotlinx.android.synthetic.main.layout_manga_thumb.view.*
+import kotlinx.android.synthetic.main.manga_thumb.view.*
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.base.rv.holders.BaseItemViewHolder
 import net.mfilm.utils.ICallbackOnClick

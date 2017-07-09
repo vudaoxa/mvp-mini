@@ -13,8 +13,8 @@ import com.joanzapata.iconify.widget.IconTextView
 import kotlinx.android.synthetic.main.bottom_fun_view.*
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_realm.*
-import kotlinx.android.synthetic.main.layout_input_text.*
-import kotlinx.android.synthetic.main.layout_mini_switch_btns.*
+import kotlinx.android.synthetic.main.input_text.*
+import kotlinx.android.synthetic.main.mini_switch_btns.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.ui.base.realm.BaseRealmFragment
@@ -192,7 +192,7 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
     override fun initFields() {
         searchable = true
         title = getString(R.string.history)
-        tryIt {
+        tryOrExit {
             activityComponent?.inject(this)
             mHistoryPresenter.onAttach(this)
         }

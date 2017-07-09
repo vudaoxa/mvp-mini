@@ -12,7 +12,7 @@ interface ChapterImagesMvpView : MvpView {
     fun requestChapterImages(chapterId: Int)
     fun onChapterImagesResponse(chapterImagesResponse: ChapterImagesResponse?)
     fun onChapterImagesNull()
-    fun initChapterImages(images: List<ChapterImage>)
+    fun buildChapterImages(images: List<ChapterImage>)
     //    val seekPrevChapter: Chapter?
 //    val seekNextChapter: Chapter?
     fun loadPrevOnDemand()

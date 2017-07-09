@@ -99,7 +99,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
                 checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
-    override fun tryIt(f: (() -> Unit)?) {
+    override fun tryOrExit(f: (() -> Unit)?) {
         try {
             f?.invoke()
         } catch (e: UninitializedPropertyAccessException) {

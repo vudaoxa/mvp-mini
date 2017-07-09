@@ -7,7 +7,7 @@ android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
-        applicationId "net.xcomic"
+        applicationId "net.komik"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -68,7 +68,6 @@ android {
 
         // dependency injection
         compile "com.google.dagger:dagger:$rootProject.dagger2Version"
-//        annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
         kapt "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
         provided 'javax.annotation:jsr250-api:1.0'
         compile 'javax.inject:javax.inject:1'
@@ -97,6 +96,8 @@ android {
         compile "com.joanzapata.iconify:android-iconify-ionicons:$rootProject.iconifyVersion"
 
         compile "com.github.stfalcon:frescoimageviewer:$rootProject.frescoViewerVersion"
+        compile "com.google.android.gms:play-services-analytics:$rootProject.playServicesVersion"
+        compile "com.google.firebase:firebase-ads:$rootProject.playServicesVersion"
     }
     repositories {
 //        mavenCentral()
@@ -115,3 +116,4 @@ tasks.whenTaskAdded { task ->
 repositories {
     mavenCentral()
 }
+apply plugin: 'com.google.gms.google-services'

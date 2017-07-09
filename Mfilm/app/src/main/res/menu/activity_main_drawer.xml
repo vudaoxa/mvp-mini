@@ -4,8 +4,12 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_home"
-            android:title="@string/home" />
+            android:icon="@drawable/ic_dashboard_black_24dp"
+            android:title="@string/manga" />
+        <item
+            android:id="@+id/nav_categories"
+            android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+            android:title="@string/categories" />
         <item
             android:id="@+id/nav_fav"
             android:icon="@drawable/ic_menu_fav"

@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
+        classpath 'com.google.gms:google-services:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
         classpath "io.realm:realm-gradle-plugin:$realm_version"
@@ -68,5 +69,6 @@ ext {
 
     draggablepanelVersion = '1.9'
     frescoViewerVersion = '0.5.0'
+    playServicesVersion = '11.0.2'
 }
 

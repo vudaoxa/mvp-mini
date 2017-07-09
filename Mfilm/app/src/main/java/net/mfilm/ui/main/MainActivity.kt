@@ -17,16 +17,18 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.joanzapata.iconify.widget.IconTextView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.ads_smart_banner.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.input_text.*
 import kotlinx.android.synthetic.main.item_main_action_btns.*
-import kotlinx.android.synthetic.main.layout_input_text.*
 import net.mfilm.R
+import net.mfilm.google.loadBannerAds
 import net.mfilm.ui.base.stack.BaseStackActivity
+import net.mfilm.ui.categories.CategoriesFragment
 import net.mfilm.ui.chapter_images.ChapterImagesFragment
 import net.mfilm.ui.favorites.FavoritesFragment
 import net.mfilm.ui.filmy.FullReadFragment
 import net.mfilm.ui.history.HistoryFragment
-import net.mfilm.ui.home.HomePagerFragment
 import net.mfilm.ui.manga.PassByTime
 import net.mfilm.ui.manga_info.MangaInfoFragment
 import net.mfilm.ui.mangas.MangasFragment
@@ -84,7 +86,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override val containerView: View
         get() = container
     override val homeClass: Class<*>
-        get() = HomePagerFragment::class.java
+        get() = MangasFragment::class.java
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         onNewScreenRequested(navs.filter { it.id == item.itemId }[0].indexTag)
@@ -127,7 +129,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         initFilters()
         initMangaSources(this)
-        tryIt {
+        tryOrExit {
             activityComponent.inject(this)
             mMainPresenter.onAttach(this)
         }
@@ -137,12 +139,12 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         super.initViews(savedInstanceState)
         initScreenRequestPassByTime()
         mNavView.setNavigationItemSelectedListener(this)
+        loadBannerAds(ad_view)
     }
 
     override fun initScreenRequestPassByTime() {
         screenRequestPassByTime = PassByTime(SCREEN_DURATION)
     }
-
     override fun showConfirmExit() {
         DialogUtil.showMessageConfirm(this, R.string.notifications, R.string.confirm_exit,
                 MaterialDialog.SingleButtonCallback { _, _ -> finish() })
@@ -157,6 +159,9 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
             //searching, category
                 IndexTags.FRAGMENT_SEARCH -> {
                     fragmentStackManager.swapFragment(MangasFragment.newInstance(null, true))
+                }
+                IndexTags.FRAGMENT_CATEGORIES -> {
+                    fragmentStackManager.swapFragment(CategoriesFragment.newInstance())
                 }
                 IndexTags.FRAGMENT_CATEGORY -> {
                     fragmentStackManager.swapFragment(MangasFragment.newInstance(obj, false))
@@ -205,7 +210,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onMainScreenRequested() = fragmentStackManager.run {
         clearStack()
-        swapFragment(HomePagerFragment.newInstance())
+        swapFragment(MangasFragment.newInstance())
     }
 
 

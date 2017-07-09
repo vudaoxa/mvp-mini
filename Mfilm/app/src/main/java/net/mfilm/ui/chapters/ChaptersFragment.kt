@@ -155,7 +155,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun initFields() {
         manga = arguments.getSerializable(AppConstants.EXTRA_DATA) as Manga
-        tryIt {
+        tryOrExit {
             activityComponent?.inject(this)
             mChaptersPresenter.onAttach(this)
         }

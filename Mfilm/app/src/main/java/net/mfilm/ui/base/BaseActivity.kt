@@ -58,7 +58,7 @@ abstract class BaseActivity : AppCompatActivity(), MvpView, BaseFragment.Callbac
 
     }
 
-    override fun tryIt(f: (() -> Unit)?) {
+    override fun tryOrExit(f: (() -> Unit)?) {
         try {
             f?.invoke()
         } catch (e: UninitializedPropertyAccessException) {

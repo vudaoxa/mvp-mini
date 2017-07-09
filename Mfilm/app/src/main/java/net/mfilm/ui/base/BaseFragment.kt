@@ -45,8 +45,8 @@ abstract class BaseFragment : Fragment(), MvpView {
         }
     }
 
-    override fun tryIt(f: (() -> Unit)?) {
-        baseActivity?.tryIt { f?.invoke() }
+    override fun tryOrExit(f: (() -> Unit)?) {
+        baseActivity?.tryOrExit { f?.invoke() }
     }
     override fun showLoading() {
         baseActivity?.showLoading()

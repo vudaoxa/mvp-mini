@@ -12,7 +12,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_mangas.*
-import kotlinx.android.synthetic.main.layout_switch_btns.*
+import kotlinx.android.synthetic.main.switch_btns.*
 import net.mfilm.R
 import net.mfilm.data.network_retrofit.Category
 import net.mfilm.data.network_retrofit.Manga
@@ -188,7 +188,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     }
 
     override fun initFields() {
-        tryIt {
+        tryOrExit {
             activityComponent?.inject(this)
             mMangasPresenter.onAttach(this)
         }
@@ -196,7 +196,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         searching = arguments.getBoolean(KEY_SEARCH)
         category = arguments.getSerializable(KEY_CATEGORY) as? Category?
         back = searching || category != null
-        title = category?.name
+        title = category?.name ?: getString(R.string.manga)
     }
 
     override fun initViews() {

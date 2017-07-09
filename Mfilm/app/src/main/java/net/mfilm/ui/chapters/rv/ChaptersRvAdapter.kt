@@ -30,7 +30,7 @@ class ChaptersRvAdapter<V : Chapter>(mContext: Context, mData: MutableList<V>?, 
                 return ChaptersItemViewHolder(mContext, viewType, view, mCallbackOnClick)
             }
             else -> {
-                val view = LayoutInflater.from(mContext).inflate(R.layout.layout_progress_view_small, parent, false)
+                val view = LayoutInflater.from(mContext).inflate(R.layout.progress_view_small, parent, false)
                 return LoadingViewHolder(view)
             }
         }

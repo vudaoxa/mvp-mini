@@ -11,6 +11,8 @@ import net.mfilm.di.components.AppComponent
 import net.mfilm.di.components.DaggerAppComponent
 import net.mfilm.di.modules.AppModule
 import net.mfilm.di.modules.NetModule
+import net.mfilm.google.initAds
+import net.mfilm.google.initTracking
 import net.mfilm.utils.*
 import org.jetbrains.annotations.NotNull
 import timber.log.Timber
@@ -50,6 +52,8 @@ class MApplication : Application() {
         initTimber()
         initRealm()
         TimeUtils
+        initTracking(this)
+        initAds(this)
         CalligraphyConfig.initDefault(mCalligraphyConfig)
         instance = this
     }

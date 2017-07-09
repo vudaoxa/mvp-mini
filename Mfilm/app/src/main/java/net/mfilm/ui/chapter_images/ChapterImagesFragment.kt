@@ -94,7 +94,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         fullScreen = true
 //        chapter = arguments.getSerializable(AppConstants.EXTRA_DATA) as? Chapter?
 //        mChaptersFragment = arguments.getSerializable(AppConstants.EXTRA_DATA) as? ChaptersFragment?
-        tryIt {
+        tryOrExit {
             activityComponent?.inject(this)
             mChapterImagesPresenter.onAttach(this)
         }
@@ -123,7 +123,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
                 cir.data.let { d ->
                     d?.run {
                         if (d.isNotEmpty()) {
-                            initChapterImages(d)
+                            buildChapterImages(d)
                         } else onChapterImagesNull()
                     } ?: let { onChapterImagesNull() }
                 }
@@ -135,7 +135,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         Timber.e("-------------------onChapterImagesNull---------------------")
     }
 
-    override fun initChapterImages(images: List<ChapterImage>) {
+    override fun buildChapterImages(images: List<ChapterImage>) {
         context?.run {
             mChapterImagesPresenter.showFresco(this, mChaptersFragment?.currentReadingChapter,
                     images.map { it.url!! }.toMutableList(), images.size - 2)

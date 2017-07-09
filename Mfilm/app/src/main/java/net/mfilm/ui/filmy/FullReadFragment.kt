@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.layout_full_read.*
+import kotlinx.android.synthetic.main.full_read.*
 import net.mfilm.R
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.animations.RevealAnimation
@@ -27,7 +27,7 @@ class FullReadFragment : BaseStackFragment() {
 
     var manga: Manga? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.layout_full_read, container, false)
+        return inflater!!.inflate(R.layout.full_read, container, false)
     }
 
     override fun initFields() {

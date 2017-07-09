@@ -4,7 +4,7 @@
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/dashboard" />
+        android:title="@string/manga" />
     <item
         android:id="@+id/navigation_categories"
         android:icon="@drawable/ic_format_list_bulleted_black_24dp"

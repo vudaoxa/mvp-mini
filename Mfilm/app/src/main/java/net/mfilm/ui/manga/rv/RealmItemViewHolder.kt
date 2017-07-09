@@ -5,7 +5,7 @@ import android.content.Context
 import android.view.View
 import kotlinx.android.synthetic.main.item_manga.view.*
 import kotlinx.android.synthetic.main.item_search_history_content.view.*
-import kotlinx.android.synthetic.main.layout_manga_thumb.view.*
+import kotlinx.android.synthetic.main.manga_thumb.view.*
 import net.mfilm.data.db.models.MangaFavoriteRealm
 import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.db.models.SearchQueryRealm

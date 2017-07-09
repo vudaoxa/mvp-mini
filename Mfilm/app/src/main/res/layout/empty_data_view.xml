@@ -25,6 +25,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="fdkfjdfd"
-        android:textColor="@color/grey_40" />
+        android:textColor="@color/white" />
 </LinearLayout>

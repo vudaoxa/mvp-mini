@@ -16,7 +16,7 @@
             style="@style/Layout_match"
             android:orientation="vertical">
 
-            <include layout="@layout/layout_manga_thumb" />
+            <include layout="@layout/manga_thumb" />
 
             <LinearLayout
                 style="@style/LinearLayout_center_vertical"

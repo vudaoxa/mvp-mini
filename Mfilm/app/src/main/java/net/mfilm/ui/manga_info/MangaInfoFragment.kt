@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_manga_info.*
-import kotlinx.android.synthetic.main.layout_manga_info_header.*
-import kotlinx.android.synthetic.main.layout_manga_info_text.*
-import kotlinx.android.synthetic.main.layout_manga_thumb.*
+import kotlinx.android.synthetic.main.manga_info_header.*
+import kotlinx.android.synthetic.main.manga_info_text.*
+import kotlinx.android.synthetic.main.manga_thumb.*
 import net.mfilm.R
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangaDetailResponse
@@ -67,7 +67,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tryIt {
+        tryOrExit {
             activityComponent?.inject(this)
             mMangaInfoMvpPresenter.onAttach(this)
         }
