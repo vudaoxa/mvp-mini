@@ -73,6 +73,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     override fun buildChapterImages(images: List<ChapterImage>) {
         context?.run {
+
             mChapterImagesPresenter.showFresco(this, mChaptersFragment?.currentReadingChapter,
                     images.map { it.url!! }.toMutableList(), images.size - 2)
         }

@@ -2,9 +2,8 @@ package net.mfilm
 
 import android.support.annotation.StringRes
 import android.support.multidex.MultiDexApplication
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.imagepipeline.core.ImagePipelineConfig
-import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
+import com.github.piasy.biv.BigImageViewer
+import com.github.piasy.biv.loader.fresco.FrescoImageLoader
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import net.mfilm.di.components.AppComponent
@@ -64,12 +63,14 @@ class MApplication : MultiDexApplication() {
     }
 
     fun initFresco() {
-        val config = ImagePipelineConfig.newBuilder(this)
-                .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
-                .setResizeAndRotateEnabledForNetwork(true)
-                .setDownsampleEnabled(true)
-                .build()
-        Fresco.initialize(this, config)
+//        val config = ImagePipelineConfig.newBuilder(this)
+//                .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
+//                .setResizeAndRotateEnabledForNetwork(true)
+//                .setDownsampleEnabled(true)
+//                .build()
+//        Fresco.initialize(this)
+        BigImageViewer.initialize(FrescoImageLoader.with(this));
+
     }
     fun showMessage(@AppConstants.TypeToast typeToast: Int, @NotNull message: String) {
         mAppToast.showMessageByType(typeToast, message)

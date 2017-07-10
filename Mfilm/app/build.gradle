@@ -106,6 +106,12 @@ android {
         compile "com.joanzapata.iconify:android-iconify-fontawesome:$rootProject.iconifyVersion"
         compile "com.joanzapata.iconify:android-iconify-ionicons:$rootProject.iconifyVersion"
 
+        compile "com.github.piasy:BigImageViewer:$rootProject.bigImageViewerVersion"
+        // load with fresco
+        compile "com.github.piasy:FrescoImageLoader:$rootProject.bigImageViewerVersion"
+        // progress pie indicator
+        compile "com.github.piasy:ProgressPieIndicator:$rootProject.bigImageViewerVersion"
+
         compile "com.github.stfalcon:frescoimageviewer:$rootProject.frescoViewerVersion"
         compile "com.google.android.gms:play-services-analytics:$rootProject.playServicesVersion"
         compile "com.google.firebase:firebase-ads:$rootProject.playServicesVersion"
