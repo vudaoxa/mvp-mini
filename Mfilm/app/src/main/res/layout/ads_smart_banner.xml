@@ -3,7 +3,6 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ad_view"
     style="@style/Layout_match_wrap"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
+    android:layout_gravity="bottom"
     ads:adSize="SMART_BANNER"
     ads:adUnitId="@string/banner_ad_unit_id" />

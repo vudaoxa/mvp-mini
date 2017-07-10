@@ -97,7 +97,7 @@ object TimeUtils {
                         }
                     } else {
                         val weekDay = cal.get(Calendar.DAY_OF_WEEK)
-                        res = context.getString(R.string.week_date, context.getString(weekDatesMaps.get(weekDay)!!), time)
+                        res = context.getString(R.string.week_date, context.getString(weekDatesMaps.get(weekDay)), time)
                     }
                 }
             }
@@ -129,7 +129,7 @@ object TimeUtils {
                 "---- ${cal.get(Calendar.DAY_OF_WEEK)}")
         Timber.e("toFbFormatTime ${year} ${month} ${date} ${hour} ${minute}  ")
         val yxx = now.year + 1900
-        val sMonth = context.getString(monthsMaps.get(month) as Int)
+        val sMonth = context.getString(monthsMaps.get(month))
         if (year < yxx - 1) {
             //date1
             Timber.e("oooooooo")

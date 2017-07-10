@@ -31,6 +31,8 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
         }
     }
 
+    override val optionsMenuId: Int
+        get() = R.menu.main
     override val swipeContainer: SwipeRefreshLayout?
         get() = swipe
 
@@ -59,6 +61,7 @@ class CategoriesFragment : BasePullRefreshFragment(), CategoriesMvpView {
             mCategoriesPresenter.onAttach(this)
         }
         title = getString(R.string.categories)
+        searchable = true
     }
 
     override fun initViews() {

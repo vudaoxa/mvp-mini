@@ -82,12 +82,11 @@ class FragmentStackManager<F : Fragment> : FragmentStackSwapper<F> {
     }
 
     override fun size(): Int {
-        return if (stackFragments == null) 0 else stackFragments!!.size
+        return stackFragments?.size ?: 0
     }
 
-    override val currentFragment: F?
+    override val topFragment: F?
         get() = mContentFragment
-
     override fun getFragmentByTag(tag: String): F? {
         return null
     }

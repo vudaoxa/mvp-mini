@@ -1,14 +1,30 @@
 package net.mfilm.google
 
 import android.content.Context
-import android.util.SparseArray
+import android.support.v4.util.SparseArrayCompat
 import com.google.android.gms.ads.*
 import net.mfilm.R
+import net.mfilm.utils.rand
 import timber.log.Timber
 
 /**
  * Created by tusi on 2/17/17.
  */
+
+fun ads(mInterstitialAd: InterstitialAd?, f: (() -> Unit)? = null) {
+    val rand = rand(MAX_ADS)
+    Timber.e("---ads--------x--- $rand ------------------")
+    if (rand < MIN_ADS) {
+        f?.invoke()
+    } else {
+        val show = showInterAds(mInterstitialAd)
+        Timber.e("--ads----show --------- $show-----------------------")
+        if (!show) {
+            f?.invoke()
+        }
+    }
+}
+
 fun initAds(context: Context) {
     context.apply {
         MobileAds.initialize(this, getString(R.string.banner_ad_unit_id))
@@ -17,26 +33,28 @@ fun initAds(context: Context) {
     initMapAdsErrors()
 }
 
-val MAX_ADS = 7
-val MIN_ADS = 4
-val MIN_ITEMS_2NATIVE_LARGE_ADS = 1
-val ITEMS_PER_AD = 5
-var time = -1L
-val DURATION = 60000
-val NATIVE_EXPRESS_AD_LARGE_HEIGHT = 300
-val NATIVE_EXPRESS_AD_HEIGHT = 100
+private const val MAX_ADS = 7
+private const val MIN_ADS = 4
+const val PAGES_PER_AD = 2
+//var time = -1L
+//val DURATION = 60000
+//val NATIVE_EXPRESS_AD_LARGE_HEIGHT = 300
+//val NATIVE_EXPRESS_AD_HEIGHT = 100
 val adRequest = AdRequest.Builder().build()
-val madSize = AdSize(AdSize.FULL_WIDTH, NATIVE_EXPRESS_AD_HEIGHT)
-fun loadBannerAds(mAdView: AdView?) {
+
+//val madSize = AdSize(AdSize.FULL_WIDTH, NATIVE_EXPRESS_AD_HEIGHT)
+fun loadBannerAds(mAdView: AdView?, adBannerListener: AdListener?) {
     Timber.e("loadBannerAds-----$mAdView-----------")
     mAdView?.run {
-        loadAd(adRequest)
         adListener = adBannerListener
+        requestNewBanner(this)
     }
 }
 
-val mapAdsErrors = SparseArray<String>()
-fun initMapAdsErrors() {
+//val mapAdsErrors = SparseArray<String>()
+private val mapAdsErrors = SparseArrayCompat<String>()
+
+private fun initMapAdsErrors() {
     mapAdsErrors.put(AdRequest.ERROR_CODE_INTERNAL_ERROR, "ERROR_CODE_INTERNAL_ERROR")
     mapAdsErrors.put(AdRequest.ERROR_CODE_INVALID_REQUEST, "ERROR_CODE_INVALID_REQUEST")
     mapAdsErrors.put(AdRequest.ERROR_CODE_NETWORK_ERROR, "ERROR_CODE_NETWORK_ERROR")
@@ -97,18 +115,22 @@ fun initNativeAds(mAdView: NativeExpressAdView) {
 }
 
 fun requestNewInterstitial(mInterstitialAd: InterstitialAd?) {
-    val adRequest = AdRequest.Builder().build()
     mInterstitialAd?.loadAd(adRequest)
 }
 
-fun showInterAds(mInterstitialAd: InterstitialAd?): Boolean {
-    mInterstitialAd?.apply {
-        if (isLoaded) {
+fun requestNewBanner(mAdView: AdView?) {
+    mAdView?.loadAd(adRequest)
+}
+
+private fun showInterAds(mInterstitialAd: InterstitialAd?): Boolean {
+    return mInterstitialAd?.run {
+        val loaded = isLoaded
+        if (loaded)
             show()
-            return true
-        } else return false
-    }
-    return false
+        else
+            requestNewInterstitial(this)
+        loaded
+    } ?: false
 }
 
 val adBannerListener = object : AdListener() {
@@ -117,6 +139,7 @@ val adBannerListener = object : AdListener() {
     }
 
     override fun onAdFailedToLoad(p0: Int) {
+        Timber.e("--onAdFailedToLoad--------------------------------------------")
         sendHit(CATEGORY_ACTION, mapAdsErrors.get(p0) as String)
     }
 
@@ -157,14 +180,17 @@ val nativeAdListener = object : AdListener() {
 }
 
 abstract class IAdListener() : AdListener() {
-    abstract fun iAction()
+    abstract fun fClosed()
+    abstract fun fFailedToLoaded()
+    abstract fun fLoaded()
     override fun onAdClosed() {
         sendHit(CATEGORY_ACTION, ACTION_onAdClosed)
-        iAction()
+        fClosed()
     }
 
     override fun onAdFailedToLoad(p0: Int) {
         sendHit(CATEGORY_ACTION, mapAdsErrors.get(p0) as String)
+        fFailedToLoaded()
     }
 
     override fun onAdOpened() {
@@ -173,6 +199,7 @@ abstract class IAdListener() : AdListener() {
 
     override fun onAdLoaded() {
         sendHit(CATEGORY_ACTION, ACTION_onAdLoaded)
+        fLoaded()
     }
 
     override fun onAdLeftApplication() {

@@ -14,6 +14,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -25,7 +26,16 @@ android {
         }
         release {
             minifyEnabled false
+            shrinkResources true
+            proguardFiles fileTree(dir: "mproguard", include: ["*.pro"]).asList().toArray()
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //Other parameters
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+//            signingConfig playStoreConfig //Add your own signing config
+            pseudoLocalesEnabled false
+            zipAlignEnabled true
             buildConfigField("String", "BASE_URL", "\"http://mangaland.net/\"")
             buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
         }
@@ -60,6 +70,7 @@ android {
         testCompile 'junit:junit:4.12'
 
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        compile "com.android.support:multidex:$rootProject.multidexVersion"
         compile "com.afollestad.material-dialogs:core:$rootProject.materialDialogVersion"
         compile "com.github.xiprox.errorview:library:$rootProject.errorViewVersion"
         compile "com.github.paolorotolo:appintro:$rootProject.appIntroVersion"

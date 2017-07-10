@@ -54,6 +54,7 @@ fun showMessage(@AppConstants.TypeToast typeToast: Int, msg: Any?) {
     MApplication.instance.showMessage(typeToast, msg)
 }
 
+fun rand(x: Int): Long = Math.round(Math.random() * x)
 fun Fragment.isVisiOk() = isVisible && isAdded && isInLayout
 
 fun setText(context: Context, tv: TextView, titleResId: Int, text: String?) {
@@ -149,7 +150,7 @@ fun initAnimations(context: Context) {
 
 var icon_search: IconDrawable? = null
 var icon_share: IconDrawable? = null
-var icon_share_grey: IconDrawable? = null
+var icon_checked_grey: IconDrawable? = null
 var icon_star: IconDrawable? = null
 var icon_star_grey: IconDrawable? = null
 var icon_star_blue: IconDrawable? = null
@@ -161,8 +162,8 @@ fun initIcons(context: Context) {
             IoniconsIcons.ion_ios_search_strong).colorRes(R.color.white).actionBarSize()
     icon_share = IconDrawable(context,
             IoniconsIcons.ion_share).colorRes(R.color.white).actionBarSize()
-    icon_share_grey = IconDrawable(context,
-            IoniconsIcons.ion_share).colorRes(R.color.grey_60).actionBarSize()
+    icon_checked_grey = IconDrawable(context,
+            IoniconsIcons.ion_checkmark_circled).colorRes(R.color.grey_60).actionBarSize()
     icon_star = IconDrawable(context,
             IoniconsIcons.ion_ios_star).colorRes(R.color.white).actionBarSize()
     icon_star_blue = IconDrawable(context,

@@ -21,12 +21,15 @@ import android.support.annotation.IdRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.view.View
+import com.google.android.gms.ads.InterstitialAd
 import net.mfilm.di.components.ActComponent
+import net.mfilm.google.*
 import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.ICallbackFragmentOptionMenu
 import net.mfilm.utils.anim
 import net.mfilm.utils.handler
 import net.mfilm.utils.isVisiOk
+import timber.log.Timber
 import vn.tieudieu.fragmentstackmanager.BaseFragmentStack
 
 /**
@@ -141,10 +144,50 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
 
     protected abstract fun initFields()
 
-    interface Callback {
+    //inter ads
+    protected var mInterAd: InterstitialAd? = null
+    protected var mPosition = 0
+    protected var mEvent = 0
+    private var action: (() -> Unit)? = null
+    protected fun capture(position: Int, event: Int) {
+        mPosition = position
+        mEvent = event
+    }
 
-        fun onFragmentAttached()
+    protected fun initAds() {
+        mInterAd = initInterAds(context, adListener)
+    }
 
-        fun onFragmentDetached(tag: String)
+    protected fun mAds(page: Int? = null, f: (() -> Unit)? = null) {
+        action = f
+        page?.run {
+            Timber.e("----mAds------------page--------$page--------")
+            if (this % PAGES_PER_AD == 0)
+                ads(f)
+        } ?: let {
+            ads(f)
+        }
+    }
+
+    private fun ads(f: (() -> Unit)? = null) {
+        ads(mInterAd, f)
+    }
+
+    private val adListener = object : IAdListener() {
+        override fun fClosed() {
+            requestNewInterstitial(mInterAd)
+            //to avoid onSaveInstantState exception
+            handler({
+                action?.invoke()
+            })
+        }
+
+        override fun fFailedToLoaded() {
+
+        }
+
+        override fun fLoaded() {
+
+        }
     }
 }

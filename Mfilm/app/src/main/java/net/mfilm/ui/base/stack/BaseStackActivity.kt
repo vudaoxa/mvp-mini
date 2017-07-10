@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.text.TextUtils
@@ -31,6 +32,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import com.google.android.gms.ads.AdView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import net.mfilm.MApplication
@@ -39,6 +41,9 @@ import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.di.components.ActComponent
 import net.mfilm.di.components.DaggerActComponent
 import net.mfilm.di.modules.ActModule
+import net.mfilm.google.IAdListener
+import net.mfilm.google.loadBannerAds
+import net.mfilm.google.requestNewBanner
 import net.mfilm.ui.base.BaseFragment
 import net.mfilm.ui.base.MvpView
 import net.mfilm.ui.manga.PassByTime
@@ -74,7 +79,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.navigationBarColor = resources.getColor(R.color.colorPrimary)
+            window.navigationBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         }
         activityComponent = DaggerActComponent.builder()
                 .actModule(ActModule(this))
@@ -323,6 +328,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
     override fun initSearchPassByTime() {
         searchPassByTime = PassByTime(AUTO_LOAD_DURATION)
     }
+
     override fun initImeActionSearch() {
         edtSearch.setOnEditorActionListener { _, i, _ ->
             if (i == EditorInfo.IME_ACTION_SEARCH) {
@@ -360,6 +366,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
             edtSearch.text = null
         }
     }
+
     override fun onSearchHistoryClicked(searchQueryRealm: SearchQueryRealm) {
         edtSearch.setText(searchQueryRealm.query)
 //        sendHit(CATEGORY_ACTION, ACTION_CLICK_SEARCH_HISTORY_ITEM)
@@ -392,12 +399,51 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
             if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mDrawerLayout.closeDrawer(GravityCompat.START)
             } else {
-                fragmentStackManager.currentFragment?.run {
-                    if (javaClass == homeClass) {
-                        showConfirmExit()
-                    } else super.onBackPressed()
-                } ?: System.exit(0)
+                if (fragmentStackManager.size() == 1) {
+                    showConfirmExit()
+                } else {
+                    super.onBackPressed()
+                }
             }
+        }
+    }
+
+    //banner ads
+    private var mAdView: AdView? = null
+
+    protected fun initBannerAds(mAdView: AdView?) {
+        this.mAdView = mAdView
+        loadBannerAds(mAdView, adListener)
+    }
+
+    private fun reloadAds() {
+        mAdView.show(false)
+        requestNewBanner(mAdView)
+    }
+
+    private val adListener = object : IAdListener() {
+        private var countTryRequest = 0
+        private var countHandler = 0
+        override fun fClosed() {
+        }
+
+        override fun fFailedToLoaded() {
+            Timber.e("------fFailedToLoaded------------ $countTryRequest------$countHandler-----------")
+            if (countTryRequest++ < 3) {
+                reloadAds()
+            } else {
+                if (countHandler++ < 10) {
+                    handler({
+                        reloadAds()
+                    }, (countHandler * 10000).toLong())
+                }
+            }
+        }
+
+        override fun fLoaded() {
+            mAdView.show(true)
+            countTryRequest = 0
+            countHandler = 0
         }
     }
 }

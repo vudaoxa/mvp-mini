@@ -11,6 +11,6 @@ interface FragmentStackSwapper<F : Fragment> {
     fun clearStack()
     fun clearStackAll()
     fun size(): Int
-    val currentFragment: F?
+    val topFragment: F?
     fun getFragmentByTag(tag: String): F?
 }

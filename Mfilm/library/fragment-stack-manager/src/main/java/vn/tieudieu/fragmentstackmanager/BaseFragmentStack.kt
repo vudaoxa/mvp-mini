@@ -10,7 +10,7 @@ abstract class BaseFragmentStack : BaseFragment() {
     var title: String? = null
     var back = false
     var fullScreen = false
-    var home = false
+    //    var home = false
     var searching = false
     var searchable = false
     var info = false

@@ -164,6 +164,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override fun initViews() {
         super.initViews()
         initRv()
+        initAds()
         requestChapters()
     }
 
@@ -213,13 +214,14 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun buildChapters(chapters: List<Chapter>) {
         Timber.e("----------------buildChapters-----------------${chapters.size}-------")
-        page++
         mChaptersRvAdapter?.run {
             onAdapterLoadMoreFinished {
                 val x = mData?.size //xxx readBtnClicked
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
-                seekCurrentReadingPosition(x)
+                chapterImagesFragment?.run {
+                    seekCurrentReadingPosition(x)
+                }
             }
         } ?: let {
             mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
@@ -298,6 +300,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                 seekNextChapter()
             } ?: let {
                 Timber.e("--------------chapterImagesFragment null-------------------")
+                mAds(page++)
             }
         }, 250)
     }

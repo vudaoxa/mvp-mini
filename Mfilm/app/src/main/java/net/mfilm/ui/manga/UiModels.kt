@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
-import com.joanzapata.iconify.IconDrawable
 import net.mfilm.utils.*
 import timber.log.Timber
 
@@ -124,4 +123,4 @@ class CallbackLongClickItem(private val f: ((Int, Int, Any?) -> Unit)?) : ICallb
     }
 }
 
-class DialogMenusItem(val icon: IconDrawable? = null, val title: String, val event: Any?)
+class DialogMenusItem(val title: String, val event: Any?)

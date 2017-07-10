@@ -1,6 +1,5 @@
 package net.mfilm.ui.chapter_images
 
-import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.MvpView
@@ -19,7 +18,7 @@ interface ChapterImagesMvpView : MvpView {
     fun loadMoreOnDemand()
     //    fun onChaptersResponse()
 //    var chapters: MutableList<Chapter>
-    fun addChapter(chapter: Chapter, f: () -> Unit)
+//    fun addChapter(chapter: Chapter, f: () -> Unit)
     fun seekNextChapter()
     fun seekPrevChapter()
 

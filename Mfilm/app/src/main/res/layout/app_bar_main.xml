@@ -66,11 +66,16 @@
         <FrameLayout
             android:id="@+id/container"
             style="@style/Layout_match"
-            android:layout_above="@+id/layout_ads" />
+            android:layout_above="@+id/ad_view" />
 
-        <include
-            android:id="@+id/layout_ads"
-            layout="@layout/ads_smart_banner" />
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ad_view"
+            style="@style/Layout_match_wrap"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id" />
+
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton

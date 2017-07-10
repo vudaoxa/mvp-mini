@@ -17,12 +17,10 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.joanzapata.iconify.widget.IconTextView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.ads_smart_banner.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.input_text.*
 import kotlinx.android.synthetic.main.item_main_action_btns.*
 import net.mfilm.R
-import net.mfilm.google.loadBannerAds
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.categories.CategoriesFragment
 import net.mfilm.ui.chapter_images.ChapterImagesFragment
@@ -120,7 +118,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         Timber.e("------------isFavorite-------$fav-----------------")
         var icon = icon_star
         fav?.run {
-            if (this) icon = icon_star_blue
+            if (this) icon = icon_checked_grey
         }
         mBtnFollow.setImageDrawable(icon)
     }
@@ -139,9 +137,12 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         super.initViews(savedInstanceState)
         initScreenRequestPassByTime()
         mNavView.setNavigationItemSelectedListener(this)
-        loadBannerAds(ad_view)
+        ads()
     }
 
+    fun ads() {
+        initBannerAds(ad_view)
+    }
     override fun initScreenRequestPassByTime() {
         screenRequestPassByTime = PassByTime(SCREEN_DURATION)
     }

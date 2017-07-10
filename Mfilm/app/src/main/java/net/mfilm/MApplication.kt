@@ -1,7 +1,7 @@
 package net.mfilm
 
-import android.app.Application
 import android.support.annotation.StringRes
+import android.support.multidex.MultiDexApplication
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
@@ -20,12 +20,11 @@ import timber.log.Timber.DebugTree
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
 
-
 /**
  * Created by Dieu on 02/03/2017.
  */
 
-class MApplication : Application() {
+class MApplication : MultiDexApplication() {
     @Inject
     lateinit var mCalligraphyConfig: CalligraphyConfig
 

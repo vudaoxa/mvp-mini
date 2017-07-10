@@ -61,6 +61,8 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         }
     }
 
+    override val optionsMenuId: Int
+        get() = R.menu.main
     private var mPagerPosition = 0
     override var pagerPosition: Int
         get() = mPagerPosition
@@ -184,7 +186,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     override fun onDestroy() {
         super.onDestroy()
         mMangasPresenter.onDetach()
-
     }
 
     override fun initFields() {
@@ -192,11 +193,11 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
             activityComponent?.inject(this)
             mMangasPresenter.onAttach(this)
         }
-
         searching = arguments.getBoolean(KEY_SEARCH)
         category = arguments.getSerializable(KEY_CATEGORY) as? Category?
         back = searching || category != null
         title = category?.name ?: getString(R.string.manga)
+        searchable = true
     }
 
     override fun initViews() {
@@ -206,6 +207,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         initEmptyDataView()
         initSwipe()
         initDialogPlus()
+        initAds()
         if (searching) {
             attachSearchHistoryFragment()
         } else {
@@ -215,8 +217,8 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
 
     override fun initDialogPlus() {
         val dialogItemsTitle = context.resources.getStringArray(R.array.bottom_dialog)
-        dialogItems = arrayOf(DialogMenusItem(icon_share_grey, dialogItemsTitle[0], DialogMenus.SHARE),
-                DialogMenusItem(icon_star_grey, dialogItemsTitle[1], DialogMenus.FAVORITES))
+        dialogItems = arrayOf(DialogMenusItem(dialogItemsTitle[0], DialogMenus.SHARE),
+                DialogMenusItem(dialogItemsTitle[1], DialogMenus.FAVORITES))
         menusAdapter = DialogMenuAdapter(context, R.layout.item_dialog_menu, dialogItems)
         longClickItem = CallbackLongClickItem({ x: Int, y: Int, z: Any? -> onDialogItemClicked(x, y, z) })
     }
@@ -357,7 +359,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     //notEmpty condition
     override fun buildMangas(mangas: List<Manga>) {
         Timber.e("---------------buildMangas---------------${mangas.size}")
-        page++
         layoutPagerBtns.show(true)
         emptyDataView?.showEmptyDataView(false)
         mMangasRvAdapter?.run {
@@ -370,6 +371,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
             mMangasRvAdapter = MangasRvAdapter(context, mangas.toMutableList(), this, this)
             rv.adapter = mMangasRvAdapter
         }
+        mAds(page++)
     }
 
     override fun onLoadMore() {
@@ -406,13 +408,23 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
 
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick--------------------$position")
-        when (event) {
+        capture(position, event)
+        mMangasRvAdapter?.mData?.run {
+            val manga = this[mPosition]
+            manga.onClicked {
+                mAds(null, { action() })
+            }
+        }
+    }
+
+    fun action() {
+        when (mEvent) {
             TYPE_ITEM -> {
                 query?.run {
                     mSearchHistoryView.saveQuery(this)
                 }
                 mMangasRvAdapter?.mData?.run {
-                    val manga = this[position]
+                    val manga = this[mPosition]
                     manga.onClicked {
                         screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_MANGA_INFO,
                                 typeContent = null, obj = manga)
@@ -421,7 +433,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
             }
         }
     }
-
     override fun onLongClick(position: Int, event: Int) {
         Timber.e("---------------------onLongClick--------------------$position")
         mMangasRvAdapter?.mData?.run {

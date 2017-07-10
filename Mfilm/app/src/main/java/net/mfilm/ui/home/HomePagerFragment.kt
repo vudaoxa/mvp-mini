@@ -68,7 +68,7 @@ class HomePagerFragment : BaseStackFragment() {
     }
 
     override fun initFields() {
-        home = true
+//        home = true
         searchable = true
     }
 

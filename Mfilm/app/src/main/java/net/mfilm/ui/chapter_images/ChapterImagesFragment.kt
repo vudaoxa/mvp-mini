@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.stack.BaseStackFragment
@@ -19,72 +18,12 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     companion object {
         fun newInstance(mChaptersFragment: Any?): ChapterImagesFragment {
             val fragment = ChapterImagesFragment(mChaptersFragment as? ChaptersMvpView?)
-//            val bundle = Bundle()
-//            bundle.putSerializable(AppConstants.EXTRA_DATA, obj as Serializable)
-//            fragment.arguments = bundle
             return fragment
         }
     }
 
     @Inject
     lateinit var mChapterImagesPresenter: ChapterImagesMvpPresenter<ChapterImagesMvpView>
-    //    private var mChaptersFragment: ChaptersFragment? = null
-
-    //    var chapter: Chapter? = null
-//    override val seekPrevChapter: Chapter?
-//        get() = mChaptersFragment?.seekPrevChapter
-//    override val seekNextChapter: Chapter?
-//        get() = mChaptersFragment?.seekNextChapter
-
-//    private var mChapters = mutableListOf<Chapter>()
-//    override var chapters: MutableList<Chapter>
-//        get() = mChapters
-//        set(value) {
-//            mChapters = value
-//        }
-
-//    override fun addChapter(chapter: Chapter) {
-//        chapters.add(chapter)
-//    }
-
-    //    override fun addChapter(chapter: Chapter, f: () -> Unit) {
-//        chapters.apply {
-//            fun doIt() {
-//                add(chapter)
-//                f()
-//            }
-//            if (isEmpty()) {
-//                doIt()
-//            } else {
-//                if (last().id != chapter.id) {
-//                    Timber.e("--------------next chapter ----- $chapter")
-//                    doIt()
-//                } else {
-//                    Timber.e("--------------same--------------")
-//                    loadMoreOnDemand()
-//                }
-//            }
-//
-//        }
-//    }
-    override fun addChapter(chapter: Chapter, f: () -> Unit) {
-
-//        fun doIt() {
-//            add(chapter)
-//            f()
-//        }
-//        if (isEmpty()) {
-//            doIt()
-//        } else {
-//            if (last().id != chapter.id) {
-//                Timber.e("--------------next chapter ----- $chapter")
-//                doIt()
-//            } else {
-//                Timber.e("--------------same--------------")
-//                loadMoreOnDemand()
-//            }
-//        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(net.mfilm.R.layout.fragment_chapter_images, container, false)
@@ -92,8 +31,6 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     override fun initFields() {
         fullScreen = true
-//        chapter = arguments.getSerializable(AppConstants.EXTRA_DATA) as? Chapter?
-//        mChaptersFragment = arguments.getSerializable(AppConstants.EXTRA_DATA) as? ChaptersFragment?
         tryOrExit {
             activityComponent?.inject(this)
             mChapterImagesPresenter.onAttach(this)
@@ -103,10 +40,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     override fun initViews() {
         mChaptersFragment?.run {
             currentReadingChapter.let { c ->
-                c?.run {
+                c?.id?.run {
                     Timber.e("----------initViews---------$c---------")
-//                    addChapter(c, { requestChapterImages(c.id!!) })
-                    requestChapterImages(c.id!!)
+                    requestChapterImages(this)
                 }
             }
         }
