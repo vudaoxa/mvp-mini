@@ -13,6 +13,7 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM_HEADER
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.settings.rv.adapters.SettingsRvAdapter
+import net.mfilm.utils.tryOrExit
 import timber.log.Timber
 import javax.inject.Inject
 

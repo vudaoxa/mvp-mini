@@ -104,15 +104,6 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
                 checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
-    override fun tryOrExit(f: (() -> Unit)?) {
-        try {
-            f?.invoke()
-        } catch (e: UninitializedPropertyAccessException) {
-            e.printStackTrace()
-            System.exit(0)
-        }
-    }
-
     override fun showLoading() {
         hideLoading()
         mProgressDialog = showLoadingDialog(this)

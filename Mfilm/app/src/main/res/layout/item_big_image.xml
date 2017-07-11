@@ -9,7 +9,7 @@
         app:failureImageInitScaleType="center"
         app:optimizeDisplay="false" />
 
-    <include layout="@layout/view_image_overlay" />
+    <!--<include layout="@layout/view_image_overlay" />-->
     <!--<com.facebook.drawee.view.SimpleDraweeView-->
     <!--xmlns:fresco="http://schemas.android.com/apk/res-auto"-->
     <!--android:id="@+id/big_image"-->

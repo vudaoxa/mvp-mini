@@ -278,7 +278,7 @@
     </style>
 
     <style name="navy_dark_background" parent="Layout_match">
-        <item name="android:background">@color/navy_blue_dark</item>
+        <item name="android:background">@color/black</item>
     </style>
 
     <style name="VerticalLinearLayout" parent="Layout_wrap">

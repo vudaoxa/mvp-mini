@@ -16,6 +16,7 @@ import net.mfilm.ui.base.error_view.BasePullRefreshFragment
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.categories.rv.CategoriesRvAdapter
 import net.mfilm.utils.IndexTags
+import net.mfilm.utils.tryOrExit
 import timber.log.Timber
 import tr.xip.errorview.ErrorView
 import javax.inject.Inject

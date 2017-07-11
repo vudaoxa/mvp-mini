@@ -32,6 +32,7 @@ import net.mfilm.data.prefs.MangaSources
 import net.mfilm.ui.manga.Filter
 import net.mfilm.ui.manga.NavItem
 import timber.log.Timber
+import java.io.File
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,8 +40,43 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
+fun deleteCache(mContext: Context) {
+    tryIt { deleteDir(mContext.cacheDir) }
+}
+
+private fun deleteDir(dir: File?): Boolean {
+    return dir?.run {
+        if (dir.isDirectory) {
+            val children = dir.list()
+            children.forEach {
+                val success = deleteDir(File(dir, it))
+                if (!success)
+                    return false
+            }
+            dir.delete()
+        } else {
+            dir.delete()
+        }
+    } ?: false
+}
+
+fun tryIt(f: (() -> Unit)? = null) {
+    try {
+        f?.invoke()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
 var mangaSources: MangaSources? = null
 
+fun tryOrExit(f: (() -> Unit)? = null) {
+    try {
+        f?.invoke()
+    } catch (e: UninitializedPropertyAccessException) {
+        e.printStackTrace()
+        System.exit(0)
+    }
+}
 fun initMangaSources(mContext: Context) {
     val titles = mContext.resources.getStringArray(R.array.manga_sources_title)
     val codes = mContext.resources.getStringArray(R.array.manga_sources_code)

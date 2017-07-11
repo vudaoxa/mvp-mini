@@ -1,10 +1,12 @@
 package net.mfilm.ui.chapter_images
 
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.piasy.biv.BigImageViewer
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
 import kotlinx.android.synthetic.main.fragment_chapter_images.*
 import net.mfilm.data.network_retrofit.ChapterImage
@@ -13,6 +15,7 @@ import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.chapter_images.rv.ChapterImagesRvAdapter
 import net.mfilm.ui.chapters.ChaptersMvpView
+import net.mfilm.utils.tryOrExit
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -57,7 +60,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     override fun initRv() {
         rvPager.run {
             layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.HORIZONTAL, false)
-//            addOnPageChangedListener(mPageChangedListener)
+            addOnPageChangedListener(mPageChangedListener)
         }
     }
 
@@ -94,6 +97,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 //                    images.map { it.url!! }.toMutableList(), images.size - 2)
 //        }
 
+        BigImageViewer.prefetch(*(images.map { Uri.parse(it.url) }.toTypedArray()))
         mChapterImagesRvAdapter?.run {
             clear()
             addAll(images)

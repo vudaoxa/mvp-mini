@@ -68,9 +68,6 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
         baseActivity?.setScrollToolbarFlag(info)
     }
 
-    override fun tryOrExit(f: (() -> Unit)?) {
-        baseActivity?.tryOrExit { f?.invoke() }
-    }
     override fun showLoading() {
         baseActivity?.showLoading()
     }

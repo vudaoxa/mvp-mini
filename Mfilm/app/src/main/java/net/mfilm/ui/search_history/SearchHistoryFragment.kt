@@ -20,6 +20,7 @@ import net.mfilm.ui.mangas.search.SearchHistoryMvpPresenter
 import net.mfilm.utils.handler
 import net.mfilm.utils.isVisible
 import net.mfilm.utils.show
+import net.mfilm.utils.tryOrExit
 import timber.log.Timber
 import javax.inject.Inject
 

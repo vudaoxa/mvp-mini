@@ -2,6 +2,8 @@ package net.mfilm
 
 import android.support.annotation.StringRes
 import android.support.multidex.MultiDexApplication
+import com.facebook.imagepipeline.core.ImagePipelineConfig
+import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
 import com.github.piasy.biv.BigImageViewer
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader
 import io.realm.Realm
@@ -63,13 +65,13 @@ class MApplication : MultiDexApplication() {
     }
 
     fun initFresco() {
-//        val config = ImagePipelineConfig.newBuilder(this)
-//                .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
-//                .setResizeAndRotateEnabledForNetwork(true)
-//                .setDownsampleEnabled(true)
-//                .build()
+        val config = ImagePipelineConfig.newBuilder(this)
+                .setProgressiveJpegConfig(SimpleProgressiveJpegConfig())
+                .setResizeAndRotateEnabledForNetwork(true)
+                .setDownsampleEnabled(true)
+                .build()
 //        Fresco.initialize(this, config)
-        BigImageViewer.initialize(FrescoImageLoader.with(this));
+        BigImageViewer.initialize(FrescoImageLoader.with(this, config));
 
     }
     fun showMessage(@AppConstants.TypeToast typeToast: Int, @NotNull message: String) {
