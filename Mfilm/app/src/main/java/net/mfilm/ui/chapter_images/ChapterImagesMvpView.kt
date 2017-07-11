@@ -3,11 +3,13 @@ package net.mfilm.ui.chapter_images
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.MvpView
+import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.ICallbackRv
 
 /**
  * Created by tusi on 5/29/17.
  */
-interface ChapterImagesMvpView : MvpView {
+interface ChapterImagesMvpView : MvpView, ICallbackRv, ICallbackOnClick {
     fun requestChapterImages(chapterId: Int)
     fun onChapterImagesResponse(chapterImagesResponse: ChapterImagesResponse?)
     fun onChapterImagesNull()

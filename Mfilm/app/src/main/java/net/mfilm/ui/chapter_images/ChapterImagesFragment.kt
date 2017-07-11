@@ -1,12 +1,17 @@
 package net.mfilm.ui.chapter_images
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+import kotlinx.android.synthetic.main.fragment_chapter_images.*
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
+import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.base.stack.BaseStackFragment
+import net.mfilm.ui.chapter_images.rv.ChapterImagesRvAdapter
 import net.mfilm.ui.chapters.ChaptersMvpView
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,7 +29,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     @Inject
     lateinit var mChapterImagesPresenter: ChapterImagesMvpPresenter<ChapterImagesMvpView>
-
+    private var mChapterImagesRvAdapter: ChapterImagesRvAdapter<ChapterImage>? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(net.mfilm.R.layout.fragment_chapter_images, container, false)
     }
@@ -38,6 +43,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun initViews() {
+        initRv()
         mChaptersFragment?.run {
             currentReadingChapter.let { c ->
                 c?.id?.run {
@@ -48,6 +54,16 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
+    override fun initRv() {
+        rvPager.run {
+            layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.HORIZONTAL, false)
+//            addOnPageChangedListener(mPageChangedListener)
+        }
+    }
+
+    private val mPageChangedListener = RecyclerViewPager.OnPageChangedListener { p0, p1 ->
+        Timber.e("-----OnPageChangedListener--------------- $p0------ $p1---------------")
+    }
     override fun requestChapterImages(chapterId: Int) {
         mChapterImagesPresenter.requestChapterImages(chapterId)
     }
@@ -58,6 +74,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             cir?.run {
                 cir.data.let { d ->
                     d?.run {
+                        val f = d.filter { it.isImage() }
                         if (d.isNotEmpty()) {
                             buildChapterImages(d)
                         } else onChapterImagesNull()
@@ -72,10 +89,18 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun buildChapterImages(images: List<ChapterImage>) {
-        context?.run {
+//        context?.run {
+//            mChapterImagesPresenter.showFresco(this, mChaptersFragment?.currentReadingChapter,
+//                    images.map { it.url!! }.toMutableList(), images.size - 2)
+//        }
 
-            mChapterImagesPresenter.showFresco(this, mChaptersFragment?.currentReadingChapter,
-                    images.map { it.url!! }.toMutableList(), images.size - 2)
+        mChapterImagesRvAdapter?.run {
+            clear()
+            addAll(images)
+            notifyDataSetChanged()
+        } ?: let {
+            mChapterImagesRvAdapter = ChapterImagesRvAdapter(context, images.toMutableList(), this)
+            rvPager.adapter = mChapterImagesRvAdapter
         }
     }
 
@@ -100,5 +125,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     override fun seekPrevChapter() {
         initViews()
+    }
+
+    override fun onClick(position: Int, event: Int) {
+        Timber.e("---------------------onClick--------------------$position")
     }
 }

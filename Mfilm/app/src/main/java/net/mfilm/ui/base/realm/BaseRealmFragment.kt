@@ -37,7 +37,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     override fun initPagerBtns() {
         var i = 0
         val btnItems = btns.zip(mFilters, { b, f -> SwitchButtonItem(i++, b, f, true) })
-        pagerBtns = SwitchButtons(btnItems, { i -> onPagerSelected(i) })
+        pagerBtns = SwitchButtons(btnItems, { j -> onPagerSelected(j) })
     }
 
     override fun onPagerSelected(i: Int) {

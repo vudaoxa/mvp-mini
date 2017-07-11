@@ -183,6 +183,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         f.run {
             if (fullScreen) {
                 supportActionBar?.hide()
+                mAdView?.show(false)
             } else {
                 setToolbarTitle(f.title)
                 Timber.e("---------mLayoutBtnsInfo.show($info)-------------")
@@ -197,6 +198,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
                 }
                 onSearch(searching)
                 supportActionBar?.show()
+                mAdView?.show(true)
             }
         }
     }
@@ -410,7 +412,6 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
 
     //banner ads
     private var mAdView: AdView? = null
-
     protected fun initBannerAds(mAdView: AdView?) {
         this.mAdView = mAdView
         loadBannerAds(mAdView, adListener)

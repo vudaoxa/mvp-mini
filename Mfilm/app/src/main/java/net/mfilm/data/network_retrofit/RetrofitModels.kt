@@ -2,6 +2,7 @@ package net.mfilm.data.network_retrofit
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import timber.log.Timber
 import java.io.Serializable
 
 /**
@@ -206,7 +207,6 @@ class ChapterDetail : Serializable {
     @SerializedName("previous_chapter")
     @Expose
     var previousChapter: Chapter? = null
-
 }
 
 class ChapterDetailResponse : MResponse() {
@@ -219,6 +219,16 @@ class ChapterImage : Serializable {
     @SerializedName("url")
     @Expose
     var url: String? = null
+
+    fun isImage(): Boolean {
+        val x = url?.run {
+            contains("png", true) || contains("jpg", true) || contains("jpeg", true)
+        } ?: false
+        if (!x) {
+            Timber.e("----isImage-------- $url----------------------")
+        }
+        return x
+    }
 }
 
 class ChapterImagesResponse : MResponse() {

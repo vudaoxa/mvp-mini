@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout_match">
 
-    <com.github.piasy.biv.view.BigImageView
-        android:id="@+id/mBigImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:failureImage="@drawable/ic_defaut_grey"
+    <com.github.piasy.biv.view.BigImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/big_image"
+        style="@style/Layout_match"
+        app:failureImage="@drawable/ic_default_grey"
         app:failureImageInitScaleType="center"
         app:optimizeDisplay="false" />
-</LinearLayout>
+
+    <include layout="@layout/view_image_overlay" />
+    <!--<com.facebook.drawee.view.SimpleDraweeView-->
+    <!--xmlns:fresco="http://schemas.android.com/apk/res-auto"-->
+    <!--android:id="@+id/big_image"-->
+    <!--style="@style/Layout_match"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginTop="0dp"-->
+    <!--fresco:failureImage="@drawable/ic_default_grey"-->
+    <!--fresco:failureImageScaleType="fitXY"-->
+    <!--fresco:placeholderImage="@drawable/ic_default_grey"-->
+    <!--fresco:placeholderImageScaleType="centerCrop"-->
+    <!--fresco:progressBarAutoRotateInterval="1000"-->
+    <!--fresco:progressBarImage="@drawable/ic_loading_image"-->
+    <!--fresco:progressBarImageScaleType="centerInside"-->
+    <!--fresco:retryImageScaleType="centerCrop"-->
+    <!--/>-->
+</FrameLayout>

@@ -68,7 +68,7 @@ class MApplication : MultiDexApplication() {
 //                .setResizeAndRotateEnabledForNetwork(true)
 //                .setDownsampleEnabled(true)
 //                .build()
-//        Fresco.initialize(this)
+//        Fresco.initialize(this, config)
         BigImageViewer.initialize(FrescoImageLoader.with(this));
 
     }

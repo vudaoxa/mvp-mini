@@ -1,20 +1,16 @@
 package net.mfilm.ui.chapter_images
 
 import android.content.Context
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.stfalcon.frescoimageviewer.ImageViewer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import net.mfilm.R
 import net.mfilm.data.DataManager
 import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
-import net.mfilm.ui.chapter_images.views.ImageOverlayView
 import net.mfilm.utils.MDisposableObserver
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -40,49 +36,45 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
         compositeDisposable.add(d)
     }
 
-    fun xx() {
-
-    }
-
     private var imageViewer: ImageViewer? = null
     //    how to add more images to the tail of imageviewer
+//    override fun showFresco(context: Context, chapter: Chapter?, list: MutableList<String>, startPosition: Int) {
+//        imageViewer?.onDismiss()
+//        val builder = ImageViewer.Builder(context, list)
+//        val overlayView = ImageOverlayView(context)
+//        val hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(context.resources)
+//                .setFailureImage(R.drawable.ic_default_grey)
+//                .setProgressBarImage(R.drawable.ic_loading_image)
+//                .setPlaceholderImage(R.drawable.ic_default_grey)
+//
+//        builder.run {
+//            setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+//            setStartPosition(startPosition)
+//            setImageChangeListener { position ->
+//                val text = "${chapter?.name} ${position + 1} / ${list.size}"
+//                Timber.e("--------------OnImageChangeListener-------------$text")
+//                if (position == list.size - 1) {
+//                    Timber.e("---------load next chapter-----------")
+//                    loadMore()
+//                }
+//                if (position == 0) {
+//                    Timber.e("-----------load prev chapter-------")
+//                    loadPrev()
+//                }
+//                overlayView.setShareText(list[position])
+//                overlayView.setDescription(text)
+//            }
+//            setOverlayView(overlayView)
+//            setOnDismissListener {
+//                Timber.e("---------------onDismiss------------------")
+//            }
+//            imageViewer = show()
+//        }
+//    }
+
     override fun showFresco(context: Context, chapter: Chapter?, list: MutableList<String>, startPosition: Int) {
-        imageViewer?.onDismiss()
-        val builder = ImageViewer.Builder(context, list)
-        val overlayView = ImageOverlayView(context)
-        val hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(context.resources)
-                .setFailureImage(R.drawable.ic_defaut_grey)
-                .setProgressBarImage(R.drawable.ic_loading_image)
-                .setPlaceholderImage(R.drawable.ic_defaut_grey)
 
-        builder.run {
-            setCustomDraweeHierarchyBuilder(hierarchyBuilder)
-            setCustomImageRequestBuilder(
-                    ImageViewer.createImageRequestBuilder()
-                            .setPostprocessor(()))
-            setStartPosition(startPosition)
-            setImageChangeListener { position ->
-                val text = "${chapter?.name} ${position + 1} / ${list.size}"
-                Timber.e("--------------OnImageChangeListener-------------$text")
-                if (position == list.size - 1) {
-                    Timber.e("---------load next chapter-----------")
-                    loadMore()
-                }
-                if (position == 0) {
-                    Timber.e("-----------load prev chapter-------")
-                    loadPrev()
-                }
-                overlayView.setShareText(list[position])
-                overlayView.setDescription(text)
-            }
-            setOverlayView(overlayView)
-            setOnDismissListener {
-                Timber.e("---------------onDismiss------------------")
-            }
-            imageViewer = show()
-        }
     }
-
     override fun loadMore() {
         mvpView?.loadMoreOnDemand()
     }
