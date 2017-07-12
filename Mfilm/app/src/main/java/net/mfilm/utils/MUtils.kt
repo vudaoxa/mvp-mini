@@ -200,15 +200,18 @@ var icon_search: IconDrawable? = null
 var icon_share: IconDrawable? = null
 var icon_checked_grey: IconDrawable? = null
 var icon_star: IconDrawable? = null
-var icon_star_grey: IconDrawable? = null
+//var icon_star_grey: IconDrawable? = null
 var icon_star_blue: IconDrawable? = null
-var icon_send: IconDrawable? = null
-var icon_del: IconDrawable? = null
+//var icon_send: IconDrawable? = null
+//var icon_del: IconDrawable? = null
+var icon_left_small: IconDrawable? = null
+var icon_right_small: IconDrawable? = null
 var icon_close: IconDrawable? = null
 var icon_up: IconDrawable? = null
 var icon_down: IconDrawable? = null
 var icon_left: IconDrawable? = null
 var icon_right: IconDrawable? = null
+
 fun initIcons(context: Context) {
     icon_search = IconDrawable(context,
             IoniconsIcons.ion_ios_search_strong).colorRes(R.color.white).actionBarSize()
@@ -220,25 +223,32 @@ fun initIcons(context: Context) {
             IoniconsIcons.ion_ios_star).colorRes(R.color.white).actionBarSize()
     icon_star_blue = IconDrawable(context,
             IoniconsIcons.ion_ios_star).colorRes(R.color.blue).actionBarSize()
-    icon_star_grey = IconDrawable(context,
-            IoniconsIcons.ion_ios_star).colorRes(R.color.grey_60).actionBarSize()
-    icon_send = IconDrawable(context,
-            IoniconsIcons.ion_android_send).colorRes(R.color.white).actionBarSize()
-    icon_del = IconDrawable(context,
-            IoniconsIcons.ion_ios_trash).colorRes(R.color.red).actionBarSize()
+
+    icon_left_small = IconDrawable(context,
+            IoniconsIcons.ion_chevron_left).colorRes(R.color.white).actionBarSize()
+    icon_right_small = IconDrawable(context,
+            IoniconsIcons.ion_chevron_right).colorRes(R.color.white).actionBarSize()
+
+//    icon_star_grey = IconDrawable(context,
+//            IoniconsIcons.ion_ios_star).colorRes(R.color.grey_60).actionBarSize()
+//    icon_send = IconDrawable(context,
+//            IoniconsIcons.ion_android_send).colorRes(R.color.white).actionBarSize()
+//    icon_del = IconDrawable(context,
+//            IoniconsIcons.ion_ios_trash).colorRes(R.color.red).actionBarSize()
     icon_close = IconDrawable(context,
             IoniconsIcons.ion_ios_close_empty).colorRes(R.color.white).actionBarSize()
 
     icon_up = IconDrawable(context,
-            IoniconsIcons.ion_chevron_up).colorRes(R.color.white).sizeDp(200)
+            IoniconsIcons.ion_chevron_up).colorRes(R.color.white).sizeDp(BIG_BTN_SIZE)
     icon_down = IconDrawable(context,
-            IoniconsIcons.ion_chevron_down).colorRes(R.color.white).actionBarSize()
+            IoniconsIcons.ion_chevron_down).colorRes(R.color.white).sizeDp(BIG_BTN_SIZE)
     icon_left = IconDrawable(context,
-            IoniconsIcons.ion_chevron_left).colorRes(R.color.white).actionBarSize()
+            IoniconsIcons.ion_chevron_left).colorRes(R.color.white).sizeDp(BIG_BTN_SIZE)
     icon_right = IconDrawable(context,
-            IoniconsIcons.ion_chevron_right).colorRes(R.color.white).actionBarSize()
+            IoniconsIcons.ion_chevron_right).colorRes(R.color.white).sizeDp(BIG_BTN_SIZE)
 }
 
+const val BIG_BTN_SIZE = 60
 fun View?.enable(enable: Boolean) {
     this?.run {
         isEnabled = enable

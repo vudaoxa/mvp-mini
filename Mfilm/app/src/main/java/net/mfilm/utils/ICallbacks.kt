@@ -29,9 +29,11 @@ import tr.xip.errorview.ErrorView
  */
 interface ICallbackPageChange {
     var currentPage: Int
+    fun initPageChange()
 }
 
 interface ICallbackViewContinue {
+    fun initBtnViewContinue()
     fun showBtnViewContinue()
 }
 

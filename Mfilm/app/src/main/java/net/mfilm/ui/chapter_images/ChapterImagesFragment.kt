@@ -60,10 +60,18 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     override fun initViews() {
         initRv()
         initBtnShare()
+        initAds()
+        initBtnViewContinue()
+
         requestChapterImages()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mChapterImagesPresenter.onDetach()
+    }
     override fun initRv() {
+        context ?: return
         rv_pager_horizontal.run {
             mLayoutWrapper = LinearLayoutManagerWrapper(context, LinearLayoutManager.HORIZONTAL, false)
             layoutManager = mLayoutWrapper
@@ -71,6 +79,24 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
+    fun next() {
+        next = true
+        loadMoreOnDemand()
+    }
+
+    fun prev() {
+        next = false
+        loadPrevOnDemand()
+    }
+
+    override fun initBtnViewContinue() {
+        btn_continue.setOnClickListener {
+            Timber.e("-----------btn_continue---------------------------")
+            if (next) {
+                loadMoreOnDemand()
+            } else loadPrevOnDemand()
+        }
+    }
     override fun showBtnViewContinue() {
         mLayoutWrapper?.run {
             val icon = if (!next) {
@@ -89,10 +115,21 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
+    override fun initPageChange() {
+        currentPage = 0
+        mChapterImagesRvAdapter?.run {
+            tv_page_count.text = "${1}/$itemCount"
+        }
+        btn_left.setImageDrawable(icon_left_small)
+        btn_right.setImageDrawable(icon_right_small)
+        btn_left.setOnClickListener { prev() }
+        btn_right.setOnClickListener { next() }
+    }
     private var next = false
     private val mPageChangedListener = RecyclerViewPager.OnPageChangedListener { p0, p1 ->
         Timber.e("-----OnPageChangedListener--------------- $p0------ $p1---------------")
         mChapterImagesRvAdapter?.run {
+            currentPage = p1
             val itemCount = itemCount
             tv_page_count.text = "${p1 + 1}/$itemCount"
             when (p1) {
@@ -111,7 +148,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
-    override fun requestChapterImages() {
+    fun request() {
         mChaptersFragment?.run {
             currentReadingChapter.let { c ->
                 c?.run {
@@ -121,6 +158,14 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
                 }
             }
         }
+    }
+
+    private var countRequestChapterImages = 0
+    override fun requestChapterImages() {
+        btn_continue.show(false)
+        if (countRequestChapterImages++ > 0) {
+            mAds(null, { request() })
+        } else request()
     }
 
     override fun requestChapterImages(chapterId: Int) {
@@ -133,8 +178,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             cir?.run {
                 cir.data.let { d ->
                     d?.run {
-                        if (d.isNotEmpty()) {
-                            buildChapterImages(d)
+                        val f = d.filter { it.isImage() }
+                        if (f.isNotEmpty()) {
+                            buildChapterImages(f)
                         } else onChapterImagesNull()
                     } ?: let { onChapterImagesNull() }
                 }
@@ -153,10 +199,14 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             clear()
             addAll(images)
             notifyDataSetChanged()
+            if (!next && countRequestChapterImages > 0) {
+                rv_pager_horizontal.scrollToPosition(itemCount - 1)
+            }
         } ?: let {
             mChapterImagesRvAdapter = ChapterImagesRvAdapter(context, images.toMutableList(), this, this)
             rv_pager_horizontal.adapter = mChapterImagesRvAdapter
         }
+        initPageChange()
     }
 
     fun webtoon() {
@@ -195,11 +245,11 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun seekNextChapter() {
-        initViews()
+        requestChapterImages()
     }
 
     override fun seekPrevChapter() {
-        initViews()
+        requestChapterImages()
     }
 
     override fun onRvFailure(position: Int) {

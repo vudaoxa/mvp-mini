@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.util.SparseArrayCompat
 import com.google.android.gms.ads.*
 import net.mfilm.R
+import net.mfilm.di.AppContext
 import net.mfilm.utils.rand
 import timber.log.Timber
 
@@ -25,7 +26,7 @@ fun ads(mInterstitialAd: InterstitialAd?, f: (() -> Unit)? = null) {
     }
 }
 
-fun initAds(context: Context) {
+fun initAds(@AppContext context: Context) {
     context.apply {
         MobileAds.initialize(this, getString(R.string.banner_ad_unit_id))
         MobileAds.initialize(this, getString(R.string.inter_ad_unit_id))
@@ -125,6 +126,7 @@ fun requestNewBanner(mAdView: AdView?) {
 private fun showInterAds(mInterstitialAd: InterstitialAd?): Boolean {
     return mInterstitialAd?.run {
         val loaded = isLoaded
+        Timber.e("---showInterAds-----loaded-------$loaded---------------------")
         if (loaded)
             show()
         else

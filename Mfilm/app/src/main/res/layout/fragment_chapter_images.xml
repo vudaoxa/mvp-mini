@@ -20,9 +20,7 @@
 
     <ImageButton
         android:id="@+id/btn_continue"
-        style="@style/ToolBar_Btn"
-        android:layout_width="@dimen/dimen200"
-        android:layout_height="@dimen/dimen200"
+        style="@style/Btn_ripple"
         android:layout_gravity="center"
         android:visibility="gone" />
 </FrameLayout>

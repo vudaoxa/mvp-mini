@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/viewer_footer"
-    style="@style/Layout_match_wrap"
+    style="@style/LinearLayout_center_vertical"
+    android:layout_width="match_parent"
     android:layout_gravity="bottom"
     android:background="@color/grey_translucent"
     android:visibility="gone">
 
+    <ImageButton
+        android:id="@+id/btn_left"
+        style="@style/ToolBar_Btn" />
     <TextView
         android:id="@+id/tv_page_count"
         style="@style/TextStyle.Sans.Regular.14.manga_intro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="0" />
-</LinearLayout>
+        android:layout_centerInParent="true" />
+
+    <ImageButton
+        android:id="@+id/btn_right"
+        style="@style/ToolBar_Btn"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>
