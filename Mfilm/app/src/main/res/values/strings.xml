@@ -19,6 +19,10 @@
     </string-array>
     <string name="enable_history">Enable history</string>
     <string name="enable_search_history">Enable search history</string>
+    <string name="webtoon_title">Webtoon detected</string>
+    <string name="webtoon_content">We have detected that you"'"re reading a webtoon
+    (vertical-layout comics). Do you want to read using Webtoon-optimized mode for the best
+    experience? (This message can be turned off in Settings)</string>
     <!--<string name=""></string>-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

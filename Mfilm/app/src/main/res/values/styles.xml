@@ -177,11 +177,13 @@
     </style>
 
     <!--=========================button styles========================-->
-    <style name="MyButton" parent="Theme.AppCompat.Light">
+    <style name="MButton" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/transparent</item>
+    </style>
+
+    <style name="MyButton" parent="MButton">
         <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <item name="colorButtonNormal">@color/colorPrimary</item>
-
         <item name="android:layout_height">@dimen/dimen48</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:paddingLeft">@dimen/dimen5</item>
@@ -379,7 +381,7 @@
 
     <style name="AppTheme.Base.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="SplashTheme">
+    <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
     <!--=========================end filmy========================-->

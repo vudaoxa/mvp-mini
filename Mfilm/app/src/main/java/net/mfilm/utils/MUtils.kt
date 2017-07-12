@@ -3,6 +3,7 @@ package net.mfilm.utils
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -40,6 +41,16 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
+fun sendShareIntent(context: Context, text: String?) {
+    text ?: return
+    val txt = text.trim()
+    if (txt.isEmpty()) return
+    val sendIntent = Intent()
+    sendIntent.action = Intent.ACTION_SEND
+    sendIntent.putExtra(Intent.EXTRA_TEXT, txt)
+    sendIntent.type = "text/plain"
+    context.startActivity(sendIntent)
+}
 fun deleteCache(mContext: Context) {
     tryIt { deleteDir(mContext.cacheDir) }
 }
@@ -60,11 +71,12 @@ private fun deleteDir(dir: File?): Boolean {
     } ?: false
 }
 
-fun tryIt(f: (() -> Unit)? = null) {
+fun tryIt(f: (() -> Unit)? = null, fCatch: (() -> Unit)? = null) {
     try {
         f?.invoke()
     } catch (e: Exception) {
         e.printStackTrace()
+        fCatch?.invoke()
     }
 }
 var mangaSources: MangaSources? = null
@@ -193,6 +205,10 @@ var icon_star_blue: IconDrawable? = null
 var icon_send: IconDrawable? = null
 var icon_del: IconDrawable? = null
 var icon_close: IconDrawable? = null
+var icon_up: IconDrawable? = null
+var icon_down: IconDrawable? = null
+var icon_left: IconDrawable? = null
+var icon_right: IconDrawable? = null
 fun initIcons(context: Context) {
     icon_search = IconDrawable(context,
             IoniconsIcons.ion_ios_search_strong).colorRes(R.color.white).actionBarSize()
@@ -212,6 +228,15 @@ fun initIcons(context: Context) {
             IoniconsIcons.ion_ios_trash).colorRes(R.color.red).actionBarSize()
     icon_close = IconDrawable(context,
             IoniconsIcons.ion_ios_close_empty).colorRes(R.color.white).actionBarSize()
+
+    icon_up = IconDrawable(context,
+            IoniconsIcons.ion_chevron_up).colorRes(R.color.white).sizeDp(200)
+    icon_down = IconDrawable(context,
+            IoniconsIcons.ion_chevron_down).colorRes(R.color.white).actionBarSize()
+    icon_left = IconDrawable(context,
+            IoniconsIcons.ion_chevron_left).colorRes(R.color.white).actionBarSize()
+    icon_right = IconDrawable(context,
+            IoniconsIcons.ion_chevron_right).colorRes(R.color.white).actionBarSize()
 }
 
 fun View?.enable(enable: Boolean) {
@@ -220,6 +245,9 @@ fun View?.enable(enable: Boolean) {
     }
 }
 
+fun View?.toggleShow() {
+    show(!isVisible())
+}
 fun View?.show(show: Boolean, duration: Long? = null, f: (() -> Unit)? = null): CountDownTimer? {
     this?.run {
         if (show) {

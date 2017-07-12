@@ -28,4 +28,8 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
+
+    <style name="MButton" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
 </resources>

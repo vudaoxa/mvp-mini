@@ -7,15 +7,19 @@ import android.view.ViewGroup
 import net.mfilm.R
 import net.mfilm.ui.base.rv.adapters.BaseRvAdapter
 import net.mfilm.utils.ICallbackOnClick
+import net.mfilm.utils.ICallbackRvFailure
 
 /**
  * Created by MRVU on 7/11/2017.
  */
-class ChapterImagesRvAdapter<V : Any?>(mContext: Context, mData: MutableList<V>?, mCallbackOnClick: ICallbackOnClick)
+class ChapterImagesRvAdapter<V : Any?>(mContext: Context,
+                                       mData: MutableList<V>?,
+                                       mCallbackOnClick: ICallbackOnClick,
+                                       val mICallbackRvFailure: ICallbackRvFailure? = null)
     : BaseRvAdapter<V>(mContext, mData, mCallbackOnClick) {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.item_big_image, parent, false)
-        return ChapterImagesItemViewHolder(mContext, viewType, view, mCallbackOnClick)
+        return ChapterImagesItemViewHolder(mContext, viewType, view, mCallbackOnClick, mICallbackRvFailure)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {

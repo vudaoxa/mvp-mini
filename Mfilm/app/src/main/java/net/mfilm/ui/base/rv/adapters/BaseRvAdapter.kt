@@ -30,6 +30,14 @@ abstract class BaseRvAdapter<V : Any?>(val mContext: Context, var mData: Mutable
         return true
     }
 
+    override fun removeAt(position: Int) {
+        mData?.run {
+            if (position < size) {
+                removeAt(position)
+                notifyItemRemoved(position)
+            }
+        }
+    }
     override fun removeAll(elements: List<V>?): Boolean {
         return elements?.run {
             mData?.removeAll(this) ?: false

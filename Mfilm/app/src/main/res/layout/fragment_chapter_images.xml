@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/navy_dark_background">
 
     <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-        android:id="@+id/rvPager"
+        android:id="@+id/rv_pager_horizontal"
         style="@style/Layout_match"
         android:clipToPadding="false"
         app:rvp_singlePageFling="true"
         app:rvp_triggerOffset="0.1" />
-</LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_vertical"
+        style="@style/Layout_match_wrap" />
+
+    <include layout="@layout/viewer_header" />
+
+    <include layout="@layout/viewer_footer" />
+
+    <ImageButton
+        android:id="@+id/btn_continue"
+        style="@style/ToolBar_Btn"
+        android:layout_width="@dimen/dimen200"
+        android:layout_height="@dimen/dimen200"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+</FrameLayout>

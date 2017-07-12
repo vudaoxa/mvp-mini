@@ -27,6 +27,19 @@ import tr.xip.errorview.ErrorView
 /**
  * Created by tusi on 5/16/17.
  */
+interface ICallbackPageChange {
+    var currentPage: Int
+}
+
+interface ICallbackViewContinue {
+    fun showBtnViewContinue()
+}
+
+interface ICallbackRvFailure {
+    fun onRvFailure(position: Int)
+}
+
+interface ICallback
 interface ICallbackPagerBtns {
     val layoutPagerBtns: View
     var pagerBtns: SwitchButtons?
@@ -112,6 +125,7 @@ interface IRV<V : Any?> {
     fun removeAll(elements: List<V>?): Boolean
     fun recoverAll(elements: List<V>?): Boolean
     fun addAll(items: List<V>?): Boolean
+    fun removeAt(position: Int)
 }
 
 interface ISelectable {

@@ -113,7 +113,7 @@ android {
         compile "com.github.piasy:ProgressPieIndicator:$rootProject.bigImageViewerVersion"
 
         compile "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.rvViewPagerVersion"
-        compile "com.github.stfalcon:frescoimageviewer:$rootProject.frescoViewerVersion"
+//        compile "com.github.stfalcon:frescoimageviewer:$rootProject.frescoViewerVersion"
         compile "com.google.android.gms:play-services-analytics:$rootProject.playServicesVersion"
         compile "com.google.firebase:firebase-ads:$rootProject.playServicesVersion"
     }
