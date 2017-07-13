@@ -250,6 +250,21 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         mMainPresenter.onDetach()
     }
 
+    //    override fun onTouchEvent(event: MotionEvent?): Boolean {
+//        Timber.e("----onTouchEvent-----------------$event-------------------------------")
+//        val gestureDetector = GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
+//            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+//                tryIt{
+//                    val detector = SwipeDetector(e1, e2, velocityX, velocityY)
+//                    Timber.e("------detector-----------${detector.isRightSwipe}----------------------------------")
+//                }
+//                return true
+//            }
+//
+//        })
+//        gestureDetector.onTouchEvent(event)
+//        return super.onTouchEvent(event)
+//    }
     companion object {
         fun getStartIntent(splashActivity: Activity): Intent {
             val intent = Intent(splashActivity, MainActivity::class.java)

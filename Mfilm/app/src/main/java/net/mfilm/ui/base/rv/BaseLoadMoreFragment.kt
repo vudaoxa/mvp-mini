@@ -21,8 +21,8 @@ abstract class BaseLoadMoreFragment : BasePullRefreshFragment(), ICallbackLoadMo
     }
 
     override fun showErrorView(show: Boolean, f: (() -> Unit)?): Boolean {
+        hideLoading()
         fun show(): Boolean {
-            hideLoading()
             Timber.e("------------showErrorView--------- $errorViewLoadMore----------------------")
             errorViewLoadMore?.show(show) ?: return super.showErrorView(show, f)
             return true

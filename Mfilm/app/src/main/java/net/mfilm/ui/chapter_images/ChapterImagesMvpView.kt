@@ -1,5 +1,6 @@
 package net.mfilm.ui.chapter_images
 
+import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.MvpView
@@ -11,6 +12,7 @@ import net.mfilm.utils.*
 interface ChapterImagesMvpView : MvpView, ICallbackRv,
         ICallbackOnClick, ICallbackRvFailure, ICallbackPageChange,
         ICallbackViewContinue {
+    fun initPagingState(chapter: Chapter)
     fun requestChapterImages()
     fun initBtnShare()
     fun requestChapterImages(chapterId: Int)

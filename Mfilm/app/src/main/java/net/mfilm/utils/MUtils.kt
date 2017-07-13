@@ -248,7 +248,7 @@ fun initIcons(context: Context) {
             IoniconsIcons.ion_chevron_right).colorRes(R.color.white).sizeDp(BIG_BTN_SIZE)
 }
 
-const val BIG_BTN_SIZE = 60
+const val BIG_BTN_SIZE = 50
 fun View?.enable(enable: Boolean) {
     this?.run {
         isEnabled = enable

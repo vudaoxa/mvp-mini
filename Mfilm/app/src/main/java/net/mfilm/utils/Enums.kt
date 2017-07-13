@@ -22,3 +22,7 @@ enum class IndexTags {
 enum class DialogMenus {
     SHARE, FAVORITES
 }
+
+enum class PagingState {
+    SINGLE, FIRST, MIDDLE, LAST
+}

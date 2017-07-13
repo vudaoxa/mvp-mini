@@ -14,6 +14,8 @@ interface ChaptersMvpView : MvpView, ICallbackOnClick, ICallbackRv {
     fun requestChapters()
     fun onChaptersResponse(chaptersResponse: ChaptersResponse?)
     fun onChaptersNull()
+
+    fun obtainChapterPagingState(prevPageUrl: String? = null, nextPageUrl: String? = null, chapters: List<Chapter>)
     fun buildChapters(chapters: List<Chapter>)
     var currentReadingPosition: Int?
     var prevPosition: Int?

@@ -1,9 +1,9 @@
 package net.mfilm.ui.base.rv.holders
 
+//import net.mfilm.ui.manga.SelectableItem
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
-//import net.mfilm.ui.manga.SelectableItem
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackOnLongClick
 
@@ -35,6 +35,16 @@ abstract class BaseItemViewHolder(protected val mContext: Context, val type: Int
             }
         }
     }
+
+    //    val gestureDetector = GestureDetectorCompat(mContext, object : GestureDetector.SimpleOnGestureListener() {
+//        override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+//            tryIt{
+//                val detector = SwipeDetector(e1, e2, velocityX, velocityY)
+//                Timber.e("------detector-----------${detector.isRightSwipe}----------------------------------")
+//            }
+//            return true
+//        }
+//    })
     abstract fun bindView(obj: Any?, position: Int)
 }
 

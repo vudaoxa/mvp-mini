@@ -8,30 +8,44 @@ import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import com.github.piasy.biv.BigImageViewer
+import com.joanzapata.iconify.IconDrawable
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+import kotlinx.android.synthetic.main.error_view.*
 import kotlinx.android.synthetic.main.fragment_chapter_images.*
 import kotlinx.android.synthetic.main.viewer_footer.*
 import kotlinx.android.synthetic.main.viewer_header.*
 import net.mfilm.R
+import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
+import net.mfilm.ui.base.error_view.BaseErrorViewFragment
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
-import net.mfilm.ui.base.stack.BaseStackFragment
 import net.mfilm.ui.chapter_images.rv.ChapterImagesRvAdapter
 import net.mfilm.ui.chapters.ChaptersMvpView
 import net.mfilm.utils.*
 import timber.log.Timber
+import tr.xip.errorview.ErrorView
 import javax.inject.Inject
 
 /**
  * Created by tusi on 5/29/17.
  */
-class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = null) : BaseStackFragment(), ChapterImagesMvpView {
+class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = null)
+    : BaseErrorViewFragment(), ChapterImagesMvpView {
     companion object {
         fun newInstance(mChaptersFragment: Any?): ChapterImagesFragment {
             val fragment = ChapterImagesFragment(mChaptersFragment as? ChaptersMvpView?)
             return fragment
         }
+    }
+
+    override val errorView: ErrorView?
+        get() = error_view
+    override val subTitle: Int?
+        get() = R.string.failed_to_load
+
+    override fun onErrorViewDemand(errorView: ErrorView?) {
+        request()
     }
 
     @Inject
@@ -58,6 +72,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun initViews() {
+        super.initViews()
         initRv()
         initBtnShare()
         initAds()
@@ -70,6 +85,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         super.onDestroy()
         mChapterImagesPresenter.onDetach()
     }
+
     override fun initRv() {
         context ?: return
         rv_pager_horizontal.run {
@@ -97,14 +113,30 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             } else loadPrevOnDemand()
         }
     }
+
+    //    override fun showBtnViewContinue() {
+//        mLayoutWrapper?.run {
+//            val icon = if (!next) {
+//                if (orientation == LinearLayoutManager.HORIZONTAL) icon_left else icon_up
+//            } else {
+//                if (orientation == LinearLayoutManager.HORIZONTAL) icon_right else icon_down
+//            }
+//            btn_continue.show(true)
+//            btn_continue.setImageDrawable(icon)
+//        }
+//    }
     override fun showBtnViewContinue() {
         mLayoutWrapper?.run {
-            val icon = if (!next) {
-                if (orientation == LinearLayoutManager.HORIZONTAL) icon_left else icon_up
+            val icon: IconDrawable?
+            val show: Boolean
+            if (!next) {
+                icon = if (orientation == LinearLayoutManager.HORIZONTAL) icon_left else icon_up
+                show = btn_left.isEnabled
             } else {
-                if (orientation == LinearLayoutManager.HORIZONTAL) icon_right else icon_down
+                icon = if (orientation == LinearLayoutManager.HORIZONTAL) icon_right else icon_down
+                show = btn_right.isEnabled
             }
-            btn_continue.show(true)
+            btn_continue.show(show)
             btn_continue.setImageDrawable(icon)
         }
     }
@@ -125,6 +157,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         btn_left.setOnClickListener { prev() }
         btn_right.setOnClickListener { next() }
     }
+
     private var next = false
     private val mPageChangedListener = RecyclerViewPager.OnPageChangedListener { p0, p1 ->
         Timber.e("-----OnPageChangedListener--------------- $p0------ $p1---------------")
@@ -132,6 +165,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             currentPage = p1
             val itemCount = itemCount
             tv_page_count.text = "${p1 + 1}/$itemCount"
+            if (Math.abs(p0 - p1) != 1) return@run
             when (p1) {
                 0 -> {
                     next = false
@@ -148,15 +182,23 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
-    fun request() {
+    private fun request() {
         mChaptersFragment?.run {
             currentReadingChapter.let { c ->
                 c?.run {
                     Timber.e("----------initViews---------$c---------")
                     requestChapterImages(c.id!!)
                     tv_chapter_name.text = c.name
-                }
+                    initPagingState(c)
+                } ?: let { onFailure() }
             }
+        }
+    }
+
+    override fun initPagingState(chapter: Chapter) {
+        chapter.run {
+            btn_left.enable(pagingState !in listOf<Any?>(PagingState.FIRST, PagingState.SINGLE))
+            btn_right.enable(pagingState !in listOf<Any?>(PagingState.LAST, PagingState.SINGLE))
         }
     }
 
@@ -164,7 +206,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     override fun requestChapterImages() {
         btn_continue.show(false)
         if (countRequestChapterImages++ > 0) {
-            mAds(null, { request() })
+            interAds(null, { request() })
         } else request()
     }
 
@@ -193,15 +235,17 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun buildChapterImages(images: List<ChapterImage>) {
+        Timber.e("-----buildChapterImages------------------${images.size}------------------------------")
         mChapterImagesPresenter.requestBitmapSize(images.getOrNull(3)?.url)
         BigImageViewer.prefetch(*(images.map { Uri.parse(it.url) }.toTypedArray()))
         mChapterImagesRvAdapter?.run {
             clear()
             addAll(images)
             notifyDataSetChanged()
-            if (!next && countRequestChapterImages > 0) {
-                rv_pager_horizontal.scrollToPosition(itemCount - 1)
-            }
+            handler({
+                val x = if (!next && countRequestChapterImages > 0) itemCount - 1 else 0
+                rv_pager_horizontal.scrollToPosition(x)
+            })
         } ?: let {
             mChapterImagesRvAdapter = ChapterImagesRvAdapter(context, images.toMutableList(), this, this)
             rv_pager_horizontal.adapter = mChapterImagesRvAdapter
@@ -214,11 +258,6 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             orientation = LinearLayoutManager.VERTICAL
             rv_pager_horizontal.requestLayout()
         }
-//        rv_pager_horizontal.show(false)
-//        rv_vertical.run {
-//            adapter = mChapterImagesRvAdapter
-//            show(true)
-//        }
     }
 
     override fun onBitmapSizeResponse(webtoon: Boolean) {
@@ -229,6 +268,11 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
+    override fun isDataEmpty(): Boolean {
+        return mChapterImagesRvAdapter?.run {
+            itemCount == 0
+        } ?: true
+    }
     override fun loadMoreOnDemand() {
         mChaptersFragment?.run {
             loadMoreOnDemand(this@ChapterImagesFragment)
@@ -260,5 +304,17 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         Timber.e("---------------------onClick--------------------$position")
         viewer_header.toggleShow()
         viewer_footer.toggleShow()
+        mChapterImagesRvAdapter?.run {
+            when (position) {
+                0 -> {
+                    if (btn_left.isEnabled)
+                        btn_continue.toggleShow()
+                }
+                itemCount - 1 -> {
+                    if (btn_right.isEnabled)
+                        btn_continue.toggleShow()
+                }
+            }
+        }
     }
 }

@@ -168,9 +168,12 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         set(value) {
             mCategory = value
         }
+    private var dataEnd = false
     override var isDataEnd: Boolean
-        get() = !rv.isVisible()
-        set(value) {}
+        get() = dataEnd
+        set(value) {
+            dataEnd = value
+        }
 
     @Inject
     lateinit var mMangasPresenter: MangasMvpPresenter<MangasMvpView>
@@ -243,7 +246,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     override fun initPagerBtns() {
         var i = 0
         val btnItems = btns.zip(mFilters, { b, f -> SwitchButtonItem(i++, b, f, true) })
-        pagerBtns = SwitchButtons(btnItems, { i -> onPagerSelected(i) })
+        pagerBtns = SwitchButtons(btnItems, { j -> onPagerSelected(j) })
     }
 
     override fun onPagerSelected(i: Int) {
@@ -262,10 +265,9 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     }
 
     override fun isDataEmpty(): Boolean {
-        mMangasRvAdapter?.run {
+        return mMangasRvAdapter?.run {
             itemCount == 0
-        }
-        return true
+        } ?: true
     }
 
     override fun initRv() {
@@ -276,12 +278,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
             setupOnLoadMore(this, mCallBackLoadMore)
         }
     }
-
-//    override fun initSpnFilters() {
-//        val banksAdapter = ArrayAdapter(activity, R.layout.item_spn_filter, mFilters.map { getString(it.resId) })
-//        spn_filter.setAdapter(banksAdapter)
-//        spn_filter.setOnItemSelectedListener(spnFilterTracker)
-//    }
 
     override fun toggleFav(manga: Manga): Boolean {
         return mMangasPresenter.toggleFav(manga)
@@ -315,7 +311,6 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
     override fun attachSearchHistoryFragment() {
         attachChildFragment(searchHistoryContainerView, searchHistoryContainerId, SearchHistoryFragment.newInstance())
     }
-
 
     override fun requestMangas() {
         Timber.e("---------------requestMangas------ $pagerPosition--------------------")
@@ -371,7 +366,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
             mMangasRvAdapter = MangasRvAdapter(context, mangas.toMutableList(), this, this)
             rv.adapter = mMangasRvAdapter
         }
-        mAds(page++)
+        interAds(page++)
     }
 
     override fun onLoadMore() {
@@ -412,7 +407,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         mMangasRvAdapter?.mData?.run {
             val manga = this[mPosition]
             manga.onClicked {
-                mAds(null, { action() })
+                interAds(null, { action() })
             }
         }
     }
@@ -433,6 +428,7 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
             }
         }
     }
+
     override fun onLongClick(position: Int, event: Int) {
         Timber.e("---------------------onLongClick--------------------$position")
         mMangasRvAdapter?.mData?.run {

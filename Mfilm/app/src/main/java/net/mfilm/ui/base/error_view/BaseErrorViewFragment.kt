@@ -36,16 +36,16 @@ abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
     }
 
     override fun showErrorView(show: Boolean, f: (() -> Unit)?): Boolean {
+        hideLoading()
+        Timber.e("-----showErrorView---1--$show--------$errorView---------------")
         fun show() {
-            hideLoading()
+            Timber.e("-----showErrorView--2---$show--------$errorView---------------")
             errorView?.show(show)
         }
         if (show) {
-            if (isDataEmpty()) {
-                show()
-                //don't show super onFailure
-                return true
-            }
+            val x = isDataEmpty()
+            if (x) show()
+            return x
         } else {
             //hide error
             show()

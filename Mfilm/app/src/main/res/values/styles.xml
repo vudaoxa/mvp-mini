@@ -265,11 +265,12 @@
     </style>
 
     <style name="Btn_ripple">
-        <item name="android:layout_width">@dimen/dimen124</item>
-        <item name="android:layout_height">@dimen/dimen124</item>
+        <item name="android:layout_width">@dimen/dimen70</item>
+        <item name="android:layout_height">@dimen/dimen70</item>
         <item name="android:gravity">center</item>
         <item name="android:foreground">@drawable/main_background</item>
-        <item name="android:padding">@dimen/dimen15</item>
+        <item name="android:background">@color/grey_translucent</item>
+        <item name="android:padding">@dimen/dimen5</item>
     </style>
     <style name="default_background" parent="Layout_match">
         <!--<item name="android:background">?android:windowBackground</item>-->

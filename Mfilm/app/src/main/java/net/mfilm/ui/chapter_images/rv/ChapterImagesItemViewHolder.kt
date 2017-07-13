@@ -10,7 +10,6 @@ import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.ui.base.rv.holders.BaseItemViewHolder
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackRvFailure
-import net.mfilm.utils.handler
 import net.mfilm.utils.tryIt
 import timber.log.Timber
 import java.io.File
@@ -24,22 +23,19 @@ class ChapterImagesItemViewHolder(mContext: Context, type: Int, itemView: View,
                                   val mCallbackRvFailure: ICallbackRvFailure? = null)
     : BaseItemViewHolder(mContext, type, itemView, mCallbackOnclick) {
     override fun bindView(obj: Any?, position: Int) {
-        handler({
-            if (obj is ChapterImage) {
-                itemView.run {
-                    Timber.e("----onBindViewHolder---------$position-----${obj.url}-------------------------------")
-                    big_image.run {
-                        tryIt({ showImage(Uri.parse(obj.url)) }, {
-                            mCallbackRvFailure?.onRvFailure(position)
-                        })
-                        setProgressIndicator(ProgressPieIndicator())
-                        setImageLoaderCallback(mImageLoaderCallback)
-                        setOnClickListener { mCallbackOnClick?.onClick(position, type) }
-                    }
+        if (obj is ChapterImage) {
+            itemView.run {
+                Timber.e("----onBindViewHolder---------$position-----${obj.url}-------------------------------")
+                big_image.run {
+                    tryIt({ showImage(Uri.parse(obj.url)) }, {
+                        mCallbackRvFailure?.onRvFailure(position)
+                    })
+                    setProgressIndicator(ProgressPieIndicator())
+                    setImageLoaderCallback(mImageLoaderCallback)
+                    setOnClickListener { mCallbackOnClick?.onClick(position, type) }
                 }
             }
-        }, 250)
-
+        }
     }
 
     val mImageLoaderCallback = object : ImageLoader.Callback {

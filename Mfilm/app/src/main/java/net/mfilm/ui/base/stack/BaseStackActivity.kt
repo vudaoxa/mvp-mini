@@ -174,7 +174,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         f.run {
             if (fullScreen) {
                 supportActionBar?.hide()
-                mAdView?.show(false)
+//                mAdView?.show(false)
             } else {
                 setToolbarTitle(f.title)
                 Timber.e("---------mLayoutBtnsInfo.show($info)-------------")
@@ -189,7 +189,7 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
                 }
                 onSearch(searching)
                 supportActionBar?.show()
-                mAdView?.show(true)
+//                mAdView?.show(true)
             }
         }
     }

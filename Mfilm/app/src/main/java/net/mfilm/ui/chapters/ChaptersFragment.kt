@@ -18,10 +18,7 @@ import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.ui.chapters.rv.ChaptersRvAdapter
 import net.mfilm.ui.manga_info.MangaInfoMvpView
-import net.mfilm.utils.AppConstants
-import net.mfilm.utils.LIMIT
-import net.mfilm.utils.handler
-import net.mfilm.utils.tryOrExit
+import net.mfilm.utils.*
 import timber.log.Timber
 import tr.xip.errorview.ErrorView
 import java.io.Serializable
@@ -180,17 +177,30 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         mChaptersPresenter.requestChapters(manga.id!!, LIMIT, page)
     }
 
+    override fun obtainChapterPagingState(prevPageUrl: String?, nextPageUrl: String?, chapters: List<Chapter>) {
+        val prev = prevPageUrl == null
+        val next = nextPageUrl == null
+        chapters.run {
+            if (prev) first().pagingState = PagingState.FIRST
+            if (next) last().pagingState = PagingState.LAST
+            if (prev && next) {
+                first().pagingState = PagingState.SINGLE
+                last().pagingState = PagingState.SINGLE
+            }
+        }
+    }
     override fun onChaptersResponse(chaptersResponse: ChaptersResponse?) {
         hideLoading()
         chaptersResponse.let { cr ->
             cr?.run {
                 cr.chapters.let { cs ->
                     cs?.run {
-                        isDataEnd = TextUtils.isEmpty(nextPageUrl)
+                        isDataEnd = TextUtils.isEmpty(cs.nextPageUrl)
                         cs.data.let { dt ->
                             dt?.run {
                                 if (dt.isNotEmpty()) {
                                     buildChapters(dt)
+                                    obtainChapterPagingState(cs.prevPageUrl, cs.nextPageUrl, dt)
                                 } else onChaptersNull()
                             } ?: let { onChaptersNull() }
                         }
@@ -303,7 +313,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                 seekNextChapter()
             } ?: let {
                 Timber.e("--------------chapterImagesFragment null-------------------")
-                mAds(page)
+                interAds(page)
             }
         }, 250)
     }

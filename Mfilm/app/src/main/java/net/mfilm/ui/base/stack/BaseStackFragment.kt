@@ -152,13 +152,32 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
     }
 
     protected fun initAds() {
-        mInterAd = initInterAds(context, adListener)
+        adListener = object : IAdListener() {
+            override fun fClosed() {
+                requestNewInterstitial(mInterAd)
+                //to avoid onSaveInstantState exception
+                handler({
+                    action?.invoke()
+                })
+            }
+
+            override fun fFailedToLoaded() {
+
+            }
+
+            override fun fLoaded() {
+
+            }
+        }
+        adListener?.run {
+            mInterAd = initInterAds(context, this)
+        }
     }
 
-    protected fun mAds(page: Int? = null, f: (() -> Unit)? = null) {
+    protected fun interAds(page: Int? = null, f: (() -> Unit)? = null) {
         action = f
         page?.run {
-            Timber.e("----mAds------------page--------$page--------")
+            Timber.e("----interAds------------page--------$page--------")
             if (this % PAGES_PER_AD == 0)
                 ads(f)
         } ?: let {
@@ -170,21 +189,22 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
         ads(mInterAd, f)
     }
 
-    private val adListener = object : IAdListener() {
-        override fun fClosed() {
-            requestNewInterstitial(mInterAd)
-            //to avoid onSaveInstantState exception
-            handler({
-                action?.invoke()
-            })
-        }
-
-        override fun fFailedToLoaded() {
-
-        }
-
-        override fun fLoaded() {
-
-        }
-    }
+    private var adListener: IAdListener? = null
+//    private var adListener = object : IAdListener() {
+//        override fun fClosed() {
+//            requestNewInterstitial(mInterAd)
+//            //to avoid onSaveInstantState exception
+//            handler({
+//                action?.invoke()
+//            })
+//        }
+//
+//        override fun fFailedToLoaded() {
+//
+//        }
+//
+//        override fun fLoaded() {
+//
+//        }
+//    }
 }
