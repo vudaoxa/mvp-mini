@@ -5,11 +5,13 @@ import android.net.Uri
 import android.view.View
 import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator
 import com.github.piasy.biv.loader.ImageLoader
+import com.github.piasy.biv.view.BigImageView
 import kotlinx.android.synthetic.main.item_big_image.view.*
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.ui.base.rv.holders.BaseItemViewHolder
 import net.mfilm.utils.ICallbackOnClick
 import net.mfilm.utils.ICallbackRvFailure
+import net.mfilm.utils.ICallbackWebtoon
 import net.mfilm.utils.tryIt
 import timber.log.Timber
 import java.io.File
@@ -33,6 +35,11 @@ class ChapterImagesItemViewHolder(mContext: Context, type: Int, itemView: View,
                     setProgressIndicator(ProgressPieIndicator())
                     setImageLoaderCallback(mImageLoaderCallback)
                     setOnClickListener { mCallbackOnClick?.onClick(position, type) }
+                    (mCallbackOnClick as? ICallbackWebtoon?)?.run {
+                        if (webtoon) {
+                            setInitScaleType(BigImageView.IMAGE_SCALE_TYPE_FIT_CENTER)
+                        }
+                    }
                 }
             }
         }

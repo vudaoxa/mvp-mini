@@ -230,6 +230,8 @@ class ChapterImage : Serializable {
         }
         return x
     }
+
+    var scaleType: Int = 0
 }
 
 class ChapterImagesResponse : MResponse() {

@@ -27,6 +27,10 @@ import tr.xip.errorview.ErrorView
 /**
  * Created by tusi on 5/16/17.
  */
+interface ICallbackWebtoon {
+    var webtoon: Boolean
+    fun showWebtoon()
+}
 interface ICallbackPageChange {
     var currentPage: Int
     fun initPageChange()
