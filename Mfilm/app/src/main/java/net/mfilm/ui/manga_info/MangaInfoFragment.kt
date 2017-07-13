@@ -128,7 +128,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
 
     override fun isDataEmpty(): Boolean {
         layout_manga_info.show(false)
-        btn_read.enable(false)
+//        btn_read.enable(false)
         return true
     }
     override fun requestManga(id: Int) {
@@ -157,7 +157,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
     override fun initMangaInfoHeader() {
         mManga?.run {
             layout_manga_info.show(true)
-            btn_read.enable(true)
+//            btn_read.enable(true)
             img_thumb.setImageURI(coverUrl)
             tv_name.text = name
             setText(context, tv_other_name, R.string.title_other_name, otherName)
@@ -172,7 +172,7 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
             }
             setText(context, tv_des, -1, summary)
             layout_manga_info.setOnClickListener { viewFullRead() }
-            btn_read.setOnClickListener { onReadBtnClicked() }
+//            btn_read.setOnClickListener { onReadBtnClicked() }
         }
     }
 
@@ -214,14 +214,14 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
         return null
     }
 
-    override fun saveHistory() {
-        mManga?.run {
-            mMangaInfoMvpPresenter.saveHistory(this)
-        }
-    }
-
-    override fun onReadBtnClicked() {
-        saveHistory()
-        screenManager?.onNewFragmentRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = mChaptersFragment)
-    }
+//    override fun saveHistory() {
+//        mManga?.run {
+//            mMangaInfoMvpPresenter.saveHistory(this)
+//        }
+//    }
+//
+//    override fun onReadBtnClicked() {
+//        saveHistory()
+//        screenManager?.onNewFragmentRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = mChaptersFragment)
+//    }
 }

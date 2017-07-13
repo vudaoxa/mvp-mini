@@ -16,7 +16,7 @@ interface MangaInfoMvpView : MvpView {
     fun initMangaInfoHeader()
     fun isFavorite()
     fun toggleFav(): Boolean
-    fun saveHistory()
+    //    fun saveHistory()
     fun requestManga(id: Int)
     fun viewFullRead()
     fun attachChaptersFragment()
@@ -32,6 +32,6 @@ interface MangaInfoMvpView : MvpView {
     val thumbsContainerId: Int
     val relatedMangasContainerView: View
     val relatedMangasContainerId: Int
-    fun onReadBtnClicked()
+//    fun onReadBtnClicked()
 }
 

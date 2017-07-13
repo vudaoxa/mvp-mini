@@ -114,17 +114,6 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
-    //    override fun showBtnViewContinue() {
-//        mLayoutWrapper?.run {
-//            val icon = if (!next) {
-//                if (orientation == LinearLayoutManager.HORIZONTAL) icon_left else icon_up
-//            } else {
-//                if (orientation == LinearLayoutManager.HORIZONTAL) icon_right else icon_down
-//            }
-//            btn_continue.show(true)
-//            btn_continue.setImageDrawable(icon)
-//        }
-//    }
     override fun showBtnViewContinue() {
         mLayoutWrapper?.run {
             val icon: IconDrawable?
@@ -150,7 +139,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     override fun initPageChange() {
         currentPage = 0
         mChapterImagesRvAdapter?.run {
-            tv_page_count.text = "${1}/$itemCount"
+            tv_page_count.text = "${currentPage + 1}/$itemCount"
         }
         btn_left.setImageDrawable(icon_left_small)
         btn_right.setImageDrawable(icon_right_small)

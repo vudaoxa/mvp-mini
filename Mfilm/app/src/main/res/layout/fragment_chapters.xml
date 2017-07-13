@@ -9,10 +9,18 @@
         style="@style/Layout_match_wrap"
         android:layout_height="@dimen/rv_height">
 
+        <Button
+            android:id="@+id/btn_read"
+            style="@style/PrimaryFlatButton"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/read"
+            android:theme="@style/PrimaryFlatButton" />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv"
             style="@style/Layout_match_wrap"
-            android:layout_above="@+id/error_view_load_more" />
+            android:layout_above="@+id/error_view_load_more"
+            android:layout_below="@id/btn_read" />
 
         <include
             android:id="@+id/error_view_load_more"

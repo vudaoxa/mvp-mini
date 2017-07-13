@@ -36,16 +36,7 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <RelativeLayout style="@style/Layout_match_wrap">
 
-                <Button
-                    android:id="@+id/btn_read"
-                    style="@style/PrimaryFlatButton"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/read"
-                    android:theme="@style/PrimaryFlatButton" />
-            </RelativeLayout>
 
             <include
                 android:id="@+id/container_chapters"

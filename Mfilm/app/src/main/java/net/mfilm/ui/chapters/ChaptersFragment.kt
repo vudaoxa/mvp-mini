@@ -163,7 +163,12 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         super.initViews()
         initRv()
         initAds()
+        initBtnRead()
         requestChapters()
+    }
+
+    override fun initBtnRead() {
+        btn_read.setOnClickListener { onReadBtnClicked() }
     }
 
     override fun initRv() {
@@ -226,6 +231,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override fun buildChapters(chapters: List<Chapter>) {
         Timber.e("----------------buildChapters-----------------${chapters.size}---page --- $page-")
         page++
+        btn_read.enable(true)
         mChaptersRvAdapter?.run {
             onAdapterLoadMoreFinished {
                 val x = mData?.size //xxx readBtnClicked
@@ -242,6 +248,16 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             seekCurrentReadingPosition(0)
         }
         notifyViewer()
+    }
+
+    override fun onFailure() {
+        super.onFailure()
+        btn_read.enable(false)
+    }
+
+    override fun onNoInternetConnections() {
+        super.onNoInternetConnections()
+        btn_read.enable(false)
     }
 
     override fun onClick(position: Int, event: Int) {
@@ -297,10 +313,9 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     }
 
     override fun isDataEmpty(): Boolean {
-        mChaptersRvAdapter?.run {
+        return mChaptersRvAdapter?.run {
             itemCount == 0
-        }
-        return true
+        } ?: true
     }
     override fun loadPrevOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
         chapterImagesFragment = chapterImagesMvpView
@@ -335,5 +350,16 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                 notifyViewer()
             }
         }
+    }
+
+    override fun saveHistory() {
+        manga.run {
+            mChaptersPresenter.saveHistory(this)
+        }
+    }
+
+    override fun onReadBtnClicked() {
+        saveHistory()
+        screenManager?.onNewFragmentRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = this)
     }
 }

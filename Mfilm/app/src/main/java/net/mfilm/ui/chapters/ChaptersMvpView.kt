@@ -11,6 +11,9 @@ import net.mfilm.utils.ICallbackRv
  * Created by tusi on 5/27/17.
  */
 interface ChaptersMvpView : MvpView, ICallbackOnClick, ICallbackRv {
+    fun initBtnRead()
+    fun saveHistory()
+    fun onReadBtnClicked()
     fun requestChapters()
     fun onChaptersResponse(chaptersResponse: ChaptersResponse?)
     fun onChaptersNull()
@@ -33,4 +36,5 @@ interface ChaptersMvpView : MvpView, ICallbackOnClick, ICallbackRv {
     //    var chapterImagesFragment: ChapterImagesFragment?
     var chapterImagesFragment: ChapterImagesMvpView?
 //    fun onResumeReading()
+
 }

@@ -40,6 +40,7 @@ abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
         Timber.e("-----showErrorView---1--$show--------$errorView---------------")
         fun show() {
             Timber.e("-----showErrorView--2---$show--------$errorView---------------")
+//            errorView?.apply { show(show) } ?: f?.invoke()
             errorView?.show(show)
         }
         if (show) {

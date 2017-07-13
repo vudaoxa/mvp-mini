@@ -5,7 +5,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import net.mfilm.data.DataManager
 import net.mfilm.data.db.models.MangaFavoriteRealm
-import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.MangaDetailResponse
 import net.mfilm.data.network_retrofit.RetrofitService
@@ -86,10 +85,10 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
         return false
     }
 
-    override fun saveHistory(manga: Manga) {
-        manga.run {
-            val newHistoryRealm = MangaHistoryRealm(id, name, coverUrl, System.currentTimeMillis(), true)
-            dataManager.saveObject(newHistoryRealm)
-        }
-    }
+//    override fun saveHistory(manga: Manga) {
+//        manga.run {
+//            val newHistoryRealm = MangaHistoryRealm(id, name, coverUrl, System.currentTimeMillis(), true)
+//            dataManager.saveObject(newHistoryRealm)
+//        }
+//    }
 }

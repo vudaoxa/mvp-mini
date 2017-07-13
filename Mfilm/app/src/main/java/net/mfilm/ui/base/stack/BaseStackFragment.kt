@@ -190,21 +190,4 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
     }
 
     private var adListener: IAdListener? = null
-//    private var adListener = object : IAdListener() {
-//        override fun fClosed() {
-//            requestNewInterstitial(mInterAd)
-//            //to avoid onSaveInstantState exception
-//            handler({
-//                action?.invoke()
-//            })
-//        }
-//
-//        override fun fFailedToLoaded() {
-//
-//        }
-//
-//        override fun fLoaded() {
-//
-//        }
-//    }
 }
