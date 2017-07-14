@@ -13,6 +13,7 @@ import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.utils.MDisposableObserver
+import net.mfilm.utils.tryIt
 import timber.log.Timber
 import java.net.URL
 import javax.inject.Inject
@@ -55,6 +56,7 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
     override fun requestBitmapSize(url: String?) {
         url ?: return
         mvpView ?: return
+
         val d = object : MDisposableObserver<Bitmap>({}, {}) {
             override fun onNext(t: Bitmap?) {
                 t?.run {
@@ -63,10 +65,12 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
                 }
             }
         }
-        Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(d)
+        tryIt {
+            Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(d)
+        }
         compositeDisposable.add(d)
     }
 }

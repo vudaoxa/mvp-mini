@@ -53,3 +53,4 @@ const val TYPE_ITEM_HEADER = 2
 const val TYPE_ITEM_SEARCH_HISTORY = 1
 const val TYPE_ITEM_LOADING = -1
 const val TYPE_ITEM_FILTER = -2
+const val TYPE_ITEM_PREVIEW = -3

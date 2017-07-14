@@ -44,9 +44,10 @@ abstract class BaseErrorViewFragment : BaseStackFragment(), ICallbackErrorView {
             errorView?.show(show)
         }
         if (show) {
-            val x = isDataEmpty()
-            if (x) show()
-            return x
+            if (isDataEmpty()) {
+                show()
+                return true
+            }
         } else {
             //hide error
             show()

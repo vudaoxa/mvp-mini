@@ -3,6 +3,7 @@ package net.mfilm.ui.chapter_images
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,8 @@ import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.error_view.BaseErrorViewFragment
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM
+import net.mfilm.ui.base.rv.holders.TYPE_ITEM_PREVIEW
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.chapter_images.rv.ChapterImagesRvAdapter
 import net.mfilm.ui.chapters.ChaptersMvpView
@@ -39,6 +42,8 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
+    override val rvPreview: RecyclerView
+        get() = rv_preview
     private var mWebtoon = false
     override var webtoon: Boolean
         get() = mWebtoon
@@ -57,6 +62,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     @Inject
     lateinit var mChapterImagesPresenter: ChapterImagesMvpPresenter<ChapterImagesMvpView>
     private var mChapterImagesRvAdapter: ChapterImagesRvAdapter<ChapterImage>? = null
+    private var mChapterImagesPreviewRvAdapter: ChapterImagesRvAdapter<ChapterImage>? = null
     private var mLayoutWrapper: LinearLayoutManagerWrapper? = null
     private var mCurrentPage = 0
     override var currentPage: Int
@@ -83,13 +89,13 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         initBtnShare()
         initAds()
         initBtnViewContinue()
-
+        initPageChange()
         requestChapterImages()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mChapterImagesPresenter.onDetach()
+        super.onDestroy()
     }
 
     override fun initRv() {
@@ -99,11 +105,17 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             layoutManager = mLayoutWrapper
             addOnPageChangedListener(mPageChangedListener)
         }
-        rv_vertical.run {
-            layoutManager = LinearLayoutManagerWrapper(context)
-        }
+//        rv_vertical.run {
+//            layoutManager = LinearLayoutManagerWrapper(context)
+//        }
+        initRvPreview()
     }
 
+    override fun initRvPreview() {
+        rvPreview.run {
+            layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
     fun next() {
         next = true
         loadMoreOnDemand()
@@ -146,16 +158,27 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun initPageChange() {
-        currentPage = 0
-        mChapterImagesRvAdapter?.run {
-            tv_page_count.text = "${currentPage + 1}/$itemCount"
-        }
+
         btn_left.setImageDrawable(icon_left_small)
         btn_right.setImageDrawable(icon_right_small)
         btn_left.setOnClickListener { prev() }
         btn_right.setOnClickListener { next() }
+        btn_eye.setImageDrawable(icon_eye)
+        btn_eye.setOnClickListener { preview() }
     }
 
+    fun pageChange() {
+        currentPage = 0
+        mChapterImagesRvAdapter?.run {
+            tv_page_count.text = "${currentPage + 1}/$itemCount"
+        }
+    }
+
+    override fun preview() {
+        rv_pager_horizontal.toggleShow()
+        rvPreview.toggleShow()
+        btn_continue.show(false)
+    }
     private var next = false
     private val mPageChangedListener = RecyclerViewPager.OnPageChangedListener { p0, p1 ->
         Timber.e("-----OnPageChangedListener--------------- $p0------ $p1---------------")
@@ -230,6 +253,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     override fun onChapterImagesNull() {
         Timber.e("-------------------onChapterImagesNull---------------------")
+//        btn_eye.enable(false)
     }
 
     override fun buildChapterImages(images: List<ChapterImage>) {
@@ -243,29 +267,40 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             notifyDataSetChanged()
             handler({
                 val x = if (!next && countRequestChapterImages > 0) itemCount - 1 else 0
-                if (webtoon)
-                    rv_vertical.scrollToPosition(x)
-                else
+//                if (webtoon)
+//                    rv_vertical.scrollToPosition(x)
+//                else
                     rv_pager_horizontal.scrollToPosition(x)
             })
         } ?: let {
             mChapterImagesRvAdapter = ChapterImagesRvAdapter(context, images.toMutableList(), this, this)
             rv_pager_horizontal.adapter = mChapterImagesRvAdapter
         }
-        initPageChange()
+        pageChange()
+        buildChapterImagesPreview(images)
     }
 
-    override fun showWebtoon() {
-//        mLayoutWrapper?.run {
-//            orientation = LinearLayoutManager.VERTICAL
-//            rv_pager_horizontal.requestLayout()
-//        }
-        webtoon = true
-        rv_pager_horizontal.show(false)
-        rv_vertical.run {
-            adapter = mChapterImagesRvAdapter
-            show(true)
+    override fun buildChapterImagesPreview(images: List<ChapterImage>) {
+        mChapterImagesPreviewRvAdapter?.run {
+            clear()
+            addAll(images)
+            notifyDataSetChanged()
+        } ?: let {
+            mChapterImagesPreviewRvAdapter = ChapterImagesRvAdapter(context, images.toMutableList(), this, this, true)
+            rvPreview.adapter = mChapterImagesPreviewRvAdapter
         }
+    }
+    override fun showWebtoon() {
+        mLayoutWrapper?.run {
+            orientation = LinearLayoutManager.VERTICAL
+            rv_pager_horizontal.requestLayout()
+        }
+        webtoon = true
+//        rv_pager_horizontal.show(false)
+//        rv_vertical.run {
+//            adapter = mChapterImagesRvAdapter
+//            show(true)
+//        }
     }
 
     override fun onBitmapSizeResponse(webtoon: Boolean) {
@@ -310,20 +345,32 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun onClick(position: Int, event: Int) {
-        Timber.e("---------------------onClick--------------------$position")
+        Timber.e("---------------------onClick----------$event----------$position")
         viewer_header.toggleShow()
         viewer_footer.toggleShow()
-        mChapterImagesRvAdapter?.run {
-            when (position) {
-                0 -> {
-                    if (btn_left.isEnabled)
-                        btn_continue.toggleShow()
+        when (event) {
+            TYPE_ITEM -> {
+                mChapterImagesRvAdapter?.run {
+                    when (position) {
+                        0 -> {
+                            if (btn_left.isEnabled)
+                                btn_continue.toggleShow()
+                        }
+                        itemCount - 1 -> {
+                            if (btn_right.isEnabled)
+                                btn_continue.toggleShow()
+                        }
+                    }
                 }
-                itemCount - 1 -> {
-                    if (btn_right.isEnabled)
-                        btn_continue.toggleShow()
+            }
+            TYPE_ITEM_PREVIEW -> {
+                rvPreview.toggleShow()
+                rv_pager_horizontal.run {
+                    toggleShow()
+                    scrollToPosition(position)
                 }
             }
         }
+
     }
 }

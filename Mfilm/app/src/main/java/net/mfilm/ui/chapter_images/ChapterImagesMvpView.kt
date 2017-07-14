@@ -11,7 +11,7 @@ import net.mfilm.utils.*
  */
 interface ChapterImagesMvpView : MvpView, ICallbackRv,
         ICallbackOnClick, ICallbackRvFailure, ICallbackPageChange,
-        ICallbackViewContinue, ICallbackWebtoon {
+        ICallbackViewContinue, ICallbackWebtoon, ICallbackPreview {
     fun initPagingState(chapter: Chapter)
     fun requestChapterImages()
     fun initBtnShare()

@@ -211,6 +211,7 @@ var icon_up: IconDrawable? = null
 var icon_down: IconDrawable? = null
 var icon_left: IconDrawable? = null
 var icon_right: IconDrawable? = null
+var icon_eye: IconDrawable? = null
 
 fun initIcons(context: Context) {
     icon_search = IconDrawable(context,
@@ -237,7 +238,8 @@ fun initIcons(context: Context) {
 //            IoniconsIcons.ion_ios_trash).colorRes(R.color.red).actionBarSize()
     icon_close = IconDrawable(context,
             IoniconsIcons.ion_ios_close_empty).colorRes(R.color.white).actionBarSize()
-
+    icon_eye = IconDrawable(context,
+            IoniconsIcons.ion_eye).colorRes(R.color.white).actionBarSize()
     icon_up = IconDrawable(context,
             IoniconsIcons.ion_chevron_up).colorRes(R.color.white).sizeDp(BIG_BTN_SIZE)
     icon_down = IconDrawable(context,

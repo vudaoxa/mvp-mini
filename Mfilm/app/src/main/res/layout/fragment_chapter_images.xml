@@ -11,8 +11,10 @@
         app:rvp_triggerOffset="0.1" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_vertical"
-        style="@style/Layout_match_wrap" />
+        android:id="@+id/rv_preview"
+        style="@style/Layout_match_wrap"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
     <include layout="@layout/viewer_header" />
 
