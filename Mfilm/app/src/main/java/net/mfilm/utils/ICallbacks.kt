@@ -234,7 +234,8 @@ interface ICallbackFragmentOptionMenu {
 interface ICallbackEdit {
     fun initBtnDone()
     fun showBottomFunView(show: Boolean)
-    val btnDone: Button
+    val topFunView: View
+    val btnDone: View
     fun toggleEdit(edit: Boolean)
     fun done()
 }

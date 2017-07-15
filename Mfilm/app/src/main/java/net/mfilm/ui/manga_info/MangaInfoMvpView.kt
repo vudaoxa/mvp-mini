@@ -16,7 +16,7 @@ interface MangaInfoMvpView : MvpView {
     fun initMangaInfoHeader()
     fun isFavorite()
     fun toggleFav(): Boolean
-    //    fun saveHistory()
+    //    fun saveMangaHistory()
     fun requestManga(id: Int)
     fun viewFullRead()
     fun attachChaptersFragment()

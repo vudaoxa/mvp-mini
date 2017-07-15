@@ -40,7 +40,7 @@ constructor(val iBus: IBus, dataManager: DataManager, compositeDisposable: Compo
     }
 
     override fun initIBus() {
-        //flowable to receive favorite response from mangaInfoPresenter to up date mvpView
+        //flowable to receive favorite response from mangaInfoPresenter to update mvpView
         val flowable = iBus.asFlowable().filter { it is Favorite }
         val favEventEmitter = flowable.publish()
         compositeDisposable.run {

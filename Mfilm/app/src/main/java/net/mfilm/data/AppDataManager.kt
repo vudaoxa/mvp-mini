@@ -3,13 +3,17 @@ package net.mfilm.data
 import android.content.Context
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
+import io.realm.RealmList
 import io.realm.RealmModel
 import io.realm.RealmObject
 import io.realm.RealmResults
 import net.mfilm.data.db.DbHelper
+import net.mfilm.data.db.models.ChapterRealm
 import net.mfilm.data.db.models.MangaFavoriteRealm
 import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.db.models.SearchQueryRealm
+import net.mfilm.data.network_retrofit.Chapter
+import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.data.prefs.PrefsHelper
 import net.mfilm.di.AppContext
@@ -49,6 +53,30 @@ class AppDataManager @Inject constructor(@AppContext val mContext: Context, val 
 
     override fun loadHistory(observer: DisposableObserver<RealmResults<MangaHistoryRealm>>?): Disposable {
         return mDbHelper.loadHistory(observer)
+    }
+
+    override fun requestMangaHistory(id: Int): MangaHistoryRealm? {
+        return mDbHelper.requestMangaHistory(id)
+    }
+
+    override fun requestChaptersHistory(id: Int, observer: DisposableObserver<RealmList<ChapterRealm>>?): Disposable? {
+        return mDbHelper.requestChaptersHistory(id, observer)
+    }
+
+    override fun saveHistoryChapter(chapter: Chapter) {
+        mDbHelper.saveHistoryChapter(chapter)
+    }
+
+    override fun saveReadingChapter(chapter: Chapter) {
+        mDbHelper.saveReadingChapter(chapter)
+    }
+
+    override fun saveReadingPage(chapter: Chapter, page: Int) {
+        mDbHelper.saveReadingPage(chapter, page)
+    }
+
+    override fun saveMangaHistory(manga: Manga) {
+        mDbHelper.saveMangaHistory(manga)
     }
     override fun saveObject(obj: RealmObject) {
         mDbHelper.saveObject(obj)

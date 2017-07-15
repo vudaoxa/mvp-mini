@@ -214,14 +214,14 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
         return null
     }
 
-//    override fun saveHistory() {
+//    override fun saveMangaHistory() {
 //        mManga?.run {
-//            mMangaInfoMvpPresenter.saveHistory(this)
+//            mMangaInfoMvpPresenter.saveMangaHistory(this)
 //        }
 //    }
 //
 //    override fun onReadBtnClicked() {
-//        saveHistory()
+//        saveMangaHistory()
 //        screenManager?.onNewFragmentRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = mChaptersFragment)
 //    }
 }

@@ -58,7 +58,7 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
     }
 
     override fun isFavorite(id: Int) {
-        val x = dataManager.isFavorite(id)?.fav
+        val x = dataManager.isFavorite(id)?.favorite
         Timber.e("-----isFavorite($id)---------$x----------------")
         iBus.send(Favorite(x))
     }
@@ -72,7 +72,7 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
     override fun toggleFav(manga: Manga): Boolean {
         manga.run {
             val mangaFavRealm = dataManager.isFavorite(id!!)
-            val x = mangaFavRealm?.fav
+            val x = mangaFavRealm?.favorite
             Timber.e("----------toggleFav----------$x---------------")
             var fav = false
             x?.run {
@@ -85,7 +85,7 @@ constructor(val retrofitService: RetrofitService, val iBus: IBus,
         return false
     }
 
-//    override fun saveHistory(manga: Manga) {
+//    override fun saveMangaHistory(manga: Manga) {
 //        manga.run {
 //            val newHistoryRealm = MangaHistoryRealm(id, name, coverUrl, System.currentTimeMillis(), true)
 //            dataManager.saveObject(newHistoryRealm)

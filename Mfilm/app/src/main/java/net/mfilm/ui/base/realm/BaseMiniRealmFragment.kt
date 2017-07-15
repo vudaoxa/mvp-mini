@@ -63,7 +63,7 @@ abstract class BaseMiniRealmFragment<V : RealmObject> : BaseStackFragment(), Rea
     override fun showBottomFunView(show: Boolean) {
         btnEdit.show(!show && !isDataEmpty())
         bottomFunView.show(show)
-        btnDone.show(show)
+        topFunView.show(show)
     }
 
     override fun isDataEmpty(): Boolean {

@@ -53,7 +53,7 @@
                     android:layout_toLeftOf="@+id/layout_btns"
                     android:layout_toRightOf="@+id/toolbar_title" />
 
-                <include layout="@layout/item_main_action_btns" />
+                <include layout="@layout/main_action_btns" />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

@@ -11,6 +11,6 @@ interface MangaInfoMvpPresenter<V : MangaInfoMvpView> : MvpPresenter<V>,
         ICallbackBus, ICallbackToggleFav {
     fun requestManga(id: Int)
     fun isFavorite(id: Int)
-    //    fun saveHistory(manga: Manga)
+    //    fun saveMangaHistory(manga: Manga)
     fun onTaps(tapCount: Int)
 }

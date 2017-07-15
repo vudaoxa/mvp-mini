@@ -1,6 +1,5 @@
 package net.mfilm.ui.chapter_images
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.reactivex.Observable
@@ -13,7 +12,6 @@ import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.utils.MDisposableObserver
-import net.mfilm.utils.tryIt
 import timber.log.Timber
 import java.net.URL
 import javax.inject.Inject
@@ -41,10 +39,13 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
         compositeDisposable.add(d)
     }
 
-    override fun showFresco(context: Context, chapter: Chapter?, list: MutableList<String>, startPosition: Int) {
-
+    override fun saveHistoryChapter(chapter: Chapter) {
+        dataManager.saveHistoryChapter(chapter)
     }
 
+    override fun saveReadingPage(chapter: Chapter, page: Int) {
+        dataManager.saveReadingPage(chapter, page)
+    }
     override fun loadMore() {
         mvpView?.loadMoreOnDemand()
     }
@@ -65,12 +66,17 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
                 }
             }
         }
-        tryIt {
-            Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(d)
-        }
+        Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(d)
+
+//        tryIt {
+//            Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(d)
+//        }
         compositeDisposable.add(d)
     }
 }

@@ -1,5 +1,7 @@
 package net.mfilm.ui.chapters
 
+import net.mfilm.data.db.models.ChapterRealm
+import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChaptersResponse
 import net.mfilm.ui.base.MvpView
@@ -12,7 +14,11 @@ import net.mfilm.utils.ICallbackRv
  */
 interface ChaptersMvpView : MvpView, ICallbackOnClick, ICallbackRv {
     fun initBtnRead()
-    fun saveHistory()
+    fun requestMangaHistory()
+    fun requestChaptersHistory()
+    fun onMangaHistoryResponse(mangaHistoryRealm: MangaHistoryRealm)
+    fun onChaptersRealmResponse(chaptersRealm: List<ChapterRealm>? = null)
+    fun saveMangaHistory()
     fun onReadBtnClicked()
     fun requestChapters()
     fun onChaptersResponse(chaptersResponse: ChaptersResponse?)

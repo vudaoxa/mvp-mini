@@ -13,12 +13,8 @@
 
             <include layout="@layout/input_text" />
 
-            <Button
-                android:id="@+id/btn_done"
-                style="@style/PrimaryFlatButton"
-                android:text="@string/done"
-                android:theme="@style/PrimaryFlatButton"
-                android:visibility="gone" />
+            <include layout="@layout/top_fun" />
+
 
             <include
                 layout="@layout/mini_switch_btns"
@@ -34,7 +30,7 @@
         </LinearLayout>
 
         <include
-            layout="@layout/bottom_fun_view"
+            layout="@layout/bottom_fun"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true" />

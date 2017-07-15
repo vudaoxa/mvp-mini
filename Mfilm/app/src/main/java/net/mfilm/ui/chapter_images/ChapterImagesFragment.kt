@@ -86,7 +86,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     override fun initViews() {
         super.initViews()
         initRv()
-        initBtnShare()
+        initHeader()
         initAds()
         initBtnViewContinue()
         initPageChange()
@@ -151,10 +151,11 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
-    override fun initBtnShare() {
+    override fun initHeader() {
         btn_share.setOnClickListener {
             sendShareIntent(context, mChapterImagesRvAdapter?.mData?.getOrNull(currentPage)?.url)
         }
+        btn_back.setOnClickListener { baseActivity?.onBackPressed() }
     }
 
     override fun initPageChange() {
@@ -186,30 +187,49 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             currentPage = p1
             val itemCount = itemCount
             tv_page_count.text = "${p1 + 1}/$itemCount"
-            if (Math.abs(p0 - p1) != 1) return@run
-            when (p1) {
-                0 -> {
-                    next = false
-                    showBtnViewContinue()
-                }
-                itemCount - 1 -> {
-                    next = true
-                    showBtnViewContinue()
-                }
-                else -> {
-                    btn_continue.show(false)
+            configBtnContinue(p0, p1, itemCount)
+            mChaptersFragment?.run {
+                currentReadingChapter.let { c ->
+                    c?.run {
+                        saveReadingPage(c, p1)
+                    }
                 }
             }
         }
     }
 
+    fun configBtnContinue(p0: Int, p1: Int, size: Int) {
+        if (Math.abs(p0 - p1) != 1) return
+        when (p1) {
+            0 -> {
+                next = false
+                showBtnViewContinue()
+            }
+            size - 1 -> {
+                next = true
+                showBtnViewContinue()
+            }
+            else -> {
+                btn_continue.show(false)
+            }
+        }
+    }
+
+    override fun saveHistoryChapter(chapter: Chapter) {
+        mChapterImagesPresenter.saveHistoryChapter(chapter)
+    }
+
+    override fun saveReadingPage(chapter: Chapter, page: Int) {
+        mChapterImagesPresenter.saveReadingPage(chapter, page)
+    }
     private fun request() {
         mChaptersFragment?.run {
             currentReadingChapter.let { c ->
                 c?.run {
                     Timber.e("----------initViews---------$c---------")
                     requestChapterImages(c.id!!)
-                    tv_chapter_name.text = c.name
+                    tv_chapter_name?.text = c.name ?: return
+                    saveHistoryChapter(c)
                     initPagingState(c)
                 } ?: let { onFailure() }
             }
@@ -333,6 +353,9 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun seekNextChapter() {
+//        if (isVisiOk())
+//            requestChapterImages()
+//        else interAds(null, {})
         requestChapterImages()
     }
 

@@ -2,6 +2,7 @@
 <net.mfilm.ui.custom.SimpleViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bottom_fun"
     style="@style/Layout_match_wrap"
+    android:background="@color/grey_translucent"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:visibility="gone">

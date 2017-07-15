@@ -10,11 +10,12 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.joanzapata.iconify.widget.IconTextView
-import kotlinx.android.synthetic.main.bottom_fun_view.*
+import kotlinx.android.synthetic.main.bottom_fun.*
 import kotlinx.android.synthetic.main.empty_data_view.*
 import kotlinx.android.synthetic.main.fragment_realm.*
 import kotlinx.android.synthetic.main.input_text.*
 import kotlinx.android.synthetic.main.mini_switch_btns.*
+import kotlinx.android.synthetic.main.top_fun.*
 import net.mfilm.R
 import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.ui.base.realm.BaseRealmFragment
@@ -76,6 +77,8 @@ class HistoryFragment : BaseRealmFragment<MangaHistoryRealm>(), HistoryMvpView {
         get() = btn_undo
     override val btnSubmit: Button
         get() = btn_delete
+    override val topFunView: View
+        get() = top_fun
     override val btnDone: Button
         get() = btn_done
     override val mFilters: List<Filter>

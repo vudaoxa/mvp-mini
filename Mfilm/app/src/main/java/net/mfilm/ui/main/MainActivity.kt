@@ -19,7 +19,7 @@ import com.joanzapata.iconify.widget.IconTextView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.input_text.*
-import kotlinx.android.synthetic.main.item_main_action_btns.*
+import kotlinx.android.synthetic.main.main_action_btns.*
 import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.categories.CategoriesFragment

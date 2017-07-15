@@ -9,6 +9,11 @@
         style="@style/Layout_match_wrap"
         android:layout_height="@dimen/rv_height">
 
+        <TextView
+            android:id="@+id/tv_read_history"
+            style="@style/TextStyle.Sans.Regular.14.manga_intro"
+            android:layout_alignBaseline="@+id/btn_read"
+            android:layout_toLeftOf="@+id/btn_read" />
         <Button
             android:id="@+id/btn_read"
             style="@style/PrimaryFlatButton"

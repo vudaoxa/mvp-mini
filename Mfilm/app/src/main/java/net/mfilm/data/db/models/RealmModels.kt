@@ -1,5 +1,6 @@
 package net.mfilm.data.db.models
 
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
@@ -12,7 +13,7 @@ open class MangaFavoriteRealm(
         var name: String? = null,
         var coverUrl: String? = null,
         var time: Long? = 0,
-        var fav: Boolean = false
+        var favorite: Boolean = false
 ) : RealmObject()
 
 open class MangaHistoryRealm(
@@ -21,7 +22,10 @@ open class MangaHistoryRealm(
         var name: String? = null,
         var coverUrl: String? = null,
         var time: Long? = 0,
-        var history: Boolean = false
+        var history: Boolean = false,
+        var readChaptersIds: RealmList<ChapterRealm> = RealmList<ChapterRealm>(),
+        var currentReadingChapterId: Int = 0,
+        var currentReadingPage: Int = 0
 ) : RealmObject()
 
 open class SearchQueryRealm(@PrimaryKey var query: String? = null,
@@ -30,3 +34,5 @@ open class SearchQueryRealm(@PrimaryKey var query: String? = null,
         return query!!
     }
 }
+
+open class ChapterRealm(@PrimaryKey var id: Int = 0) : RealmObject()

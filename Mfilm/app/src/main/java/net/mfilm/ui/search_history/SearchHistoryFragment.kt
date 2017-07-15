@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import kotlinx.android.synthetic.main.bottom_fun_view.*
+import kotlinx.android.synthetic.main.bottom_fun.*
 import kotlinx.android.synthetic.main.fragment_search_history.*
 import kotlinx.android.synthetic.main.item_history_clear.*
+import kotlinx.android.synthetic.main.top_fun.*
 import net.mfilm.R
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.ui.base.realm.BaseMiniRealmFragment
@@ -76,6 +77,8 @@ class SearchHistoryFragment : BaseMiniRealmFragment<SearchQueryRealm>(), SearchH
         get() = btn_undo
     override val btnSubmit: Button
         get() = btn_delete
+    override val topFunView: View
+        get() = top_fun
     override val btnDone: Button
         get() = btn_done
 

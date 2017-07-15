@@ -3,13 +3,15 @@ package net.mfilm.ui.chapters
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.realm.RealmList
 import net.mfilm.data.DataManager
-import net.mfilm.data.db.models.MangaHistoryRealm
+import net.mfilm.data.db.models.ChapterRealm
 import net.mfilm.data.network_retrofit.ChaptersResponse
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.utils.MDisposableObserver
+import net.mfilm.utils.MRealmDisposableObserver
 import javax.inject.Inject
 
 /**
@@ -24,7 +26,7 @@ class ChaptersPresenter<V : ChaptersMvpView>
         val d = object : MDisposableObserver<ChaptersResponse>({ mvpView?.onFailure() },
                 { mvpView?.onNoInternetConnections() }) {
             override fun onNext(t: ChaptersResponse?) {
-                    mvpView?.onChaptersResponse(t)
+                mvpView?.onChaptersResponse(t)
             }
         }
         retrofitService.mApisService.requestChapters(mangaId, limit, page)
@@ -34,10 +36,34 @@ class ChaptersPresenter<V : ChaptersMvpView>
         compositeDisposable.add(d)
     }
 
-    override fun saveHistory(manga: Manga) {
+    override fun saveMangaHistory(manga: Manga) {
         manga.run {
-            val newHistoryRealm = MangaHistoryRealm(id, name, coverUrl, System.currentTimeMillis(), true)
-            dataManager.saveObject(newHistoryRealm)
+            //            val newHistoryRealm = MangaHistoryRealm(id, name, coverUrl, System.currentTimeMillis(), true)
+            dataManager.saveMangaHistory(manga)
         }
+    }
+
+    override fun requestMangaHistory(id: Int) {
+        val x = dataManager.requestMangaHistory(id)
+        x?.run {
+            mvpView?.onMangaHistoryResponse(this)
+        }
+    }
+
+    override fun requestChaptersHistory(id: Int) {
+        val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmList<ChapterRealm>>() {
+            override fun onNext(t: RealmList<ChapterRealm>?) {
+                mvpView?.run {
+                    onChaptersRealmResponse(t)
+                    t?.addChangeListener { t, changeSet ->
+                        onChaptersRealmResponse(t)
+                    }
+                }
+            }
+        }
+        dataManager.requestChaptersHistory(id, mRealmDisposableObserver)?.run {
+            compositeDisposable.add(this)
+        }
+        compositeDisposable.add(mRealmDisposableObserver)
     }
 }

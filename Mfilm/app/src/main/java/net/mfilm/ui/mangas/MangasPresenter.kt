@@ -42,7 +42,7 @@ constructor(val retrofitService: RetrofitService,
     override fun toggleFav(manga: Manga): Boolean {
         manga.run {
             val mangaFavRealm = dataManager.isFavorite(id!!)
-            val x = mangaFavRealm?.fav
+            val x = mangaFavRealm?.favorite
             Timber.e("----------toggleFav----------$x---------------")
             var fav = false
             x?.run {

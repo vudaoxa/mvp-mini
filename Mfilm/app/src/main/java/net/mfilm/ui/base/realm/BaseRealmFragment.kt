@@ -266,7 +266,7 @@ abstract class BaseRealmFragment<V : RealmObject> : BaseStackFragment(), RealmMv
     override fun showBottomFunView(show: Boolean) {
         edtSearch.enable(!show)
         imgClear.enable(!show)
-        btnDone.show(show)
+        topFunView.show(show)
         bottomFunView.show(show)
     }
 
