@@ -116,6 +116,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.HORIZONTAL, false)
         }
     }
+
     fun next() {
         next = true
         loadMoreOnDemand()
@@ -172,6 +173,17 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         currentPage = 0
         mChapterImagesRvAdapter?.run {
             tv_page_count.text = "${currentPage + 1}/$itemCount"
+            save()
+        }
+    }
+
+    fun save() {
+        mChaptersFragment?.run {
+            currentReadingChapter.let { c ->
+                c?.run {
+                    saveReadingPage(c, currentPage)
+                }
+            }
         }
     }
 
@@ -180,6 +192,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         rvPreview.toggleShow()
         btn_continue.show(false)
     }
+
     private var next = false
     private val mPageChangedListener = RecyclerViewPager.OnPageChangedListener { p0, p1 ->
         Timber.e("-----OnPageChangedListener--------------- $p0------ $p1---------------")
@@ -188,13 +201,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             val itemCount = itemCount
             tv_page_count.text = "${p1 + 1}/$itemCount"
             configBtnContinue(p0, p1, itemCount)
-            mChaptersFragment?.run {
-                currentReadingChapter.let { c ->
-                    c?.run {
-                        saveReadingPage(c, p1)
-                    }
-                }
-            }
+            save()
         }
     }
 
@@ -215,21 +222,23 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         }
     }
 
-    override fun saveHistoryChapter(chapter: Chapter) {
-        mChapterImagesPresenter.saveHistoryChapter(chapter)
+    override fun saveChapterHistory(chapter: Chapter, position: Int) {
+        mChapterImagesPresenter.saveChapterHistory(chapter, position)
     }
 
     override fun saveReadingPage(chapter: Chapter, page: Int) {
         mChapterImagesPresenter.saveReadingPage(chapter, page)
     }
+
     private fun request() {
         mChaptersFragment?.run {
+            val position = currentReadingPosition!!
             currentReadingChapter.let { c ->
                 c?.run {
                     Timber.e("----------initViews---------$c---------")
                     requestChapterImages(c.id!!)
                     tv_chapter_name?.text = c.name ?: return
-                    saveHistoryChapter(c)
+                    saveChapterHistory(c, position)
                     initPagingState(c)
                 } ?: let { onFailure() }
             }
@@ -290,7 +299,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 //                if (webtoon)
 //                    rv_vertical.scrollToPosition(x)
 //                else
-                    rv_pager_horizontal.scrollToPosition(x)
+                rv_pager_horizontal.scrollToPosition(x)
             })
         } ?: let {
             mChapterImagesRvAdapter = ChapterImagesRvAdapter(context, images.toMutableList(), this, this)
@@ -310,6 +319,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             rvPreview.adapter = mChapterImagesPreviewRvAdapter
         }
     }
+
     override fun showWebtoon() {
         mLayoutWrapper?.run {
             orientation = LinearLayoutManager.VERTICAL
@@ -353,14 +363,10 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
     }
 
     override fun seekNextChapter() {
-//        if (isVisiOk())
-//            requestChapterImages()
-//        else interAds(null, {})
-        requestChapterImages()
-    }
-
-    override fun seekPrevChapter() {
-        requestChapterImages()
+        if (isVisible && isAdded)
+            requestChapterImages()
+        else interAds()
+//        requestChapterImages()
     }
 
     override fun onRvFailure(position: Int) {

@@ -132,7 +132,9 @@ class AppDbHelper @Inject constructor() : DbHelper {
 
     override fun requestChaptersHistory(id: Int, observer: DisposableObserver<RealmList<ChapterRealm>>?): Disposable? {
         val realm = Realm.getDefaultInstance()
-        val item = realm.where(MangaHistoryRealm::class.java).equalTo("id", id).equalTo("history", true).findFirst()
+        val item = realm.where(MangaHistoryRealm::class.java).equalTo("id", id)
+//                .equalTo("history", true)
+                .findFirst()
         item?.run {
             readChaptersIds.run {
                 Timber.e("-requestChaptersHistory---readChaptersIds------------$this---------------------------")
@@ -150,22 +152,25 @@ class AppDbHelper @Inject constructor() : DbHelper {
         return null
     }
 
-    override fun saveHistoryChapter(chapter: Chapter) {
+    override fun saveChapterHistory(chapter: Chapter, position: Int) {
         chapter.let { c ->
             c.run {
                 val realm = Realm.getDefaultInstance()
                 realm.executeTransaction {
-                    val item = realm.where(MangaHistoryRealm::class.java).equalTo("id", mangaId).equalTo("history", true).findFirst()
+                    val item = realm.where(MangaHistoryRealm::class.java).equalTo("id", mangaId)
+//                            .equalTo("history", true)
+                            .findFirst()
                     item.let { it ->
                         it?.run {
                             val id = c.id!!
                             it.readChaptersIds.run {
-                                Timber.e("-saveHistoryChapter---readChaptersIds------------$this---------------------------")
+                                Timber.e("-saveChapterHistory---readChaptersIds------------$this---------------------------")
                                 if (!map { it.id }.contains(id)) {
                                     add(ChapterRealm(id))
                                 }
                             }
-                            it.currentReadingChapterId = id
+                            it.readingChapterId = id
+                            it.readingChapterPosition = position
                             it.time = System.currentTimeMillis()
                         }
                     }
@@ -175,15 +180,18 @@ class AppDbHelper @Inject constructor() : DbHelper {
     }
 
     //not use
-    override fun saveReadingChapter(chapter: Chapter) {
+    override fun saveReadingChapter(chapter: Chapter, position: Int) {
         chapter.let { c ->
             c.run {
                 val realm = Realm.getDefaultInstance()
                 realm.executeTransaction {
-                    val item = realm.where(MangaHistoryRealm::class.java).equalTo("id", mangaId).equalTo("history", true).findFirst()
+                    val item = realm.where(MangaHistoryRealm::class.java).equalTo("id", mangaId)
+//                            .equalTo("history", true)
+                            .findFirst()
                     item.let { it ->
                         it?.run {
-                            it.currentReadingChapterId = c.id!!
+                            it.readingChapterId = c.id!!
+                            it.readingChapterPosition = position
                         }
                     }
                 }
@@ -199,7 +207,7 @@ class AppDbHelper @Inject constructor() : DbHelper {
                     val item = realm.where(MangaHistoryRealm::class.java).equalTo("id", mangaId).equalTo("history", true).findFirst()
                     item.let { it ->
                         it?.run {
-                            it.currentReadingPage = page
+                            it.readingPage = page
                         }
                     }
                 }

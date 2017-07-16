@@ -36,7 +36,7 @@ fun initAds(@AppContext context: Context) {
 
 private const val MAX_ADS = 7
 private const val MIN_ADS = 4
-const val PAGES_PER_AD = 2
+const val PAGES_PER_AD = 4
 //var time = -1L
 //val DURATION = 60000
 //val NATIVE_EXPRESS_AD_LARGE_HEIGHT = 300

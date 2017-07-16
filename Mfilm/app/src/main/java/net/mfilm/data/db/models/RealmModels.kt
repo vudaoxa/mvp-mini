@@ -24,8 +24,9 @@ open class MangaHistoryRealm(
         var time: Long? = 0,
         var history: Boolean = false,
         var readChaptersIds: RealmList<ChapterRealm> = RealmList<ChapterRealm>(),
-        var currentReadingChapterId: Int = 0,
-        var currentReadingPage: Int = 0
+        var readingChapterId: Int = 0,
+        var readingChapterPosition: Int = 0,
+        var readingPage: Int = 0
 ) : RealmObject()
 
 open class SearchQueryRealm(@PrimaryKey var query: String? = null,

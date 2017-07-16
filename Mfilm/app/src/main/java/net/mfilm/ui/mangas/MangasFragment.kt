@@ -218,6 +218,10 @@ class MangasFragment : BaseLoadMoreFragment(), MangasMvpView {
         }
     }
 
+    override fun initAds() {
+        super.initAds()
+        pagesPerAds = 2
+    }
     override fun initDialogPlus() {
         val dialogItemsTitle = context.resources.getStringArray(R.array.bottom_dialog)
         dialogItems = arrayOf(DialogMenusItem(dialogItemsTitle[0], DialogMenus.SHARE),

@@ -63,12 +63,12 @@ class AppDataManager @Inject constructor(@AppContext val mContext: Context, val 
         return mDbHelper.requestChaptersHistory(id, observer)
     }
 
-    override fun saveHistoryChapter(chapter: Chapter) {
-        mDbHelper.saveHistoryChapter(chapter)
+    override fun saveChapterHistory(chapter: Chapter, position: Int) {
+        mDbHelper.saveChapterHistory(chapter, position)
     }
 
-    override fun saveReadingChapter(chapter: Chapter) {
-        mDbHelper.saveReadingChapter(chapter)
+    override fun saveReadingChapter(chapter: Chapter, position: Int) {
+        mDbHelper.saveReadingChapter(chapter, position)
     }
 
     override fun saveReadingPage(chapter: Chapter, page: Int) {

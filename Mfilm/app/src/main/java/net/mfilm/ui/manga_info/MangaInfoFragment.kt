@@ -82,6 +82,11 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
         super.initViews()
         buildManga()
     }
+
+    override fun onResume() {
+        super.onResume()
+        mChaptersFragment?.onResume()
+    }
     override fun onDestroy() {
         super.onDestroy()
         mMangaInfoMvpPresenter.onDetach()

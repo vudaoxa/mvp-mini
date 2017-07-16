@@ -24,8 +24,8 @@ interface DbHelper {
     fun isFavorite(id: Int): MangaFavoriteRealm?
     fun requestMangaHistory(id: Int): MangaHistoryRealm?
     fun requestChaptersHistory(id: Int, observer: DisposableObserver<RealmList<ChapterRealm>>? = null): Disposable?
-    fun saveHistoryChapter(chapter: Chapter)
-    fun saveReadingChapter(chapter: Chapter)
+    fun saveChapterHistory(chapter: Chapter, position: Int)
+    fun saveReadingChapter(chapter: Chapter, position: Int)
     fun saveReadingPage(chapter: Chapter, page: Int)
     fun delete(clazz: Class<out RealmModel>)
     fun saveMangaHistory(manga: Manga)

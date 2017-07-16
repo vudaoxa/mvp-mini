@@ -13,6 +13,7 @@ import io.reactivex.Flowable
 import io.realm.RealmObject
 import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.data.network_retrofit.Category
+import net.mfilm.data.network_retrofit.Chapter
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.data.prefs.MangaSources
@@ -28,6 +29,10 @@ import tr.xip.errorview.ErrorView
 /**
  * Created by tusi on 5/16/17.
  */
+interface ICallbackChaptersHistory {
+    fun initChapterHistory(chapter: Chapter)
+    fun initReading(chapter: Chapter)
+}
 interface ICallbackPreview {
     val rvPreview: RecyclerView
     fun initRvPreview()

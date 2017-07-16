@@ -31,6 +31,7 @@
     <string name="ion_close_round">{ion-close-round}</string>
     <string name="ion_musical_note">{ion-ios-musical-note}</string>
     <string name="fa_history">{fa-history}</string>
+    <string name="ion_eye">{ion-eye}</string>
     <string name="ion_happy">{ion-happy-outline}</string>
     <string name="ion_checkmark">{ion-checkmark-circled}</string>
     <string name="home">Home</string>

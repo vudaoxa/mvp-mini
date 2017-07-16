@@ -12,7 +12,7 @@ import net.mfilm.utils.*
 interface ChapterImagesMvpView : MvpView, ICallbackRv,
         ICallbackOnClick, ICallbackRvFailure, ICallbackPageChange,
         ICallbackViewContinue, ICallbackWebtoon, ICallbackPreview {
-    fun saveHistoryChapter(chapter: Chapter)
+    fun saveChapterHistory(chapter: Chapter, position: Int)
     fun saveReadingPage(chapter: Chapter, page: Int)
     fun initPagingState(chapter: Chapter)
     fun requestChapterImages()
@@ -24,6 +24,6 @@ interface ChapterImagesMvpView : MvpView, ICallbackRv,
     fun loadPrevOnDemand()
     fun loadMoreOnDemand()
     fun seekNextChapter()
-    fun seekPrevChapter()
+    //    fun seekPrevChapter()
     fun onBitmapSizeResponse(webtoon: Boolean)
 }

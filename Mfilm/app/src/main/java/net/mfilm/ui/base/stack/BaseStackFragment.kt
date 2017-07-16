@@ -23,7 +23,10 @@ import android.support.v4.app.Fragment
 import android.view.View
 import com.google.android.gms.ads.InterstitialAd
 import net.mfilm.di.components.ActComponent
-import net.mfilm.google.*
+import net.mfilm.google.IAdListener
+import net.mfilm.google.ads
+import net.mfilm.google.initInterAds
+import net.mfilm.google.requestNewInterstitial
 import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.ICallbackFragmentOptionMenu
 import net.mfilm.utils.anim
@@ -151,7 +154,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
         mEvent = event
     }
 
-    protected fun initAds() {
+    protected open fun initAds() {
         adListener = object : IAdListener() {
             override fun fClosed() {
                 requestNewInterstitial(mInterAd)
@@ -178,13 +181,14 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
         action = f
         page?.run {
             Timber.e("----interAds------------page--------$page--------")
-            if (this % PAGES_PER_AD == 0)
+            if (this % pagesPerAds == 0)
                 ads(f)
         } ?: let {
             ads(f)
         }
     }
 
+    protected var pagesPerAds = 2
     private fun ads(f: (() -> Unit)? = null) {
         ads(mInterAd, f)
     }

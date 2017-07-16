@@ -16,8 +16,9 @@ interface ChaptersMvpView : MvpView, ICallbackOnClick, ICallbackRv {
     fun initBtnRead()
     fun requestMangaHistory()
     fun requestChaptersHistory()
+    var mangaHistory: Boolean
     fun onMangaHistoryResponse(mangaHistoryRealm: MangaHistoryRealm)
-    fun onChaptersRealmResponse(chaptersRealm: List<ChapterRealm>? = null)
+    fun onChaptersHistoryResponse(chaptersRealm: List<ChapterRealm>? = null)
     fun saveMangaHistory()
     fun onReadBtnClicked()
     fun requestChapters()

@@ -184,6 +184,8 @@ class Chapter : Serializable {
     @Expose
     var mangaId: Int? = null
     var pagingState: PagingState = PagingState.MIDDLE
+    var chapterHistory = false
+    var reading = false
     override fun toString(): String {
         return "$name --- $id"
     }

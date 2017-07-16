@@ -54,9 +54,9 @@ class ChaptersPresenter<V : ChaptersMvpView>
         val mRealmDisposableObserver = object : MRealmDisposableObserver<RealmList<ChapterRealm>>() {
             override fun onNext(t: RealmList<ChapterRealm>?) {
                 mvpView?.run {
-                    onChaptersRealmResponse(t)
-                    t?.addChangeListener { t, changeSet ->
-                        onChaptersRealmResponse(t)
+                    onChaptersHistoryResponse(t)
+                    t?.addChangeListener { t, _ ->
+                        onChaptersHistoryResponse(t)
                     }
                 }
             }
