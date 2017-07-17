@@ -240,7 +240,11 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
                     tv_chapter_name?.text = c.name ?: return
                     saveChapterHistory(c, position)
                     initPagingState(c)
-                } ?: let { onFailure() }
+                } ?: let {
+                    mangaHistoryRealm?.run {
+                        requestChapter(id!!)
+                    } ?: onFailure()
+                }
             }
         }
     }

@@ -19,7 +19,6 @@ import net.mfilm.data.network_retrofit.Manga
 interface DbHelper {
     fun loadSearchHistory(observer: DisposableObserver<RealmResults<SearchQueryRealm>>? = null): Disposable
     fun loadFavorites(observer: DisposableObserver<RealmResults<MangaFavoriteRealm>>? = null): Disposable
-
     fun loadHistory(observer: DisposableObserver<RealmResults<MangaHistoryRealm>>? = null): Disposable
     fun isFavorite(id: Int): MangaFavoriteRealm?
     fun requestMangaHistory(id: Int): MangaHistoryRealm?

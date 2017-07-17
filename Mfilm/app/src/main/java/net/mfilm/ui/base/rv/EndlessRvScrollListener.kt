@@ -4,6 +4,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
+import timber.log.Timber
 
 abstract class EndlessRvScrollListener : RecyclerView.OnScrollListener {
     internal var mLayoutManager: RecyclerView.LayoutManager
@@ -87,8 +88,8 @@ abstract class EndlessRvScrollListener : RecyclerView.OnScrollListener {
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
         val x = !loading && lastVisibleItemPosition + visibleThreshold > totalItemCount
-//        Timber.e("------------onScrolled---------$loading ----" +
-//                "--- $lastVisibleItemPosition------- $visibleThreshold------ $totalItemCount----- $x")
+        Timber.e("------------onScrolled---------$loading ----" +
+                "--- $lastVisibleItemPosition------- $visibleThreshold------ $totalItemCount----- $x")
         if (x) {
             currentPage++
             onLoadMore(currentPage, totalItemCount)

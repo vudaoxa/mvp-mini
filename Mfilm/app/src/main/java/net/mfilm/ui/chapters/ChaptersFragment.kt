@@ -44,6 +44,12 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         }
     }
 
+    private var mMangaHistoryRealm: MangaHistoryRealm? = null
+    override var mangaHistoryRealm: MangaHistoryRealm?
+        get() = mMangaHistoryRealm
+        set(value) {
+            mMangaHistoryRealm = value
+        }
     private var mHistory = false
     override var mangaHistory: Boolean
         get() = mHistory
@@ -107,16 +113,21 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             Timber.e("-----------currentReadingChapter---------$mCurrentReadingChapter")
         }
 
-    private var mPrevPosition = 0
-    private var mNextPosition = 0
-    private var mCurrentPosition = 0
+    private var mPrevPosition: Int? = null
+    private var mNextPosition: Int? = null
+    private var mCurrentPosition: Int? = null
     override var prevPosition: Int?
         get() = mPrevPosition
         set(value) {
             chapters?.run {
-                if (value!! >= 0) {
-                    mPrevPosition = value
-                    prevChapter = get(mPrevPosition)
+                value?.run {
+                    if (this >= 0) {
+                        mPrevPosition = this
+                        prevChapter = get(this)
+                    }
+                } ?: let {
+                    prevChapter = null
+                    mPrevPosition = null
                 }
             }
         }
@@ -124,9 +135,14 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         get() = mNextPosition
         set(value) {
             chapters?.run {
-                if (value!! <= size - 1) {
-                    mNextPosition = value
-                    nextChapter = get(mNextPosition)
+                value?.run {
+                    if (this <= size - 1) {
+                        mNextPosition = this
+                        nextChapter = get(this)
+                    }
+                } ?: let {
+                    nextChapter = null
+                    mNextPosition = null
                 }
             }
         }
@@ -135,16 +151,23 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         set(value) {
             chapters?.run {
                 Timber.e("-----------currentReadingPosition--------------$value------${size - 1}")
-                if (value!! < 0) return
-                if (value <= size - 1) {
-                    mCurrentPosition = value
-                    currentReadingChapter = get(mCurrentPosition)
-                    if (mCurrentPosition < size - 1) nextPosition = mCurrentPosition + 1
-                } else {
-                    loadMoreOnDemand()
-                    nextChapter = null
+                value?.run {
+                    if (this < 0) return
+                    if (this <= size - 1) {
+                        mCurrentPosition = this
+                        currentReadingChapter = get(this)
+                        if (this < size - 1) nextPosition = this + 1
+                    } else {
+                        loadMoreOnDemand()
+                        nextChapter = null
+                    }
+                    if (this > 0) prevPosition = this - 1
+                } ?: let {
+                    mCurrentPosition = null
+                    currentReadingChapter = null
+                    nextPosition = null
+                    prevPosition = null
                 }
-                if (mCurrentPosition > 0) prevPosition = mCurrentPosition - 1
             }
         }
     override val chapters: List<Chapter>?
@@ -216,12 +239,21 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun onMangaHistoryResponse(mangaHistoryRealm: MangaHistoryRealm) {
         Timber.e("----onMangaHistoryResponse--------$mangaHistoryRealm----------------------------------")
+        this.mangaHistoryRealm = mangaHistoryRealm
         mangaHistoryRealm.run {
             requestChaptersHistory()
             mChaptersRvAdapter?.updateReadingChapter(this)
             val text = TimeUtils.toFbFormatTime(context, time)
             tv_read_history.text = text
             btn_read.setText(R.string.resume)
+            mChaptersRvAdapter?.run {
+                val readingChapterIndex = contains(id!!)
+                if (readingChapterIndex != -1) {
+                    currentReadingPosition = readingChapterIndex
+                } else {
+                    currentReadingPosition = null
+                }
+            }
         }
     }
 
@@ -293,7 +325,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         mChaptersRvAdapter?.run {
             onAdapterLoadMoreFinished {
                 val x = mData?.size //xxx readBtnClicked
-
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
                 chapterImagesFragment?.run {
@@ -303,7 +334,8 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         } ?: let {
             mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
             rv.adapter = mChaptersRvAdapter
-            seekCurrentReadingPosition(0)
+            if (!mangaHistory)
+                seekCurrentReadingPosition(0)
         }
         if (page == PAGE_START)
             requestMangaHistory()
@@ -403,8 +435,10 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     }
 
     override fun seekNextChapter() {
-        Timber.e("----------------seekNextChapter---------$currentReadingPosition")
-        currentReadingPosition = (currentReadingPosition!! + 1)
+        currentReadingPosition?.run {
+            Timber.e("----------------seekNextChapter---------$this")
+            currentReadingPosition = (this + 1)
+        }
     }
 
     override fun seekPrevChapter() {

@@ -127,10 +127,10 @@ private fun showInterAds(mInterstitialAd: InterstitialAd?): Boolean {
     return mInterstitialAd?.run {
         val loaded = isLoaded
         Timber.e("---showInterAds-----loaded-------$loaded---------------------")
-        if (loaded)
-            show()
-        else
-            requestNewInterstitial(this)
+//        if (loaded)
+//            show()
+//        else
+//            requestNewInterstitial(this)
         loaded
     } ?: false
 }
