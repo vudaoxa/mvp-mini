@@ -16,9 +16,7 @@ import kotlinx.android.synthetic.main.fragment_chapter_images.*
 import kotlinx.android.synthetic.main.viewer_footer.*
 import kotlinx.android.synthetic.main.viewer_header.*
 import net.mfilm.R
-import net.mfilm.data.network_retrofit.Chapter
-import net.mfilm.data.network_retrofit.ChapterImage
-import net.mfilm.data.network_retrofit.ChapterImagesResponse
+import net.mfilm.data.network_retrofit.*
 import net.mfilm.ui.base.error_view.BaseErrorViewFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_PREVIEW
@@ -33,7 +31,8 @@ import javax.inject.Inject
 /**
  * Created by tusi on 5/29/17.
  */
-class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = null)
+//private var mChaptersFragment: ChaptersMvpView? = null
+class ChapterImagesFragment()
     : BaseErrorViewFragment(), ChapterImagesMvpView {
     companion object {
         fun newInstance(mChaptersFragment: Any?): ChapterImagesFragment {
@@ -105,9 +104,6 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
             layoutManager = mLayoutWrapper
             addOnPageChangedListener(mPageChangedListener)
         }
-//        rv_vertical.run {
-//            layoutManager = LinearLayoutManagerWrapper(context)
-//        }
         initRvPreview()
     }
 
@@ -232,23 +228,66 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
 
     private fun request() {
         mChaptersFragment?.run {
-            val position = currentReadingPosition!!
             currentReadingChapter.let { c ->
                 c?.run {
                     Timber.e("----------initViews---------$c---------")
                     requestChapterImages(c.id!!)
                     tv_chapter_name?.text = c.name ?: return
-                    saveChapterHistory(c, position)
+                    saveChapterHistory(c, currentReadingPosition!!)
                     initPagingState(c)
                 } ?: let {
                     mangaHistoryRealm?.run {
-                        requestChapter(id!!)
+                        requestChapterDetail(readingChapterId)
+                        mReadingChapterPosition = readingChapterPosition
                     } ?: onFailure()
                 }
             }
         }
     }
 
+    override fun loadMoreOnDemand() {
+        mChapterDetail?.run {
+
+        } ?: let {
+            mChaptersFragment?.loadMoreOnDemand(this@ChapterImagesFragment)
+        }
+
+    }
+
+    override fun loadPrevOnDemand() {
+        //it's must be synchronized with mChaptersFragment, because:
+        //read btn behavior
+        //get currentReadingPosition from mChaptersFragment, to reload images in $chapters
+        mChaptersFragment?.run {
+            loadPrevOnDemand(this@ChapterImagesFragment)
+        }
+    }
+
+    private var mReadingChapterPosition = 0
+    private var mChapterDetail: ChapterDetail? = null
+    override fun requestChapterDetail(chapterId: Int) {
+        mChapterImagesPresenter.requestChapterDetail(chapterId)
+    }
+
+    override fun onChapterDetailResponse(t: ChapterDetailResponse?) {
+        hideLoading()
+        t?.run {
+            chapterDetail?.run {
+                mChapterDetail = this
+                chapter?.run {
+                    Timber.e("----------chapter---------$this---------")
+                    requestChapterImages(id!!)
+                    tv_chapter_name?.text = name ?: return
+                    saveChapterHistory(this, mReadingChapterPosition)
+                    initPagingState(this)
+                } ?: onChapterDetailNull()
+            } ?: onChapterDetailNull()
+        } ?: onChapterDetailNull()
+    }
+
+    override fun onChapterDetailNull() {
+        Timber.e("---------onChapterDetailNull-----------------------------")
+    }
     override fun initPagingState(chapter: Chapter) {
         chapter.run {
             btn_left.enable(pagingState !in listOf<Any?>(PagingState.FIRST, PagingState.SINGLE))
@@ -351,20 +390,7 @@ class ChapterImagesFragment(private var mChaptersFragment: ChaptersMvpView? = nu
         } ?: true
     }
 
-    override fun loadMoreOnDemand() {
-        mChaptersFragment?.run {
-            loadMoreOnDemand(this@ChapterImagesFragment)
-        }
-    }
 
-    override fun loadPrevOnDemand() {
-        //it's must be synchronized with mChaptersFragment, because:
-        //read btn behavior
-        //get currentReadingPosition from mChaptersFragment, to reload images in $chapters
-        mChaptersFragment?.run {
-            loadPrevOnDemand(this@ChapterImagesFragment)
-        }
-    }
 
     override fun seekNextChapter() {
         if (isVisible && isAdded)

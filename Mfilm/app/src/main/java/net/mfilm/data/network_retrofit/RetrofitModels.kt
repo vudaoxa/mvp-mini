@@ -215,7 +215,7 @@ class ChapterDetail : Serializable {
 class ChapterDetailResponse : MResponse() {
     @SerializedName("data")
     @Expose
-    var data: ChapterDetail? = null
+    var chapterDetail: ChapterDetail? = null
 }
 
 class ChapterImage : Serializable {

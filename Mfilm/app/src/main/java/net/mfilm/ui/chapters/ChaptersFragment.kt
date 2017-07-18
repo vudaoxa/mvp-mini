@@ -247,7 +247,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             tv_read_history.text = text
             btn_read.setText(R.string.resume)
             mChaptersRvAdapter?.run {
-                val readingChapterIndex = contains(id!!)
+                val readingChapterIndex = contains(readingChapterId)
                 if (readingChapterIndex != -1) {
                     currentReadingPosition = readingChapterIndex
                 } else {

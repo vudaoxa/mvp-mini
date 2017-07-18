@@ -10,7 +10,7 @@ interface ChapterImagesMvpPresenter<V : ChapterImagesMvpView> : MvpPresenter<V> 
     fun saveChapterHistory(chapter: Chapter, position: Int)
     fun saveReadingPage(chapter: Chapter, page: Int)
     fun requestChapterImages(chapterId: Int)
-    //    fun showFresco(context: Context, chapter: Chapter?, list: MutableList<String>, startPosition: Int = 0)
+    fun requestChapterDetail(chapterId: Int)
     fun requestBitmapSize(url: String?)
     fun loadMore()
     fun loadPrev()

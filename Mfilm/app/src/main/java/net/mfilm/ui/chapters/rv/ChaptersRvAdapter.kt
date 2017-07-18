@@ -113,4 +113,5 @@ class ChaptersRvAdapter<V : Chapter>(mContext: Context, mData: MutableList<V>?, 
     fun contains(id: Int): Int {
         return mData?.map { it.id }?.indexOf(id) ?: -1
     }
+
 }
