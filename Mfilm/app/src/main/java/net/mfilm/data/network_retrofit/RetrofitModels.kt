@@ -2,7 +2,6 @@ package net.mfilm.data.network_retrofit
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import net.mfilm.utils.PagingState
 import timber.log.Timber
 import java.io.Serializable
 
@@ -183,7 +182,7 @@ class Chapter : Serializable {
     @SerializedName("manga_id")
     @Expose
     var mangaId: Int? = null
-    var pagingState: PagingState = PagingState.MIDDLE
+    //    var pagingState: PagingState = PagingState.MIDDLE
     var chapterHistory = false
     var reading = false
     override fun toString(): String {

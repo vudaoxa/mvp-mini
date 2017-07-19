@@ -1,7 +1,7 @@
 package net.mfilm.ui.chapter_images
 
 import net.mfilm.data.network_retrofit.Chapter
-import net.mfilm.data.network_retrofit.ChapterDetailResponse
+import net.mfilm.data.network_retrofit.ChapterDetail
 import net.mfilm.data.network_retrofit.ChapterImage
 import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.ui.base.MvpView
@@ -12,14 +12,12 @@ import net.mfilm.utils.*
  */
 interface ChapterImagesMvpView : MvpView, ICallbackRv,
         ICallbackOnClick, ICallbackRvFailure, ICallbackPageChange,
-        ICallbackViewContinue, ICallbackWebtoon, ICallbackPreview {
-    fun saveChapterHistory(chapter: Chapter, position: Int)
+        ICallbackViewContinue, ICallbackWebtoon, ICallbackPreview, ICallbackChapterDetail {
+    fun saveChapterHistory(chapter: Chapter)
     fun saveReadingPage(chapter: Chapter, page: Int)
-    fun initPagingState(chapter: Chapter)
+    fun initPagingState(chapterDetail: ChapterDetail)
     fun requestChapterImages()
-    fun requestChapterDetail(chapterId: Int)
-    fun onChapterDetailResponse(t: ChapterDetailResponse?)
-    fun onChapterDetailNull()
+
     fun initHeader()
     fun requestChapterImages(chapterId: Int)
     fun onChapterImagesResponse(chapterImagesResponse: ChapterImagesResponse?)
@@ -27,7 +25,7 @@ interface ChapterImagesMvpView : MvpView, ICallbackRv,
     fun buildChapterImages(images: List<ChapterImage>)
     fun loadPrevOnDemand()
     fun loadMoreOnDemand()
-    fun seekNextChapter()
+    //    fun seekNextChapter()
     //    fun seekPrevChapter()
     fun onBitmapSizeResponse(webtoon: Boolean)
 }

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
@@ -137,10 +136,10 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         super.initViews(savedInstanceState)
         initScreenRequestPassByTime()
         mNavView.setNavigationItemSelectedListener(this)
-        ads()
+        initAds()
     }
 
-    fun ads() {
+    fun initAds() {
         initBannerAds(ad_view)
     }
     override fun initScreenRequestPassByTime() {
@@ -177,6 +176,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
                 }
                 IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
+                    fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(obj), true)
                 }
                 IndexTags.FRAGMENT_FAV -> {
                     fragmentStackManager.swapFragment(FavoritesFragment.newInstance())
@@ -189,16 +189,6 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 IndexTags.FRAGMENT_ABOUT -> {
 
-                }
-            }
-        }
-    }
-
-    override fun onNewFragmentRequested(indexTag: Any?, fragment: Fragment?, obj: Any?) {
-        screenRequestPassByTime?.passByTime {
-            when (indexTag) {
-                IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
-                    fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(fragment), true)
                 }
             }
         }

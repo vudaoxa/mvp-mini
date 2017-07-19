@@ -14,12 +14,12 @@ import timber.log.Timber
 
 fun ads(mInterstitialAd: InterstitialAd?, f: (() -> Unit)? = null) {
     val rand = rand(MAX_ADS)
-    Timber.e("---ads--------x--- $rand ------------------")
+    Timber.e("---initAds--------x--- $rand ------------------")
     if (rand < MIN_ADS) {
         f?.invoke()
     } else {
         val show = showInterAds(mInterstitialAd)
-        Timber.e("--ads----show --------- $show-----------------------")
+        Timber.e("--initAds----show --------- $show-----------------------")
         if (!show) {
             f?.invoke()
         }
@@ -127,10 +127,10 @@ private fun showInterAds(mInterstitialAd: InterstitialAd?): Boolean {
     return mInterstitialAd?.run {
         val loaded = isLoaded
         Timber.e("---showInterAds-----loaded-------$loaded---------------------")
-//        if (loaded)
-//            show()
-//        else
-//            requestNewInterstitial(this)
+        if (loaded)
+            show()
+        else
+            requestNewInterstitial(this)
         loaded
     } ?: false
 }

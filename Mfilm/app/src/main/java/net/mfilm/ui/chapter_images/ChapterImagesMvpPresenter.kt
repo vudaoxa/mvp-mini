@@ -7,7 +7,7 @@ import net.mfilm.ui.base.MvpPresenter
  * Created by tusi on 5/29/17.
  */
 interface ChapterImagesMvpPresenter<V : ChapterImagesMvpView> : MvpPresenter<V> {
-    fun saveChapterHistory(chapter: Chapter, position: Int)
+    fun saveChapterHistory(chapter: Chapter)
     fun saveReadingPage(chapter: Chapter, page: Int)
     fun requestChapterImages(chapterId: Int)
     fun requestChapterDetail(chapterId: Int)

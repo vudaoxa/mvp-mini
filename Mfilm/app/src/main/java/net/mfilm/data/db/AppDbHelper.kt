@@ -152,7 +152,7 @@ class AppDbHelper @Inject constructor() : DbHelper {
         return null
     }
 
-    override fun saveChapterHistory(chapter: Chapter, position: Int) {
+    override fun saveChapterHistory(chapter: Chapter) {
         chapter.let { c ->
             c.run {
                 val realm = Realm.getDefaultInstance()
@@ -170,7 +170,7 @@ class AppDbHelper @Inject constructor() : DbHelper {
                                 }
                             }
                             it.readingChapterId = id
-                            it.readingChapterPosition = position
+//                            it.readingChapterPosition = position
                             it.time = System.currentTimeMillis()
                         }
                     }
@@ -180,7 +180,7 @@ class AppDbHelper @Inject constructor() : DbHelper {
     }
 
     //not use
-    override fun saveReadingChapter(chapter: Chapter, position: Int) {
+    override fun saveReadingChapter(chapter: Chapter) {
         chapter.let { c ->
             c.run {
                 val realm = Realm.getDefaultInstance()
@@ -191,7 +191,7 @@ class AppDbHelper @Inject constructor() : DbHelper {
                     item.let { it ->
                         it?.run {
                             it.readingChapterId = c.id!!
-                            it.readingChapterPosition = position
+//                            it.readingChapterPosition = position
                         }
                     }
                 }

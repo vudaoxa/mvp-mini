@@ -17,9 +17,7 @@ import net.mfilm.data.network_retrofit.Manga
 import net.mfilm.ui.base.rv.BaseLoadMoreFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
-import net.mfilm.ui.chapter_images.ChapterImagesMvpView
 import net.mfilm.ui.chapters.rv.ChaptersRvAdapter
-import net.mfilm.ui.manga_info.MangaInfoMvpView
 import net.mfilm.utils.*
 import timber.log.Timber
 import tr.xip.errorview.ErrorView
@@ -44,18 +42,8 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         }
     }
 
-    private var mMangaHistoryRealm: MangaHistoryRealm? = null
-    override var mangaHistoryRealm: MangaHistoryRealm?
-        get() = mMangaHistoryRealm
-        set(value) {
-            mMangaHistoryRealm = value
-        }
-    private var mHistory = false
-    override var mangaHistory: Boolean
-        get() = mHistory
-        set(value) {
-            mHistory = value
-        }
+    override var mangaHistoryRealm: MangaHistoryRealm? = null
+    override var mangaHistory: Boolean = false
     override val errorView: ErrorView?
         get() = error_view
     override val subTitle: Int?
@@ -80,96 +68,8 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     @Inject
     lateinit var mChaptersPresenter: ChaptersMvpPresenter<ChaptersMvpView>
     var mChaptersRvAdapter: ChaptersRvAdapter<Chapter>? = null
-    //    private var mChapterImagesFragment: ChapterImagesFragment?=null
-    private var mChapterImagesFragment: ChapterImagesMvpView? = null
 
     private var manga: Manga? = null
-    private var mCurrentReadingChapter: Chapter? = null
-    private var mPrevChapter: Chapter? = null
-    private var mNextChapter: Chapter? = null
-    override var chapterImagesFragment: ChapterImagesMvpView?
-        get() = mChapterImagesFragment
-        set(value) {
-            mChapterImagesFragment = value
-        }
-    override var prevChapter: Chapter?
-        get() = mPrevChapter
-        set(value) {
-            mPrevChapter = value
-        }
-    override var nextChapter: Chapter?
-        get() {
-            mNextChapter?.run { return this }
-            loadMoreOnDemand()
-            return null
-        }
-        set(value) {
-            mNextChapter = value
-        }
-    override var currentReadingChapter: Chapter?
-        get() = mCurrentReadingChapter
-        set(value) {
-            mCurrentReadingChapter = value
-            Timber.e("-----------currentReadingChapter---------$mCurrentReadingChapter")
-        }
-
-    private var mPrevPosition: Int? = null
-    private var mNextPosition: Int? = null
-    private var mCurrentPosition: Int? = null
-    override var prevPosition: Int?
-        get() = mPrevPosition
-        set(value) {
-            chapters?.run {
-                value?.run {
-                    if (this >= 0) {
-                        mPrevPosition = this
-                        prevChapter = get(this)
-                    }
-                } ?: let {
-                    prevChapter = null
-                    mPrevPosition = null
-                }
-            }
-        }
-    override var nextPosition: Int?
-        get() = mNextPosition
-        set(value) {
-            chapters?.run {
-                value?.run {
-                    if (this <= size - 1) {
-                        mNextPosition = this
-                        nextChapter = get(this)
-                    }
-                } ?: let {
-                    nextChapter = null
-                    mNextPosition = null
-                }
-            }
-        }
-    override var currentReadingPosition: Int?
-        get() = mCurrentPosition
-        set(value) {
-            chapters?.run {
-                Timber.e("-----------currentReadingPosition--------------$value------${size - 1}")
-                value?.run {
-                    if (this < 0) return
-                    if (this <= size - 1) {
-                        mCurrentPosition = this
-                        currentReadingChapter = get(this)
-                        if (this < size - 1) nextPosition = this + 1
-                    } else {
-                        loadMoreOnDemand()
-                        nextChapter = null
-                    }
-                    if (this > 0) prevPosition = this - 1
-                } ?: let {
-                    mCurrentPosition = null
-                    currentReadingChapter = null
-                    nextPosition = null
-                    prevPosition = null
-                }
-            }
-        }
     override val chapters: List<Chapter>?
         get() = mChaptersRvAdapter?.mData
 
@@ -246,14 +146,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             val text = TimeUtils.toFbFormatTime(context, time)
             tv_read_history.text = text
             btn_read.setText(R.string.resume)
-            mChaptersRvAdapter?.run {
-                val readingChapterIndex = contains(readingChapterId)
-                if (readingChapterIndex != -1) {
-                    currentReadingPosition = readingChapterIndex
-                } else {
-                    currentReadingPosition = null
-                }
-            }
         }
     }
 
@@ -271,18 +163,18 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         }
     }
 
-    override fun obtainChapterPagingState(prevPageUrl: String?, nextPageUrl: String?, chapters: List<Chapter>) {
-        val prev = prevPageUrl == null
-        val next = nextPageUrl == null
-        chapters.run {
-            if (prev) first().pagingState = PagingState.FIRST
-            if (next) last().pagingState = PagingState.LAST
-            if (prev && next) {
-                first().pagingState = PagingState.SINGLE
-                last().pagingState = PagingState.SINGLE
-            }
-        }
-    }
+//    override fun obtainChapterPagingState(prevPageUrl: String?, nextPageUrl: String?, chapters: List<Chapter>) {
+//        val prev = prevPageUrl == null
+//        val next = nextPageUrl == null
+//        chapters.run {
+//            if (prev) first().pagingState = PagingState.FIRST
+//            if (next) last().pagingState = PagingState.LAST
+//            if (prev && next) {
+//                first().pagingState = PagingState.SINGLE
+//                last().pagingState = PagingState.SINGLE
+//            }
+//        }
+//    }
 
     override fun onChaptersResponse(chaptersResponse: ChaptersResponse?) {
         hideLoading()
@@ -295,7 +187,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
                             dt?.run {
                                 if (dt.isNotEmpty()) {
                                     buildChapters(dt)
-                                    obtainChapterPagingState(cs.prevPageUrl, cs.nextPageUrl, dt)
+//                                    obtainChapterPagingState(cs.prevPageUrl, cs.nextPageUrl, dt)
                                 } else onChaptersNull()
                             } ?: let { onChaptersNull() }
                         }
@@ -320,27 +212,19 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
 
     override fun buildChapters(chapters: List<Chapter>) {
         Timber.e("----------------buildChapters-----------------${chapters.size}---page --- $page-")
-
         btn_read.enable(true)
         mChaptersRvAdapter?.run {
             onAdapterLoadMoreFinished {
                 val x = mData?.size //xxx readBtnClicked
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
-                chapterImagesFragment?.run {
-                    seekCurrentReadingPosition(x)
-                }
             }
         } ?: let {
             mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
             rv.adapter = mChaptersRvAdapter
-            if (!mangaHistory)
-                seekCurrentReadingPosition(0)
         }
-        if (page == PAGE_START)
+        if (page++ == PAGE_START)
             requestMangaHistory()
-        page++
-        notifyViewer()
     }
 
     override fun onFailure() {
@@ -356,17 +240,16 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override fun onClick(position: Int, event: Int) {
         when (event) {
             TYPE_ITEM -> {
-                mChaptersRvAdapter?.run {
-                    mData?.run {
-                        parentFragment?.run {
-                            if (this is MangaInfoMvpView) {
-                                seekCurrentReadingPosition(position)
-                                onReadBtnClicked()
-                            }
-                        }
-                    }
-                }
+                saveMangaHistory()
+                requestChaptersHistory()
+                readByChapterPosition(position)
             }
+        }
+    }
+
+    fun readByChapterPosition(position: Int) {
+        mChaptersRvAdapter?.mData?.getOrNull(position)?.run {
+            readByChapterId(id)
         }
     }
 
@@ -384,22 +267,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         mCallBackLoadMore?.onLoadMore()
     }
 
-    override fun loadMoreOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
-        chapterImagesFragment = chapterImagesMvpView
-        fun loadMore() {
-            Timber.e("-----------------loadMore----------$chapterImagesFragment")
-            loadMoreOnDemand()
-        }
-        nextChapter.let { n ->
-            n?.run {
-                seekNextChapter()
-                chapterImagesFragment?.seekNextChapter()
-            } ?: let {
-                loadMore()
-            }
-        }
-    }
-
     override fun loadInterrupted() {
         super.loadInterrupted()
         mChaptersRvAdapter?.onAdapterLoadMoreFinished()
@@ -411,45 +278,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         } ?: true
     }
 
-    override fun loadPrevOnDemand(chapterImagesMvpView: ChapterImagesMvpView) {
-        chapterImagesFragment = chapterImagesMvpView
-        seekPrevChapter()
-    }
-
-    fun notifyViewer() {
-        handler({
-            chapterImagesFragment?.run {
-                seekNextChapter()
-//                if (isVisible())
-//                    seekNextChapter()
-//                else interAds(page)
-            } ?: let {
-                Timber.e("--------------chapterImagesFragment null-------------------")
-                interAds(page)
-            }
-        }, 250)
-    }
-
-    override fun seekCurrentReadingPosition(newPosition: Int?) {
-        currentReadingPosition = newPosition
-    }
-
-    override fun seekNextChapter() {
-        currentReadingPosition?.run {
-            Timber.e("----------------seekNextChapter---------$this")
-            currentReadingPosition = (this + 1)
-        }
-    }
-
-    override fun seekPrevChapter() {
-        Timber.e("----------------seekPrevChapter---------$currentReadingPosition")
-        currentReadingPosition?.run {
-            if (this > 0) {
-                currentReadingPosition = this - 1
-                notifyViewer()
-            }
-        }
-    }
 
     override fun saveMangaHistory() {
         manga?.run {
@@ -460,6 +288,12 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     override fun onReadBtnClicked() {
         saveMangaHistory()
         requestChaptersHistory()
-        screenManager?.onNewFragmentRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = this)
+        mangaHistoryRealm?.run {
+            readByChapterId(readingChapterId)
+        } ?: readByChapterPosition(0)
+    }
+
+    fun readByChapterId(chapterId: Int?) {
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, obj = chapterId)
     }
 }

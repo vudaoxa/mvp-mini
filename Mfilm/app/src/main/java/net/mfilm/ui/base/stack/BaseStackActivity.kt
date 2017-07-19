@@ -401,10 +401,35 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         }
     }
 
-    //banner ads
+    //banner initAds
     private var mAdView: AdView? = null
     protected fun initBannerAds(mAdView: AdView?) {
         this.mAdView = mAdView
+        adListener = object : IAdListener() {
+            private var countTryRequest = 0
+            private var countHandler = 0
+            override fun fClosed() {
+            }
+
+            override fun fFailedToLoaded() {
+                Timber.e("------fFailedToLoaded------------ $countTryRequest------$countHandler-----------")
+                if (countTryRequest++ < 3) {
+                    reloadAds()
+                } else {
+                    if (countHandler++ < 10) {
+                        handler({
+                            reloadAds()
+                        }, (countHandler * 10000).toLong())
+                    }
+                }
+            }
+
+            override fun fLoaded() {
+                mAdView.show(true)
+                countTryRequest = 0
+                countHandler = 0
+            }
+        }
         loadBannerAds(mAdView, adListener)
     }
 
@@ -413,29 +438,5 @@ abstract class BaseStackActivity : BaseActivityFragmentStack(), MvpView, BaseFra
         requestNewBanner(mAdView)
     }
 
-    private val adListener = object : IAdListener() {
-        private var countTryRequest = 0
-        private var countHandler = 0
-        override fun fClosed() {
-        }
-
-        override fun fFailedToLoaded() {
-            Timber.e("------fFailedToLoaded------------ $countTryRequest------$countHandler-----------")
-            if (countTryRequest++ < 3) {
-                reloadAds()
-            } else {
-                if (countHandler++ < 10) {
-                    handler({
-                        reloadAds()
-                    }, (countHandler * 10000).toLong())
-                }
-            }
-        }
-
-        override fun fLoaded() {
-            mAdView.show(true)
-            countTryRequest = 0
-            countHandler = 0
-        }
-    }
+    private var adListener: IAdListener? = null
 }

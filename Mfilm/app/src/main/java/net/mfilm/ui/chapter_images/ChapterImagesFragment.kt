@@ -22,7 +22,6 @@ import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_PREVIEW
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
 import net.mfilm.ui.chapter_images.rv.ChapterImagesRvAdapter
-import net.mfilm.ui.chapters.ChaptersMvpView
 import net.mfilm.utils.*
 import timber.log.Timber
 import tr.xip.errorview.ErrorView
@@ -35,12 +34,17 @@ import javax.inject.Inject
 class ChapterImagesFragment()
     : BaseErrorViewFragment(), ChapterImagesMvpView {
     companion object {
-        fun newInstance(mChaptersFragment: Any?): ChapterImagesFragment {
-            val fragment = ChapterImagesFragment(mChaptersFragment as? ChaptersMvpView?)
+        fun newInstance(obj: Any?): ChapterImagesFragment {
+            val fragment = ChapterImagesFragment()
+            val bundle = Bundle()
+            bundle.putInt(AppConstants.EXTRA_DATA, obj as Int)
+            fragment.arguments = bundle
             return fragment
         }
     }
 
+    //    private var mChapter: Chapter? = null
+    private var mChapterId: Int? = null
     override val rvPreview: RecyclerView
         get() = rv_preview
     private var mWebtoon = false
@@ -55,7 +59,7 @@ class ChapterImagesFragment()
         get() = R.string.failed_to_load
 
     override fun onErrorViewDemand(errorView: ErrorView?) {
-        request()
+        requestChapterImages()
     }
 
     @Inject
@@ -63,18 +67,14 @@ class ChapterImagesFragment()
     private var mChapterImagesRvAdapter: ChapterImagesRvAdapter<ChapterImage>? = null
     private var mChapterImagesPreviewRvAdapter: ChapterImagesRvAdapter<ChapterImage>? = null
     private var mLayoutWrapper: LinearLayoutManagerWrapper? = null
-    private var mCurrentPage = 0
-    override var currentPage: Int
-        get() = mCurrentPage
-        set(value) {
-            mCurrentPage = value
-        }
+    override var currentPage: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(net.mfilm.R.layout.fragment_chapter_images, container, false)
     }
 
     override fun initFields() {
+        mChapterId = arguments.getInt(AppConstants.EXTRA_DATA) as? Int?
         fullScreen = true
         tryOrExit {
             activityComponent?.inject(this)
@@ -89,7 +89,7 @@ class ChapterImagesFragment()
         initAds()
         initBtnViewContinue()
         initPageChange()
-        requestChapterImages()
+        mChapterId?.run { requestChapterDetail(this) }
     }
 
     override fun onDestroy() {
@@ -165,21 +165,17 @@ class ChapterImagesFragment()
         btn_eye.setOnClickListener { preview() }
     }
 
-    fun pageChange() {
+    override fun startPageChange() {
         currentPage = 0
         mChapterImagesRvAdapter?.run {
             tv_page_count.text = "${currentPage + 1}/$itemCount"
-            save()
+            saveCurrentPage()
         }
     }
 
-    fun save() {
-        mChaptersFragment?.run {
-            currentReadingChapter.let { c ->
-                c?.run {
-                    saveReadingPage(c, currentPage)
-                }
-            }
+    override fun saveCurrentPage() {
+        mChapterDetail?.chapter?.run {
+            saveReadingPage(this, currentPage)
         }
     }
 
@@ -197,7 +193,7 @@ class ChapterImagesFragment()
             val itemCount = itemCount
             tv_page_count.text = "${p1 + 1}/$itemCount"
             configBtnContinue(p0, p1, itemCount)
-            save()
+            saveCurrentPage()
         }
     }
 
@@ -218,8 +214,8 @@ class ChapterImagesFragment()
         }
     }
 
-    override fun saveChapterHistory(chapter: Chapter, position: Int) {
-        mChapterImagesPresenter.saveChapterHistory(chapter, position)
+    override fun saveChapterHistory(chapter: Chapter) {
+        mChapterImagesPresenter.saveChapterHistory(chapter)
     }
 
     override fun saveReadingPage(chapter: Chapter, page: Int) {
@@ -227,43 +223,24 @@ class ChapterImagesFragment()
     }
 
     private fun request() {
-        mChaptersFragment?.run {
-            currentReadingChapter.let { c ->
-                c?.run {
-                    Timber.e("----------initViews---------$c---------")
-                    requestChapterImages(c.id!!)
-                    tv_chapter_name?.text = c.name ?: return
-                    saveChapterHistory(c, currentReadingPosition!!)
-                    initPagingState(c)
-                } ?: let {
-                    mangaHistoryRealm?.run {
-                        requestChapterDetail(readingChapterId)
-                        mReadingChapterPosition = readingChapterPosition
-                    } ?: onFailure()
-                }
-            }
+        mChapterDetail?.chapter?.run {
+            Timber.e("----------request---------$this---------")
+            requestChapterImages(id!!)
         }
     }
 
     override fun loadMoreOnDemand() {
-        mChapterDetail?.run {
-
-        } ?: let {
-            mChaptersFragment?.loadMoreOnDemand(this@ChapterImagesFragment)
+        mChapterDetail?.previousChapter?.id?.run {
+            requestChapterDetail(this)
         }
-
     }
 
     override fun loadPrevOnDemand() {
-        //it's must be synchronized with mChaptersFragment, because:
-        //read btn behavior
-        //get currentReadingPosition from mChaptersFragment, to reload images in $chapters
-        mChaptersFragment?.run {
-            loadPrevOnDemand(this@ChapterImagesFragment)
+        mChapterDetail?.nextChapter?.id?.run {
+            requestChapterDetail(this)
         }
     }
 
-    private var mReadingChapterPosition = 0
     private var mChapterDetail: ChapterDetail? = null
     override fun requestChapterDetail(chapterId: Int) {
         mChapterImagesPresenter.requestChapterDetail(chapterId)
@@ -274,24 +251,31 @@ class ChapterImagesFragment()
         t?.run {
             chapterDetail?.run {
                 mChapterDetail = this
+                initPagingState(this)
                 chapter?.run {
-                    Timber.e("----------chapter---------$this---------")
-                    requestChapterImages(id!!)
-                    tv_chapter_name?.text = name ?: return
-                    saveChapterHistory(this, mReadingChapterPosition)
-                    initPagingState(this)
+                    buildChapterDetail(this)
                 } ?: onChapterDetailNull()
             } ?: onChapterDetailNull()
         } ?: onChapterDetailNull()
     }
 
+    override fun buildChapterDetail(chapter: Chapter) {
+        chapter.run {
+            Timber.e("----------chapter---------$this---------")
+            requestChapterImages(id!!)
+            tv_chapter_name?.text = name ?: return
+            saveChapterHistory(this)
+        }
+    }
+
     override fun onChapterDetailNull() {
         Timber.e("---------onChapterDetailNull-----------------------------")
     }
-    override fun initPagingState(chapter: Chapter) {
-        chapter.run {
-            btn_left.enable(pagingState !in listOf<Any?>(PagingState.FIRST, PagingState.SINGLE))
-            btn_right.enable(pagingState !in listOf<Any?>(PagingState.LAST, PagingState.SINGLE))
+
+    override fun initPagingState(chapterDetail: ChapterDetail) {
+        chapterDetail.run {
+            btn_left.enable(nextChapter != null)
+            btn_right.enable(previousChapter != null)
         }
     }
 
@@ -339,16 +323,13 @@ class ChapterImagesFragment()
             notifyDataSetChanged()
             handler({
                 val x = if (!next && countRequestChapterImages > 0) itemCount - 1 else 0
-//                if (webtoon)
-//                    rv_vertical.scrollToPosition(x)
-//                else
                 rv_pager_horizontal.scrollToPosition(x)
             })
         } ?: let {
             mChapterImagesRvAdapter = ChapterImagesRvAdapter(context, images.toMutableList(), this, this)
             rv_pager_horizontal.adapter = mChapterImagesRvAdapter
         }
-        pageChange()
+        startPageChange()
         buildChapterImagesPreview(images)
     }
 
@@ -369,11 +350,6 @@ class ChapterImagesFragment()
             rv_pager_horizontal.requestLayout()
         }
         webtoon = true
-//        rv_pager_horizontal.show(false)
-//        rv_vertical.run {
-//            adapter = mChapterImagesRvAdapter
-//            show(true)
-//        }
     }
 
     override fun onBitmapSizeResponse(webtoon: Boolean) {
@@ -391,13 +367,11 @@ class ChapterImagesFragment()
     }
 
 
-
-    override fun seekNextChapter() {
-        if (isVisible && isAdded)
-            requestChapterImages()
-        else interAds()
-//        requestChapterImages()
-    }
+//    override fun seekNextChapter() {
+//        if (isVisible && isAdded)
+//            requestChapterImages()
+//        else interAds()
+//    }
 
     override fun onRvFailure(position: Int) {
         mChapterImagesRvAdapter?.removeAt(position)
@@ -430,6 +404,5 @@ class ChapterImagesFragment()
                 }
             }
         }
-
     }
 }

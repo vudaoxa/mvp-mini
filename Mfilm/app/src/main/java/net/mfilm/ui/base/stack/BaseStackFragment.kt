@@ -144,7 +144,7 @@ abstract class BaseStackFragment : BaseFragmentStack(), MvpView, ICallbackFragme
 
     protected abstract fun initFields()
 
-    //inter ads
+    //inter initAds
     protected var mInterAd: InterstitialAd? = null
     protected var mPosition = 0
     protected var mEvent = 0

@@ -12,10 +12,7 @@ import com.joanzapata.iconify.widget.IconTextView
 import io.reactivex.Flowable
 import io.realm.RealmObject
 import net.mfilm.data.db.models.SearchQueryRealm
-import net.mfilm.data.network_retrofit.Category
-import net.mfilm.data.network_retrofit.Chapter
-import net.mfilm.data.network_retrofit.ChapterImage
-import net.mfilm.data.network_retrofit.Manga
+import net.mfilm.data.network_retrofit.*
 import net.mfilm.data.prefs.MangaSources
 import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.custom.SimpleViewAnimator
@@ -29,6 +26,12 @@ import tr.xip.errorview.ErrorView
 /**
  * Created by tusi on 5/16/17.
  */
+interface ICallbackChapterDetail {
+    fun requestChapterDetail(chapterId: Int)
+    fun onChapterDetailResponse(t: ChapterDetailResponse?)
+    fun onChapterDetailNull()
+    fun buildChapterDetail(chapter: Chapter)
+}
 interface ICallbackChaptersHistory {
     fun initChapterHistory(chapter: Chapter)
     fun initReading(chapter: Chapter)
@@ -46,6 +49,8 @@ interface ICallbackWebtoon {
 interface ICallbackPageChange {
     var currentPage: Int
     fun initPageChange()
+    fun startPageChange()
+    fun saveCurrentPage()
 }
 
 interface ICallbackViewContinue {

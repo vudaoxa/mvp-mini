@@ -23,6 +23,6 @@ enum class DialogMenus {
     SHARE, FAVORITES
 }
 
-enum class PagingState {
-    SINGLE, FIRST, MIDDLE, LAST
-}
+//enum class PagingState {
+//    SINGLE, FIRST, MIDDLE, LAST
+//}

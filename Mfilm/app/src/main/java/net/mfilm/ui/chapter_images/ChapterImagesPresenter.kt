@@ -41,8 +41,8 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
         compositeDisposable.add(d)
     }
 
-    override fun saveChapterHistory(chapter: Chapter, position: Int) {
-        dataManager.saveChapterHistory(chapter, position)
+    override fun saveChapterHistory(chapter: Chapter) {
+        dataManager.saveChapterHistory(chapter)
     }
 
     override fun saveReadingPage(chapter: Chapter, page: Int) {
