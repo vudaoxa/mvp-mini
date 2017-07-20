@@ -163,19 +163,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         }
     }
 
-//    override fun obtainChapterPagingState(prevPageUrl: String?, nextPageUrl: String?, chapters: List<Chapter>) {
-//        val prev = prevPageUrl == null
-//        val next = nextPageUrl == null
-//        chapters.run {
-//            if (prev) first().pagingState = PagingState.FIRST
-//            if (next) last().pagingState = PagingState.LAST
-//            if (prev && next) {
-//                first().pagingState = PagingState.SINGLE
-//                last().pagingState = PagingState.SINGLE
-//            }
-//        }
-//    }
-
     override fun onChaptersResponse(chaptersResponse: ChaptersResponse?) {
         hideLoading()
         chaptersResponse.let { cr ->
