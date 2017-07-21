@@ -1,10 +1,12 @@
-package net.mfilm.google
+package net.mfilm.more.google
 
 import android.content.Context
 import android.support.v4.util.SparseArrayCompat
 import com.google.android.gms.ads.*
 import net.mfilm.R
 import net.mfilm.di.AppContext
+import net.mfilm.more.vungle.initVungle
+import net.mfilm.more.vungle.playAds
 import net.mfilm.utils.rand
 import timber.log.Timber
 
@@ -15,15 +17,17 @@ import timber.log.Timber
 fun ads(mInterstitialAd: InterstitialAd?, f: (() -> Unit)? = null) {
     val rand = rand(MAX_ADS)
     Timber.e("---initAds--------x--- $rand ------------------")
-    if (rand < MIN_ADS) {
-        f?.invoke()
-    } else {
-        val show = showInterAds(mInterstitialAd)
-        Timber.e("--initAds----show --------- $show-----------------------")
-        if (!show) {
-            f?.invoke()
-        }
-    }
+    playAds()
+//    if (rand < MIN_ADS) {
+//        f?.invoke()
+//    } else {
+//        playAds()
+//        val show = showInterAds(mInterstitialAd)
+//        Timber.e("--initAds----show --------- $show-----------------------")
+//        if (!show) {
+//            f?.invoke() ?: playAds()
+//        }
+//    }
 }
 
 fun initAds(@AppContext context: Context) {
@@ -32,6 +36,7 @@ fun initAds(@AppContext context: Context) {
         MobileAds.initialize(this, getString(R.string.inter_ad_unit_id))
     }
     initMapAdsErrors()
+    initVungle(context)
 }
 
 private const val MAX_ADS = 7

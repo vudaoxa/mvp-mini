@@ -41,9 +41,9 @@ import net.mfilm.data.db.models.SearchQueryRealm
 import net.mfilm.di.components.ActComponent
 import net.mfilm.di.components.DaggerActComponent
 import net.mfilm.di.modules.ActModule
-import net.mfilm.google.IAdListener
-import net.mfilm.google.loadBannerAds
-import net.mfilm.google.requestNewBanner
+import net.mfilm.more.google.IAdListener
+import net.mfilm.more.google.loadBannerAds
+import net.mfilm.more.google.requestNewBanner
 import net.mfilm.ui.base.BaseFragment
 import net.mfilm.ui.base.MvpView
 import net.mfilm.ui.manga.PassByTime

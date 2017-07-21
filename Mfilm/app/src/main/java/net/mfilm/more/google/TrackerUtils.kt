@@ -1,4 +1,4 @@
-package net.mfilm.google
+package net.mfilm.more.google
 
 import android.content.Context
 import com.google.android.gms.analytics.GoogleAnalytics

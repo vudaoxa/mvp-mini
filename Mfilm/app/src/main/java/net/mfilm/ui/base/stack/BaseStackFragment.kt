@@ -23,10 +23,10 @@ import android.support.v4.app.Fragment
 import android.view.View
 import com.google.android.gms.ads.InterstitialAd
 import net.mfilm.di.components.ActComponent
-import net.mfilm.google.IAdListener
-import net.mfilm.google.ads
-import net.mfilm.google.initInterAds
-import net.mfilm.google.requestNewInterstitial
+import net.mfilm.more.google.IAdListener
+import net.mfilm.more.google.ads
+import net.mfilm.more.google.initInterAds
+import net.mfilm.more.google.requestNewInterstitial
 import net.mfilm.ui.base.MvpView
 import net.mfilm.utils.ICallbackFragmentOptionMenu
 import net.mfilm.utils.anim
