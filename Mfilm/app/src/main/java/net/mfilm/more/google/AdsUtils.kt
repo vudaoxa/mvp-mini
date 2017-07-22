@@ -6,6 +6,7 @@ import com.google.android.gms.ads.*
 import net.mfilm.R
 import net.mfilm.di.AppContext
 import net.mfilm.more.vungle.initVungle
+import net.mfilm.more.vungle.loadVideoAds
 import net.mfilm.more.vungle.playAds
 import net.mfilm.utils.rand
 import timber.log.Timber
@@ -17,17 +18,23 @@ import timber.log.Timber
 fun ads(mInterstitialAd: InterstitialAd?, f: (() -> Unit)? = null) {
     val rand = rand(MAX_ADS)
     Timber.e("---initAds--------x--- $rand ------------------")
-    playAds()
-//    if (rand < MIN_ADS) {
-//        f?.invoke()
-//    } else {
-//        playAds()
-//        val show = showInterAds(mInterstitialAd)
-//        Timber.e("--initAds----show --------- $show-----------------------")
-//        if (!show) {
-//            f?.invoke() ?: playAds()
-//        }
-//    }
+    if (rand < MIN_ADS) {
+        f?.invoke()
+    } else {
+        val x = rand(2)
+        if (x == 0L) {
+            val show = showInterAds(mInterstitialAd)
+            Timber.e("--initAds----show --------- $show-----------------------")
+            if (!show) {
+                f?.invoke() ?: playAds()
+            }
+        } else {
+            val played = playAds()
+            if (!played) {
+                f?.invoke() ?: showInterAds(mInterstitialAd)
+            }
+        }
+    }
 }
 
 fun initAds(@AppContext context: Context) {
@@ -37,8 +44,13 @@ fun initAds(@AppContext context: Context) {
     }
     initMapAdsErrors()
     initVungle(context)
+    loadVideoAds()
+    addTestDevices()
 }
 
+fun addTestDevices() {
+    AdRequest.Builder().addTestDevice("377FF6D585460429A6A727CC8702FAED")
+}
 private const val MAX_ADS = 7
 private const val MIN_ADS = 4
 const val PAGES_PER_AD = 4

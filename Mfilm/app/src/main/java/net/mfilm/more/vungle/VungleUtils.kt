@@ -10,28 +10,40 @@ import timber.log.Timber
  * Created by tusi on 7/21/17.
  */
 val vunglePub = VunglePub.getInstance()
+
 internal val app_id = "5970d5f593062a7656004221"
 internal val DEFAULT_PLACEMENT_ID = "DEFAULT93295"
 private val placement_list = arrayOf(DEFAULT_PLACEMENT_ID, "PLACEME03059")
-fun loadAds() {
-    vunglePub.run {
-        if (!isInitialized) return
-        loadAd(placement_list[1])
-    }
-}
 
-fun playAds() {
+//test
+//internal val app_id = "5916309cb46f6b5a3e00009c"
+//internal val DEFAULT_PLACEMENT_ID = "DEFAULT32590"
+//private val placement_list = arrayOf(DEFAULT_PLACEMENT_ID, "TESTREW28799", "TESTINT07107")
+
+fun loadVideoAds() {
     vunglePub.run {
         if (!isInitialized) return
         placement_list.run {
-            for (i in indices) {
-                if (isAdPlayable(this[i])) {
-                    playAd(this[i], null)
-                    break
+            forEach { loadAd(it) }
+        }
+    }
+}
+
+fun playAds(): Boolean {
+    vunglePub.run {
+        if (!isInitialized) return false
+        placement_list.run {
+            forEach {
+                val x = isAdPlayable(it)
+                Timber.i("----- isAdPlayable------ $x---------------------")
+                if (x) {
+                    playAd(it, null)
+                    return true
                 } else {
-                    Timber.i("----- !isAdPlayable------ ${this[i]}---------------------")
+                    loadAd(it)
                 }
             }
+            return false
         }
     }
 }

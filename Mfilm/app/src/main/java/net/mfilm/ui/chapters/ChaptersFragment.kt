@@ -210,6 +210,7 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
             mChaptersRvAdapter = ChaptersRvAdapter(context, chapters.toMutableList(), this)
             rv.adapter = mChaptersRvAdapter
         }
+        interAds(page)
         if (page++ == PAGE_START)
             requestMangaHistory()
     }
@@ -265,7 +266,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         } ?: true
     }
 
-
     override fun saveMangaHistory() {
         manga?.run {
             mChaptersPresenter.saveMangaHistory(this)
@@ -276,11 +276,15 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         saveMangaHistory()
         requestChaptersHistory()
         mangaHistoryRealm?.run {
-            readByChapterId(readingChapterId)
+            readByMangaHistoryRealm(this)
         } ?: readByChapterPosition(0)
     }
 
     fun readByChapterId(chapterId: Int?) {
         screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, obj = chapterId)
+    }
+
+    fun readByMangaHistoryRealm(mangaHistoryRealm: MangaHistoryRealm) {
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, obj = mangaHistoryRealm)
     }
 }

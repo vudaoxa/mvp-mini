@@ -4,10 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.view.GestureDetectorCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
+import android.view.GestureDetector
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
@@ -23,6 +26,7 @@ import net.mfilm.R
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.categories.CategoriesFragment
 import net.mfilm.ui.chapter_images.ChapterImagesFragment
+import net.mfilm.ui.custom.SwipeDetector
 import net.mfilm.ui.favorites.FavoritesFragment
 import net.mfilm.ui.filmy.FullReadFragment
 import net.mfilm.ui.history.HistoryFragment
@@ -142,9 +146,11 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     fun initAds() {
         initBannerAds(ad_view)
     }
+
     override fun initScreenRequestPassByTime() {
         screenRequestPassByTime = PassByTime(SCREEN_DURATION)
     }
+
     override fun showConfirmExit() {
         DialogUtil.showMessageConfirm(this, R.string.notifications, R.string.confirm_exit,
                 MaterialDialog.SingleButtonCallback { _, _ -> finish() })
@@ -240,21 +246,22 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         mMainPresenter.onDetach()
     }
 
-    //    override fun onTouchEvent(event: MotionEvent?): Boolean {
-//        Timber.e("----onTouchEvent-----------------$event-------------------------------")
-//        val gestureDetector = GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
-//            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-//                tryIt{
-//                    val detector = SwipeDetector(e1, e2, velocityX, velocityY)
-//                    Timber.e("------detector-----------${detector.isRightSwipe}----------------------------------")
-//                }
-//                return true
-//            }
-//
-//        })
-//        gestureDetector.onTouchEvent(event)
-//        return super.onTouchEvent(event)
-//    }
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        Timber.e("----onTouchEvent-----------------$event-------------------------------")
+        val gestureDetector = GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+                tryIt {
+                    val detector = SwipeDetector(e1, e2, velocityX, velocityY)
+                    Timber.e("------detector-----------${detector.isRightSwipe}----------------------------------")
+                }
+                return true
+            }
+
+        })
+        gestureDetector.onTouchEvent(event)
+        return super.onTouchEvent(event)
+    }
+
     companion object {
         fun getStartIntent(splashActivity: Activity): Intent {
             val intent = Intent(splashActivity, MainActivity::class.java)

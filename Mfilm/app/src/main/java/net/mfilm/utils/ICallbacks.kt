@@ -27,6 +27,7 @@ import tr.xip.errorview.ErrorView
  * Created by tusi on 5/16/17.
  */
 interface ICallbackChapterDetail {
+    fun requestChapterDetail()
     fun requestChapterDetail(chapterId: Int)
     fun onChapterDetailResponse(t: ChapterDetailResponse?)
     fun onChapterDetailNull()

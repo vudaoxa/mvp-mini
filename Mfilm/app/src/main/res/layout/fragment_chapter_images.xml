@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/navy_dark_background">
+    style="@style/navy_dark_background"
+    android:clickable="true">
 
     <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
         android:id="@+id/rv_pager_horizontal"

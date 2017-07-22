@@ -1,9 +1,11 @@
 package net.mfilm.ui.chapter_images
 
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +18,13 @@ import kotlinx.android.synthetic.main.fragment_chapter_images.*
 import kotlinx.android.synthetic.main.viewer_footer.*
 import kotlinx.android.synthetic.main.viewer_header.*
 import net.mfilm.R
+import net.mfilm.data.db.models.MangaHistoryRealm
 import net.mfilm.data.network_retrofit.*
 import net.mfilm.ui.base.error_view.BaseErrorViewFragment
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM
 import net.mfilm.ui.base.rv.holders.TYPE_ITEM_PREVIEW
 import net.mfilm.ui.base.rv.wrappers.LinearLayoutManagerWrapper
+import net.mfilm.ui.base.rv.wrappers.StaggeredGridLayoutManagerWrapper
 import net.mfilm.ui.chapter_images.rv.ChapterImagesRvAdapter
 import net.mfilm.utils.*
 import timber.log.Timber
@@ -30,21 +34,33 @@ import javax.inject.Inject
 /**
  * Created by tusi on 5/29/17.
  */
-//private var mChaptersFragment: ChaptersMvpView? = null
 class ChapterImagesFragment()
     : BaseErrorViewFragment(), ChapterImagesMvpView {
     companion object {
+        private const val KEY_READING_PAGE = "KEY_READING_PAGE"
+        private const val KEY_CHAPTER_ID = "KEY_CHAPTER_ID"
         fun newInstance(obj: Any?): ChapterImagesFragment {
             val fragment = ChapterImagesFragment()
             val bundle = Bundle()
-            bundle.putInt(AppConstants.EXTRA_DATA, obj as Int)
+            when (obj) {
+                is MangaHistoryRealm -> {
+                    bundle.putInt(KEY_READING_PAGE, obj.readingPage)
+                    bundle.putInt(KEY_CHAPTER_ID, obj.readingChapterId)
+                }
+                is Int -> {
+                    bundle.putInt(KEY_CHAPTER_ID, obj)
+                }
+            }
             fragment.arguments = bundle
             return fragment
         }
     }
 
-    //    private var mChapter: Chapter? = null
+    private var mChapterDetail: ChapterDetail? = null
     private var mChapterId: Int? = null
+    private var mReadingPage: Int? = null
+    override val spanCount: Int
+        get() = resources.getInteger(R.integer.chapter_images_preview_span_count)
     override val rvPreview: RecyclerView
         get() = rv_preview
     private var mWebtoon = false
@@ -59,7 +75,9 @@ class ChapterImagesFragment()
         get() = R.string.failed_to_load
 
     override fun onErrorViewDemand(errorView: ErrorView?) {
-        requestChapterImages()
+        mChapterDetail?.run {
+            requestChapterImages()
+        } ?: requestChapterDetail()
     }
 
     @Inject
@@ -67,6 +85,7 @@ class ChapterImagesFragment()
     private var mChapterImagesRvAdapter: ChapterImagesRvAdapter<ChapterImage>? = null
     private var mChapterImagesPreviewRvAdapter: ChapterImagesRvAdapter<ChapterImage>? = null
     private var mLayoutWrapper: LinearLayoutManagerWrapper? = null
+    private lateinit var mPreviewRvLayoutManagerWrapper: StaggeredGridLayoutManagerWrapper
     override var currentPage: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,7 +93,9 @@ class ChapterImagesFragment()
     }
 
     override fun initFields() {
-        mChapterId = arguments.getInt(AppConstants.EXTRA_DATA) as? Int?
+        mChapterId = arguments.getInt(KEY_CHAPTER_ID) as? Int?
+        mReadingPage = arguments.getInt(KEY_READING_PAGE) as? Int?
+        Timber.e("------mChapterId--------- $mChapterId-------mReadingPage------------ $mReadingPage-------------------")
         fullScreen = true
         tryOrExit {
             activityComponent?.inject(this)
@@ -89,7 +110,7 @@ class ChapterImagesFragment()
         initAds()
         initBtnViewContinue()
         initPageChange()
-        mChapterId?.run { requestChapterDetail(this) }
+        requestChapterDetail()
     }
 
     override fun onDestroy() {
@@ -109,7 +130,9 @@ class ChapterImagesFragment()
 
     override fun initRvPreview() {
         rvPreview.run {
-            layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.HORIZONTAL, false)
+            mPreviewRvLayoutManagerWrapper = StaggeredGridLayoutManagerWrapper(spanCount,
+                    StaggeredGridLayoutManager.VERTICAL)
+            layoutManager = mPreviewRvLayoutManagerWrapper
         }
     }
 
@@ -226,7 +249,7 @@ class ChapterImagesFragment()
         mChapterDetail?.chapter?.run {
             Timber.e("----------request---------$this---------")
             requestChapterImages(id!!)
-        }
+        } ?: onFailure()
     }
 
     override fun loadMoreOnDemand() {
@@ -241,7 +264,10 @@ class ChapterImagesFragment()
         }
     }
 
-    private var mChapterDetail: ChapterDetail? = null
+    override fun requestChapterDetail() {
+        mChapterId?.run { requestChapterDetail(this) }
+    }
+
     override fun requestChapterDetail(chapterId: Int) {
         mChapterImagesPresenter.requestChapterDetail(chapterId)
     }
@@ -328,6 +354,11 @@ class ChapterImagesFragment()
         } ?: let {
             mChapterImagesRvAdapter = ChapterImagesRvAdapter(context, images.toMutableList(), this, this)
             rv_pager_horizontal.adapter = mChapterImagesRvAdapter
+            handler({
+                mReadingPage?.run {
+                    rv_pager_horizontal.scrollToPosition(this)
+                }
+            })
         }
         startPageChange()
         buildChapterImagesPreview(images)
@@ -377,6 +408,13 @@ class ChapterImagesFragment()
         mChapterImagesRvAdapter?.removeAt(position)
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        rvPreview.run {
+            mPreviewRvLayoutManagerWrapper.spanCount = spanCount
+            requestLayout()
+        }
+    }
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick----------$event----------$position")
         viewer_header.toggleShow()

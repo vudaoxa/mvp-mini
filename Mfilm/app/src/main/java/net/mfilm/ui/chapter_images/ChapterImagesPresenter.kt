@@ -82,17 +82,12 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
                 }
             }
         }
-//        Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(d)
-
-        tryIt {
+        tryIt({
             Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(d)
-        }
+        })
         compositeDisposable.add(d)
     }
 }
