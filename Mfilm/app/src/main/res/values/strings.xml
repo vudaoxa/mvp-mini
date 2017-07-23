@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">MangaLand</string>
+    <string name="app_name">Komik</string>
+    <string name="app_website">Mangaland.net</string>
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
     <string name="banner_ad_unit_id">ca-app-pub-7484458390598913/9984814780</string>
@@ -131,6 +132,7 @@
     <string name="select_all">Select All</string>
     <string name="deselect_all">Deselect All</string>
     <string name="undo">Undo</string>
+    <string name="coming_soon">Coming soon!</string>
     <string-array name="bottom_dialog">
         <item>{ion-share} \u0020 Share with my friends</item>
         <item>{ion-ios-star} \u0020 Add to favorites</item>

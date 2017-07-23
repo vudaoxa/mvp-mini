@@ -13,7 +13,6 @@ import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.utils.MDisposableObserver
-import net.mfilm.utils.tryIt
 import timber.log.Timber
 import java.net.URL
 import javax.inject.Inject
@@ -82,12 +81,19 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
                 }
             }
         }
-        tryIt({
+        try {
             Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(d)
-        })
+        } catch (e: Exception) {
+        }
+//        tryIt({
+//            Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(d)
+//        })
         compositeDisposable.add(d)
     }
 }

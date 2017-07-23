@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.CountDownTimer
 import android.os.Handler
 import android.provider.Settings
@@ -41,6 +42,10 @@ import java.util.*
 /**
  * Created by tusi on 4/2/17.
  */
+fun viewIntent(context: Context, link: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+    context.startActivity(intent)
+}
 fun sendShareIntent(context: Context, text: String?) {
     text ?: return
     val txt = text.trim()

@@ -50,6 +50,7 @@ fun initAds(@AppContext context: Context) {
 
 fun addTestDevices() {
     AdRequest.Builder().addTestDevice("377FF6D585460429A6A727CC8702FAED")
+    AdRequest.Builder().addTestDevice("68DA9A73E167D7B233E4AD999D3FD0DE")
 }
 private const val MAX_ADS = 7
 private const val MIN_ADS = 4

@@ -289,8 +289,8 @@ interface ICallbackLocalSearch : ICallbackLayoutSearch {
 }
 interface ICallbackToolbar : ICallbackToolbarSearch, ICallbackOptionMenu, ICallbackLayoutSearch {
     var optionsMenu: Int
-    val actionSettingsId: Int
-    val actionAboutId: Int
+    val actionSettingsId: Int?
+    val actionAboutId: Int?
     val mToolbarTitle: TextView
     val mToolbarBack: ImageButton
     val mToolbar: Toolbar

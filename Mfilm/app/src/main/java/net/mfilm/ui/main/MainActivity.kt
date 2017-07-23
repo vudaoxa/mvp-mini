@@ -74,10 +74,11 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
         get() = layout_btns_info
     override val mLayoutInputText: LinearLayout
         get() = layout_input_text
-    override val actionSettingsId: Int
+    override val actionSettingsId: Int?
         get() = R.id.action_settings
-    override val actionAboutId: Int
-        get() = R.id.action_about
+    override val actionAboutId: Int?
+//        get() = R.id.action_about
+        get() = null
     override val resLayout: Int
         get() = R.layout.activity_main
 
@@ -110,6 +111,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onShare() {
         Timber.e("---------------onShare-----------")
+        showMessage(AppConstants.TYPE_TOAST_INFOR, R.string.coming_soon)
     }
 
     override fun onFollow() {
@@ -139,10 +141,19 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
     override fun initViews(savedInstanceState: Bundle?) {
         super.initViews(savedInstanceState)
         initScreenRequestPassByTime()
-        mNavView.setNavigationItemSelectedListener(this)
+        initNav()
         initAds()
     }
 
+    fun initNav() {
+        mNavView.setNavigationItemSelectedListener(this)
+//        mNavView.findViewById(R.id.layout_nav_header).setOnClickListener { viewIntent(this, "http://mangaland.net/") }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        findViewById(R.id.layout_nav_header)?.setOnClickListener { viewIntent(this, "http://mangaland.net/") }
+    }
     fun initAds() {
         initBannerAds(ad_view)
     }

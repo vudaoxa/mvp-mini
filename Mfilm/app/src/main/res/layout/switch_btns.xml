@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_pager_btns"
-    style="@style/Layout_wrap.white_border"
+    style="@style/Layout_wrap"
     android:padding="@dimen/dimen1">
 
     <FrameLayout
