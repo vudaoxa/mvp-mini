@@ -18,7 +18,7 @@ object DialogUtils {
         dialog = DialogPlus.newDialog(mContext)
                 .setMargin(30, 0, 30, 0)
                 .setAdapter(adapter)
-                .setOnItemClickListener { dialog, item, view, position ->
+                .setOnItemClickListener { _, _, _, position ->
                     Timber.e("----onlick------------$position--------------------------")
                     longClickItem?.onDialogItemClicked(dataItemPosition,
                             position, adapter.getItem(position)?.event)

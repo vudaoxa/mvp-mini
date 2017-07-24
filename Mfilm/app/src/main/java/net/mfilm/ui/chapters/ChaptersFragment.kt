@@ -202,7 +202,6 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
         btn_read.enable(true)
         mChaptersRvAdapter?.run {
             onAdapterLoadMoreFinished {
-                val x = mData?.size //xxx readBtnClicked
                 mData?.addAll(chapters)
                 notifyDataSetChanged()
             }

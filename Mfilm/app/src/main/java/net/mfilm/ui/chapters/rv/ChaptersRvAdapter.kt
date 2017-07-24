@@ -14,6 +14,7 @@ import net.mfilm.utils.ICallbackChaptersHistory
 import net.mfilm.utils.ICallbackOnClick
 import timber.log.Timber
 
+@Suppress("UNCHECKED_CAST")
 /**
  * Created by tusi on 5/27/17.
  */
