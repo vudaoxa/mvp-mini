@@ -1,3 +1,5 @@
+@file:Suppress("VARIABLE_WITH_REDUNDANT_INITIALIZER", "DEPRECATION")
+
 package net.mfilm.utils
 
 import android.content.Context

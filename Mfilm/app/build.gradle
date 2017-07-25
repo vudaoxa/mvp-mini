@@ -22,7 +22,6 @@ android {
             minifyEnabled false
             buildConfigField("String", "BASE_URL", "\"http://mangaland.net/\"")
             buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
-
         }
         release {
             minifyEnabled true
@@ -39,6 +38,12 @@ android {
             buildConfigField("String", "BASE_URL", "\"http://mangaland.net/\"")
             buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

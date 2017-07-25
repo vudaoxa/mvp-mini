@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package net.mfilm.utils
 
 import android.animation.Animator

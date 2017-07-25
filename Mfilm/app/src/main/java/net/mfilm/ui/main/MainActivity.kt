@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.input_text.*
 import kotlinx.android.synthetic.main.main_action_btns.*
 import net.mfilm.R
+import net.mfilm.more.vungle.vunglePub
 import net.mfilm.ui.base.stack.BaseStackActivity
 import net.mfilm.ui.categories.CategoriesFragment
 import net.mfilm.ui.chapter_images.ChapterImagesFragment
@@ -152,7 +153,13 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
-        findViewById(R.id.layout_nav_header)?.setOnClickListener { viewIntent(this, "http://mangaland.net/") }
+        vunglePub.onResume()
+//        findViewById(R.id.layout_nav_header)?.setOnClickListener { viewIntent(this, "http://mangaland.net/") }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        vunglePub.onPause()
     }
     fun initAds() {
         initBannerAds(ad_view)

@@ -77,7 +77,7 @@ class MangaDetailResponse : MResponse() {
     var manga: Manga? = null
 }
 
-class Manga : Serializable {
+open class Manga : Serializable {
     @SerializedName("id")
     @Expose
     var id: Int? = null
@@ -166,7 +166,7 @@ class Chapters : MPaging() {
     var data: List<Chapter>? = null
 }
 
-class Chapter : Serializable {
+open class Chapter : Serializable {
     @SerializedName("id")
     @Expose
     var id: Int? = null
