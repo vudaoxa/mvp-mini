@@ -25,7 +25,7 @@ android {
 
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
             proguardFiles fileTree(dir: "mproguard", include: ["*.pro"]).asList().toArray()
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
