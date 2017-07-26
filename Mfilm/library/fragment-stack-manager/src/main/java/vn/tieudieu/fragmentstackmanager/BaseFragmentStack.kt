@@ -21,7 +21,7 @@ abstract class BaseFragmentStack : BaseFragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is ScreenManager) {
-            screenManager = context as ScreenManager?
+            screenManager = context
         } else {
             throw IllegalArgumentException()
         }
