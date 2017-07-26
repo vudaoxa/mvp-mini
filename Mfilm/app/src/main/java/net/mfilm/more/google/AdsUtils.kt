@@ -5,9 +5,9 @@ import android.support.v4.util.SparseArrayCompat
 import com.google.android.gms.ads.*
 import net.mfilm.R
 import net.mfilm.di.AppContext
-import net.mfilm.more.vungle.initVungle
-import net.mfilm.more.vungle.loadVideoAds
-import net.mfilm.more.vungle.playAds
+//import net.mfilm.more.vungle.initVungle
+//import net.mfilm.more.vungle.loadVideoAds
+//import net.mfilm.more.vungle.playAds
 import net.mfilm.utils.rand
 import timber.log.Timber
 
@@ -21,19 +21,24 @@ fun ads(mInterstitialAd: InterstitialAd?, f: (() -> Unit)? = null) {
     if (rand < MIN_ADS) {
         f?.invoke()
     } else {
-        val x = rand(2)
-        if (x == 0L) {
-            val show = showInterAds(mInterstitialAd)
-            Timber.e("--initAds----show --------- $show-----------------------")
-            if (!show) {
-                f?.invoke() ?: playAds()
-            }
-        } else {
-            val played = playAds()
-            if (!played) {
-                f?.invoke() ?: showInterAds(mInterstitialAd)
-            }
+        val show = showInterAds(mInterstitialAd)
+        Timber.e("--initAds----show --------- $show-----------------------")
+        if (!show) {
+            f?.invoke()
         }
+//        val x = rand(2)
+//        if (x == 0L) {
+//            val show = showInterAds(mInterstitialAd)
+//            Timber.e("--initAds----show --------- $show-----------------------")
+//            if (!show) {
+//                f?.invoke() ?: playAds()
+//            }
+//        } else {
+//            val played = playAds()
+//            if (!played) {
+//                f?.invoke() ?: showInterAds(mInterstitialAd)
+//            }
+//        }
     }
 }
 
@@ -43,8 +48,8 @@ fun initAds(@AppContext context: Context) {
         MobileAds.initialize(this, getString(R.string.inter_ad_unit_id))
     }
     initMapAdsErrors()
-    initVungle(context)
-    loadVideoAds()
+//    initVungle(context)
+//    loadVideoAds()
     addTestDevices()
 }
 

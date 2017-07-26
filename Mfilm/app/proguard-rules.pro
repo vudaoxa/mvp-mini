@@ -23,3 +23,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn net.mfilm.ui.favorites.FavoritesFragment
+-dontwarn net.mfilm.ui.history.HistoryFragment
+-dontwarn net.mfilm.ui.mangas.MangasFragment

@@ -122,7 +122,7 @@ android {
         compile "com.google.android.gms:play-services-analytics:$rootProject.playServicesVersion"
         compile "com.google.firebase:firebase-ads:$rootProject.playServicesVersion"
 
-        compile "com.github.vungle:vungle-android-sdk:$rootProject.vungleVersion"
+//        compile "com.github.vungle:vungle-android-sdk:$rootProject.vungleVersion"
     }
     repositories {
 //        mavenCentral()
