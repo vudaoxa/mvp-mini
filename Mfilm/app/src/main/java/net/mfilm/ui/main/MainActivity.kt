@@ -162,7 +162,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 //        vunglePub.onPause()
     }
     fun initAds() {
-        initBannerAds(ad_view)
+//        initBannerAds(ad_view)
     }
 
     override fun initScreenRequestPassByTime() {
