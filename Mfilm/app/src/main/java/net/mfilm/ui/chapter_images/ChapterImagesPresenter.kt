@@ -1,8 +1,5 @@
 package net.mfilm.ui.chapter_images
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -13,8 +10,6 @@ import net.mfilm.data.network_retrofit.ChapterImagesResponse
 import net.mfilm.data.network_retrofit.RetrofitService
 import net.mfilm.ui.base.BasePresenter
 import net.mfilm.utils.MDisposableObserver
-import timber.log.Timber
-import java.net.URL
 import javax.inject.Inject
 
 
@@ -69,31 +64,31 @@ class ChapterImagesPresenter<V : ChapterImagesMvpView>
                 .subscribe(d)
         compositeDisposable.add(d)
     }
-    override fun requestBitmapSize(url: String?) {
-        url ?: return
-        mvpView ?: return
-
-        val d = object : MDisposableObserver<Bitmap>({}, {}) {
-            override fun onNext(t: Bitmap?) {
-                t?.run {
-                    Timber.e("----requestBitmapSize-------$url------ $width-----$height-------------------")
-                    mvpView?.onBitmapSizeResponse(height / width >= 2.5)
-                }
-            }
-        }
-        try {
-            Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(d)
-        } catch (e: Exception) {
-        }
-//        tryIt({
+//    override fun requestBitmapSize(url: String?) {
+//        url ?: return
+//        mvpView ?: return
+//
+//        val d = object : MDisposableObserver<Bitmap>({}, {}) {
+//            override fun onNext(t: Bitmap?) {
+//                t?.run {
+//                    Timber.e("----requestBitmapSize-------$url------ $width-----$height-------------------")
+//                    mvpView?.onBitmapSizeResponse(height / width >= 2.5)
+//                }
+//            }
+//        }
+//        try {
 //            Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
 //                    .subscribeOn(Schedulers.io())
 //                    .observeOn(AndroidSchedulers.mainThread())
 //                    .subscribe(d)
-//        })
-        compositeDisposable.add(d)
-    }
+//        } catch (e: Exception) {
+//        }
+////        tryIt({
+////            Observable.fromCallable { BitmapFactory.decodeStream(URL(url).openStream()) }
+////                    .subscribeOn(Schedulers.io())
+////                    .observeOn(AndroidSchedulers.mainThread())
+////                    .subscribe(d)
+////        })
+//        compositeDisposable.add(d)
+//    }
 }

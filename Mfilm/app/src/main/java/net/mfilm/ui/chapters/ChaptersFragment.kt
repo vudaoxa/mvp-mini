@@ -280,10 +280,10 @@ class ChaptersFragment : BaseLoadMoreFragment(), ChaptersMvpView {
     }
 
     fun readByChapterId(chapterId: Int?) {
-        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, obj = chapterId)
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, obj = Pair(manga, chapterId))
     }
 
     fun readByMangaHistoryRealm(mangaHistoryRealm: MangaHistoryRealm) {
-        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, obj = mangaHistoryRealm)
+        screenManager?.onNewScreenRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, obj = Pair(manga, mangaHistoryRealm))
     }
 }

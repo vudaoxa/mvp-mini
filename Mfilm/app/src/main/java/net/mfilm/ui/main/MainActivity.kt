@@ -200,6 +200,7 @@ class MainActivity : BaseStackActivity(), NavigationView.OnNavigationItemSelecte
 
                 }
                 IndexTags.FRAGMENT_CHAPTER_IMAGES -> {
+
                     fragmentStackManager.swapFragment(ChapterImagesFragment.newInstance(obj), true)
                 }
                 IndexTags.FRAGMENT_FAV -> {

@@ -11,7 +11,7 @@ interface ChapterImagesMvpPresenter<V : ChapterImagesMvpView> : MvpPresenter<V> 
     fun saveReadingPage(chapter: Chapter, page: Int)
     fun requestChapterImages(chapterId: Int)
     fun requestChapterDetail(chapterId: Int)
-    fun requestBitmapSize(url: String?)
+    //    fun requestBitmapSize(url: String?)
     fun loadMore()
     fun loadPrev()
 }

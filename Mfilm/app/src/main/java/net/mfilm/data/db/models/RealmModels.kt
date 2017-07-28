@@ -25,7 +25,6 @@ open class MangaHistoryRealm(
         var history: Boolean = false,
         var readChaptersIds: RealmList<ChapterRealm> = RealmList<ChapterRealm>(),
         var readingChapterId: Int = 0,
-        //        var readingChapterPosition: Int = 0,
         var readingPage: Int = 0
 ) : RealmObject()
 

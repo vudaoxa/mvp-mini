@@ -39,18 +39,25 @@ class ChapterImagesFragment()
     companion object {
         private const val KEY_READING_PAGE = "KEY_READING_PAGE"
         private const val KEY_CHAPTER_ID = "KEY_CHAPTER_ID"
-        fun newInstance(obj: Any?): ChapterImagesFragment {
+        private var manga: Manga? = null
+        fun newInstance(pair: Any?): ChapterImagesFragment {
             val fragment = ChapterImagesFragment()
             val bundle = Bundle()
-            when (obj) {
-                is MangaHistoryRealm -> {
-                    bundle.putInt(KEY_READING_PAGE, obj.readingPage)
-                    bundle.putInt(KEY_CHAPTER_ID, obj.readingChapterId)
-                }
-                is Int -> {
-                    bundle.putInt(KEY_CHAPTER_ID, obj)
+            val mPair = pair as? Pair<Manga, Any>?
+            mPair?.run {
+                manga = first
+                val obj = second
+                when (obj) {
+                    is MangaHistoryRealm -> {
+                        bundle.putInt(KEY_READING_PAGE, obj.readingPage)
+                        bundle.putInt(KEY_CHAPTER_ID, obj.readingChapterId)
+                    }
+                    is Int -> {
+                        bundle.putInt(KEY_CHAPTER_ID, obj)
+                    }
                 }
             }
+
             fragment.arguments = bundle
             return fragment
         }
@@ -63,12 +70,7 @@ class ChapterImagesFragment()
         get() = resources.getInteger(R.integer.chapter_images_preview_span_count)
     override val rvPreview: RecyclerView
         get() = rv_preview
-    private var mWebtoon = false
-    override var webtoon: Boolean
-        get() = mWebtoon
-        set(value) {
-            mWebtoon = value
-        }
+    override var webtoon = false
     override val errorView: ErrorView?
         get() = error_view
     override val subTitle: Int?
@@ -111,6 +113,7 @@ class ChapterImagesFragment()
         initBtnViewContinue()
         initPageChange()
         requestChapterDetail()
+
     }
 
     override fun onDestroy() {
@@ -340,8 +343,14 @@ class ChapterImagesFragment()
 
     override fun buildChapterImages(images: List<ChapterImage>) {
         Timber.e("-----buildChapterImages------------------${images.size}------------------------------")
-        if (!webtoon)
-            mChapterImagesPresenter.requestBitmapSize(images.getOrNull(3)?.url)
+        if (!webtoon) {
+            manga?.run {
+                categories?.map { it.name!!.toLowerCase() }?.run {
+                    onBitmapSizeResponse(contains("webtoon"))
+                }
+            }
+        }
+
         BigImageViewer.prefetch(*(images.map { Uri.parse(it.url) }.toTypedArray()))
         mChapterImagesRvAdapter?.run {
             clear()
@@ -397,13 +406,6 @@ class ChapterImagesFragment()
         } ?: true
     }
 
-
-//    override fun seekNextChapter() {
-//        if (isVisible && isAdded)
-//            requestChapterImages()
-//        else interAds()
-//    }
-
     override fun onRvFailure(position: Int) {
         mChapterImagesRvAdapter?.removeAt(position)
     }
@@ -415,6 +417,7 @@ class ChapterImagesFragment()
             requestLayout()
         }
     }
+
     override fun onClick(position: Int, event: Int) {
         Timber.e("---------------------onClick----------$event----------$position")
         viewer_header.toggleShow()

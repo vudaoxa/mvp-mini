@@ -162,7 +162,6 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
     override fun initMangaInfoHeader() {
         mManga?.run {
             layout_manga_info.show(true)
-//            btn_read.enable(true)
             img_thumb.setImageURI(coverUrl)
             tv_name.text = name
             setText(context, tv_other_name, R.string.title_other_name, otherName)
@@ -177,7 +176,6 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
             }
             setText(context, tv_des, -1, summary)
             layout_manga_info.setOnClickListener { viewFullRead() }
-//            btn_read.setOnClickListener { onReadBtnClicked() }
         }
     }
 
@@ -218,15 +216,4 @@ class MangaInfoFragment : BaseErrorViewFragment(), MangaInfoMvpView {
     override fun obtainRelatedMangasFragment(): Fragment? {
         return null
     }
-
-//    override fun saveMangaHistory() {
-//        mManga?.run {
-//            mMangaInfoMvpPresenter.saveMangaHistory(this)
-//        }
-//    }
-//
-//    override fun onReadBtnClicked() {
-//        saveMangaHistory()
-//        screenManager?.onNewFragmentRequested(IndexTags.FRAGMENT_CHAPTER_IMAGES, fragment = mChaptersFragment)
-//    }
 }
